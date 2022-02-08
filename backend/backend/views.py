@@ -3,7 +3,7 @@ from django.shortcuts import render
 import pyrebase
 
 # Create your views here.
-config ={
+config = {
     "apiKey": "AIzaSyDtC9VSkN8XQ-r81OkuJPynCxukrLPZ7uw",
 
     "authDomain": "purdueci.firebaseapp.com",
@@ -24,3 +24,6 @@ config ={
 firebase=pyrebase.initialize_app(config)
 authe = firebase.auth()
 database=firebase.database()
+
+def index(request) :
+    return render(request, 'index.html')

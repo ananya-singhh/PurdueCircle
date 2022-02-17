@@ -1,4 +1,3 @@
-from pickle import TRUE
 from firebase_admin import credentials, firestore, initialize_app
 from .User import User
 from random import random

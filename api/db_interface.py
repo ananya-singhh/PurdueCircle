@@ -10,14 +10,22 @@ class db_interface(object):
         db = firestore.client()
         self.users = db.collection('users')
         
-    def id_exists(self, id) -> bool:
-        res = self.users.document(id).get()
-        return res.exists
-        
-        
-    def generate_user_id(self):
-        pass
-        
     
+    #checks if user with same username or email exists
+    def user_exists(self, username, email): 
+        if self.users.where(u'username', u"==", username).get():
+            return (True, 'username')
+        if self.users.where(u'email', u'==', email).get():
+            return (True, 'email')
+        return (False, None)
+        
+        
+    #create new user given info, can also add password checking for proper length etc
     def create_user(self, email, username, password):
-        pass
+        check = self.user_exists(username, email)
+        if check[0] == True: #if username or email already exists
+            return (None, check[1]) #returns 'email' or 'username' depending on which was already taken
+        new_user = User(email, username, password, '')
+        self.users.add(new_user.to_dict())
+        return (new_user, None)
+        

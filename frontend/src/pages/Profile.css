@@ -1,0 +1,39 @@
+#background {
+    font-family: 'Ubuntu';
+    color:#DDDDDD;
+    margin: auto;
+}
+
+#profilePage {
+    width: 75vw;
+    text-align: center;
+    font-family: 'Ubuntu';
+    border-radius: 5px;
+}
+
+#userDisplay {
+    font-size: 30px;
+    text-align: center;
+    color:#ffffff;
+    text-decoration: underline;
+}
+
+#nameDisplay {
+    font-size: 20px;
+    text-align: center;
+    color:#bbbbbb;
+    font-weight: bold;
+}
+
+#bioDisplay {
+    font-size: 15px;
+    text-align: center;
+    color:#999999;
+}
+
+#signupbutton {
+    font-size: 20px;
+    text-align: center;
+    font-family: 'Ubuntu';
+    margin: auto;
+}

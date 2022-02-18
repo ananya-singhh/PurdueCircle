@@ -10,9 +10,10 @@ db = db_interface()
 
 @app.route('/')
 def index():
-    user = User(1, 'email', 'username', 'password', 'bio stuff', None, None)
-    db.users.document('1').set(user.to_dict())
-    print(db.users.document('1').get().exists)
+    db.create_user('conner7mcc@gmail.com', 'conner', 'pass1234')
+    print(db.create_user('conner7mcc@gmail.com', 'conner2', 'pass1234'))
+    print(db.create_user('conner8mcc@gmail.com', 'conner', 'pass1234'))
+    db.users.document(u'1').delete()
     return "this should be " 
 
 if __name__ == "__main__":

@@ -1,0 +1,52 @@
+#background {
+    font-family: 'Ubuntu';
+    color:#DDDDDD;
+    margin: auto;
+}
+
+#SignUpPage {
+    width: 75vw;
+    text-align: center;
+    font-family: 'Ubuntu';
+    border-radius: 5px;
+}
+
+#signupbutton {
+    font-size: 20px;
+    text-align: center;
+    font-family: 'Ubuntu';
+    margin: auto;
+}
+
+
+a.button{
+    display:inline-block;
+    padding:0.3em 3em;
+    border:0.1em solid #ddc958;
+    margin:0 0.3em 0.3em 0;
+    box-sizing: border-box;
+    text-decoration:none;
+    font-family:'Ubuntu';
+    font-weight:400;
+    color:#ddc958;
+    text-align:center;
+    transition: all 0.15s;
+    border-radius: 0.2cm;
+}
+
+a.button:hover{
+    color:#DDDDDD;
+    border-color:#ddc958;
+}
+
+a.button:active{
+    color:#BBBBBB;
+    border-color:#ddc958;
+}
+
+input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: auto;
+    box-sizing: border-box;
+}

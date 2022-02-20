@@ -1,9 +1,9 @@
 from typing import List
-import Constants
+from .Constants import *
 
 class User(object):
     
-    def __init__(self, email: str = None, username: str = None, password: str = None, bio: str = None, profile_picture = None, privacy_setting: Constants.PrivacySetting = None):
+    def __init__(self, email: str = None, username: str = None, password: str = None, bio: str = None, profile_picture = None, privacy_setting: int = 0):
         self.username = username
         self.email = email
         self.password = password
@@ -18,7 +18,7 @@ class User(object):
             'username': self.username,
             'bio': self.bio,
             'password': self.password,
-            
+            'privacy': self.privacy_setting
         }
         
         

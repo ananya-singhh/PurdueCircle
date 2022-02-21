@@ -1,33 +1,60 @@
-import React from "react";
+import axios from "axios";
+import React, { useState, useEffect} from "react";
+import { useNavigate } from 'react-router-dom'
 
 function Login() {
 
-     return (
-      <div id="background">
-      <div id="LoginPage">
+    const [user, setUser] = useState({username: "", password: ""})
 
-      <form>
-      <label>
-      Username:
-      <input type="text"/>
-      </label>
-      </form>
+    let navigate = useNavigate();
+    useEffect(() => {    
+        document.cookie = "user=; SameSite=Lax; Secure";
+    }, []);
 
-      <form>
-      <label>
-      Password:
-      <input type="password"/>
-      </label>
-      </form>
+    function handleLogin() {
+        console.log("what");
+        axios({
+            method: 'post',
+            url: 'http://127.0.0.1:5000/login_user',
+            data: {
+                username: user.username,
+                password: user.password,
+            }
+        }).then( res => {
+            console.log(res);
+            document.cookie = 'user=' + res.data.username + ';';
+            navigate("/");
+        }).catch(error => {
+            console.log(error);
+            //navigate("/404");
+        })
+    }
 
-      <div id ="loginbutton">
-          <a href="/" class="button">Login</a>
-      </div>
+    return (
+        <div id="background">
+        <div id="LoginPage">
 
-      </div>
-      </div>
-     );
+        <form>
+        <label>
+        Username:
+        <input type="text" onChange = {e => setUser({...user, username: e.target.value})} value={user.username}/>
+        </label>
+        </form>
 
- }
+        <form>
+        <label>
+        Password:
+        <input type="password" onChange = {e => setUser({...user, password: e.target.value})} value={user.password}/>
+        </label>
+        </form>
+
+        <div id ="loginbutton">
+            <button href="" class="button" type="button" onClick={handleLogin}>Login</button>
+        </div>
+        </div>
+        </div>
+    );
+
+}
 
  export default Login;

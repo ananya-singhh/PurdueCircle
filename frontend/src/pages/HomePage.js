@@ -3,7 +3,16 @@ import React from 'react'
 
 
 function HomePage() {
-    return (
+
+    function get_user_from_cookie() {
+        return document.cookie
+        .split('; ')
+        .find(row => row.startsWith('user='))
+        .split('=')[1];
+      }
+    console.log(get_user_from_cookie())
+    if(get_user_from_cookie() === "") {
+        return (
         <div id="background">
             <div id="homepage">
                 <div id="title">PurdueCircle</div>
@@ -15,9 +24,15 @@ function HomePage() {
                 </div>
             </div>
         </div>
-
-
-    );
+        )
+    } else return (
+        <div id="background">
+            <div id="homepage">
+                <div id="title">PurdueCircle</div>
+                successful sign in
+            </div>
+        </div>
+    )
     
 }
 

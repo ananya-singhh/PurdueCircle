@@ -18,7 +18,7 @@ class User(object):
             'username': self.username,
             'bio': self.bio,
             'password': self.password,
-            'privacy': self.privacy_setting
+            'privacy_setting': self.privacy_setting
         }
         
         

@@ -24,5 +24,14 @@ def login_user():
     print(user.to_dict())
     return user.to_dict()
 
+@app.route('/create_user', methods=['POST'])
+def create_user():
+    request_data = request.get_json()
+    res = db.create_user(request_data['email'], request_data['username'], request_data['password'])
+    user = res[0]
+    if user == None:
+        return {'data': res[1]} #returns username if user is taken or email if email is taken
+    return user.to_dict() #else returns the user
+
 if __name__ == "__main__":
     app.run(debug=True)

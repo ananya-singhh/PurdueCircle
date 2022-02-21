@@ -11,7 +11,7 @@ import Profile from './pages/Profile'
 
 function App() {
 
-  
+  document.cookie = "user=; SameSite=Lax; Secure";
   return (
     <div>
       <Router>

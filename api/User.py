@@ -17,7 +17,6 @@ class User(object):
             'email': self.email,
             'username': self.username,
             'bio': self.bio,
-            'password': self.password,
             'privacy_setting': self.privacy_setting,
             'profile_picture': self.profile_picture
         }

@@ -1,3 +1,4 @@
+from hashlib import new
 from firebase_admin import credentials, firestore, initialize_app
 from .User import User
 from random import random
@@ -28,7 +29,7 @@ class db_interface(object):
         if check[0] == True: #if username or email already exists
             return (None, check[1]) #returns 'email' or 'username' depending on which was already taken
         new_user = User(email, username, password, '')
-        self.users.document(username).set(new_user.to_dict())
+        self.users.document(username).set(to_dict(new_user))
         return (new_user, None)
     
     def login_user(self, username, password):

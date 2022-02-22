@@ -23,7 +23,7 @@ function Login() {
                 alert("Information is incorrect")
             } else {
                 console.log(res);
-                sessionStorage.setItem('user', user.username)
+                localStorage.setItem('user', JSON.stringify(res.data))
                 navigate("/");
             }
                 

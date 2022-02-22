@@ -6,12 +6,12 @@ import { Navigate } from 'react-router-dom';
 function HomePage() {
 
     function logout() {
-        sessionStorage.removeItem('user');
+        localStorage.removeItem('user');
         window.location.reload(false);
     }
 
-    console.log(sessionStorage.getItem('user'))
-    if(!sessionStorage.getItem('user')) {
+    console.log(localStorage.getItem('user'))
+    if(!localStorage.getItem('user')) {
         return (
         <div id="background">
             <div id="homepage">
@@ -25,11 +25,13 @@ function HomePage() {
             </div>
         </div>
         )
-    } else return (
+    } else 
+        var user = JSON.parse(localStorage.getItem('user'));
+        return (
         <div id="background">
             <div id="homepage">
                 <div id="title">PurdueCircle</div>
-                successful sign in as {sessionStorage.getItem('user')}
+                successful sign in as {user['username']}
                 <div id ="logoutbutton">
                 <button class="button" type="button" onClick={logout}>Logout</button>
                 </div>

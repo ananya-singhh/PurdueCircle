@@ -7,12 +7,9 @@ function Login() {
     const [user, setUser] = useState({username: "", password: ""})
 
     let navigate = useNavigate();
-    useEffect(() => {    
-        document.cookie = "user=; SameSite=Lax; Secure";
-    }, []);
+    
 
     function handleLogin() {
-        console.log("what");
         axios({
             method: 'post',
             url: 'http://127.0.0.1:5000/login_user',
@@ -21,9 +18,15 @@ function Login() {
                 password: user.password,
             }
         }).then( res => {
-            console.log(res);
-            document.cookie = 'user=' + res.data.username + ';';
-            navigate("/");
+            if (res.data.data === "Failed") {
+                console.log("bad login")
+                alert("Information is incorrect")
+            } else {
+                console.log(res);
+                sessionStorage.setItem('user', user.username)
+                navigate("/");
+            }
+                
         }).catch(error => {
             console.log(error);
             //navigate("/404");
@@ -49,7 +52,7 @@ function Login() {
         </form>
 
         <div id ="loginbutton">
-            <button href="" class="button" type="button" onClick={handleLogin}>Login</button>
+            <button class="button" type="button" onClick={handleLogin}>Login</button>
         </div>
         </div>
         </div>

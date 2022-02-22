@@ -27,13 +27,20 @@ class db_interface(object):
         if check[0] == True: #if username or email already exists
             return (None, check[1]) #returns 'email' or 'username' depending on which was already taken
         new_user = User(email, username, password, '')
-        self.users.add(new_user.to_dict())
+        self.users.document(username).set(new_user.to_dict())
         return (new_user, None)
     
-    def get_user(self, username, password):
+    def login_user(self, username, password):
         if not self.users.where(u'username', u"==", username).get():
             return None
         users = self.users.where(u'username', u"==", username).where(u'password', u'==', password).limit(1).stream()
+        user = next(users,None)
+        if not user:
+            return None
+        return User(**user.to_dict())
+    
+    def get_user(self, username):
+        users = self.users.where(u'username', u"==", username).limit(1).stream()
         user = next(users,None)
         if not user:
             return None

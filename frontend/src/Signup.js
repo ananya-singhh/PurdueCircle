@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
 import InlineAlert from './InlineAlert';
 import Alert from 'react-bootstrap/Alert';
 
@@ -15,6 +15,7 @@ function Signup() {
   const navigate = useNavigate();
   const [passwordShown, setPasswordShown] = useState(false);
   const [validated, setValidated] = useState(false);
+  const [user, setUser] = useState({username: "", email: "", password: ""})
   
   const formRef = useRef(null);
   
@@ -26,17 +27,34 @@ function Signup() {
   
    const handleSubmit = (event) => {
     const form = event.currentTarget;
+	event.preventDefault();
 
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
 	  setValidated(true);
     } else {
-		    setValidated(true);
-			event.preventDefault();
-			setShow(true);	
-			formRef.current.reset();
-			setValidated(false);
+		axios({
+			method: 'post',
+			url: 'http://127.0.0.1:5000/create_user',
+			data: {
+				username: user.username,
+				password: user.password,
+				email: user.email,
+			}
+		  }).then( res => {
+			  if (res.data.data) {
+				  if (res.data.data === "username") {
+					alert("Username is taken")
+				  } else alert("Email is already in use!");
+			  } else {
+				  localStorage.setItem('user', JSON.stringify(res.data));
+				  navigate("/homepage");
+			  }
+			  
+		  }).catch(error => {
+			  console.log(error);
+			  //navigate("/404"); //do error stuff
+		  })
 	}	
   };
    
@@ -44,10 +62,6 @@ function Signup() {
     const handleLogin = (event) => {
 	  navigate('/');
   };
-
-  const handleSignup = (event) => {
-	navigate('/homepage');
-}
   
 	  return (
 	    <>
@@ -64,7 +78,7 @@ function Signup() {
 		  
 		  <Form.Group className="mb-3" controlId="formEmail">
 			<Form.Label>Email address</Form.Label>
-			<Form.Control required type="email" placeholder="Enter email address" />
+			<Form.Control required type="email" placeholder="Enter email address" onChange = {e => setUser({...user, email: e.target.value})} value={user.email} />
 			<Form.Control.Feedback type="invalid">
               Please enter email address.
             </Form.Control.Feedback>
@@ -72,7 +86,7 @@ function Signup() {
 		  
 		  <Form.Group className="mb-3" controlId="formUserName">
 			<Form.Label>Username</Form.Label>
-			<Form.Control required type="text" placeholder="Enter user name" />
+			<Form.Control required type="text" placeholder="Enter user name" onChange = {e => setUser({...user, username: e.target.value})} value={user.username}/>
 			<Form.Control.Feedback type="invalid">
               Please enter username.
             </Form.Control.Feedback>
@@ -81,7 +95,7 @@ function Signup() {
 		  <Row className="mb-3">
 		  <Form.Group as={Col} controlId="formPassword">
 			<Form.Label>Password</Form.Label>
-			<Form.Control required type={passwordShown ? "text" : "password"} placeholder="Password" />
+			<Form.Control required type={passwordShown ? "text" : "password"} placeholder="Password" onChange = {e => setUser({...user, password: e.target.value})} value={user.password}/>
 			<Form.Control.Feedback type="invalid">
               Please choose a password.
             </Form.Control.Feedback>

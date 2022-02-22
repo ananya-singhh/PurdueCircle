@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -7,6 +7,8 @@ import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
 
 function Homepage() { 
+
+    
 
     const navigate = useNavigate();
 
@@ -17,6 +19,13 @@ function Homepage() {
     const handleSignup = (event) => {
         navigate('/signup');
     }
+    // console.log(localStorage.getItem('user'))
+
+    useEffect(() => {
+      if (localStorage.getItem('user')) navigate('/homepage');
+    },[]);
+    
+     
     
         return (
           <Container className="My-main">

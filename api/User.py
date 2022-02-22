@@ -3,7 +3,7 @@ from .Constants import *
 
 class User(object):
     
-    def __init__(self, email: str = None, username: str = None, password: str = None, bio: str = None, profile_picture = None, privacy_setting: int = 0):
+    def __init__(self, email: str = None, username: str = None, password: str = None, bio: str = None, profile_picture: int = 0, privacy_setting: int = 0):
         self.username = username
         self.email = email
         self.password = password
@@ -18,7 +18,6 @@ class User(object):
             'username': self.username,
             'bio': self.bio,
             'password': self.password,
-            'privacy_setting': self.privacy_setting
+            'privacy_setting': self.privacy_setting,
+            'profile_picture': self.profile_picture
         }
-        
-        

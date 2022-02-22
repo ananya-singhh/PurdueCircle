@@ -11,3 +11,15 @@ class User(object):
         self.profile_picture = profile_picture
         self.privacy_setting = privacy_setting
         
+    
+    def to_dict(self):
+        return {
+            'email': self.email,
+            'username': self.username,
+            'bio': self.bio,
+            'password': self.password,
+            'privacy_setting': self.privacy_setting,
+            'profile_picture': self.profile_picture
+        }
+        
+        

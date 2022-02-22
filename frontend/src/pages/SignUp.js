@@ -46,7 +46,7 @@ function SignUp() {
               alert("Username is taken")
             } else alert("Email is already in use!");
         } else {
-            sessionStorage.setItem('user', user.username);
+            localStorage.setItem('user', JSON.stringify(res.data));
             navigate("/");
         }
         

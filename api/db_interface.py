@@ -1,6 +1,7 @@
 from firebase_admin import credentials, firestore, initialize_app
 from .User import User
 from random import random
+from .Helper import *
 
 
 class db_interface(object):
@@ -49,7 +50,7 @@ class db_interface(object):
     
     #edit user with given info
     def edit_user(self, user: User):
-        self.users.document(user.username).set(user.to_dict())
+        self.users.document(user.username).set(to_dict(user))
             
     #delete user with username
     def delete_user(self, username):

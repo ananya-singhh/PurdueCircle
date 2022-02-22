@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #D5F5E3;
+  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -36,3 +36,42 @@
     transform: rotate(360deg);
   }
 }
+
+#root {
+  position: relative;
+  min-height: 100vh;
+  padding-bottom: 40px;
+}
+
+.My-header {
+ position: relative;
+ height: 60px;
+ width: 100%;
+}
+
+.My-main{
+  position: relative;
+  padding: 20px;
+}
+
+/* Now set the height of your Footer equal to the padding that you left for it in your #root.  To make it stay at the bottom, you will set it to be absolutely positioned.  If Main grows larger, your Footer will move down to remain at the bottom of the page. */ 
+.My-footer {
+  height: 20px;
+  width: 100%;
+  position: absolute;
+  bottom: 20px;
+}
+
+.My-border {
+  border: 1px solid;
+  border-radius: 12px;
+  padding: 15px;
+}
+
+@media (max-width:700px){
+        .My-border{
+        border: none;
+		border-radius: 0px;
+		padding: 0px;
+        }
+  }

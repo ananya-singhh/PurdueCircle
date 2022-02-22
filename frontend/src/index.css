@@ -5,21 +5,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color:#000000;
-  overflow-x: hidden;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Ubuntu',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
-
-::selection {
-  background:  #367048  ;
-}
-::-webkit-selection {
-  background: #367048;
-}
-::-moz-selection {
-  background:  #367048; 
 }

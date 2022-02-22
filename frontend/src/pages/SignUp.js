@@ -7,11 +7,31 @@ function SignUp() {
   const [user, setUser] = useState({username: "", email: "", password: ""})
   let navigate = useNavigate();
 
-  useEffect(() => {
-    document.cookie = "user=; SameSite=Lax; Secure";
-  });
+  var passwordValidator = require('password-validator');
+  var schema = new passwordValidator();
+
+  schema
+  .is().min(8)                                    // Minimum length 8
+  .is().max(100)                                  // Maximum length 100
+  // .has().uppercase()                              // Must have uppercase letters
+  // .has().lowercase()                              // Must have lowercase letters
+  // .has().digits(1)                                // Must have at least 2 digits
+  // .has().not().spaces();                          // Should not have spaces
+  
 
   function handleSignup() {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(user.email)) {
+      console.log("good email")
+    } else {
+      alert("Email is invalid")
+      return;
+    }
+
+    if (!schema.validate(user.password)) {
+      alert("Password is invalid")
+      return;
+    }
+
     axios({
       method: 'post',
       url: 'http://127.0.0.1:5000/create_user',

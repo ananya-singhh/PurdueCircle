@@ -18,7 +18,7 @@ def not_found(e):
 def login_user():
     request_data = request.get_json()
     print(request_data)
-    user = db.get_user(request_data['username'], request_data['password'])
+    user = db.login_user(request_data['username'], request_data['password'])
     if not user:
             return {'data': 'Failed'}
     print(user.to_dict())

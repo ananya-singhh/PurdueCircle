@@ -1,17 +1,17 @@
 import './HomePage.css';
 import React from 'react'
+import { Navigate } from 'react-router-dom';
 
 
 function HomePage() {
 
-    function get_user_from_cookie() {
-        return document.cookie
-        .split('; ')
-        .find(row => row.startsWith('user='))
-        .split('=')[1];
-      }
-    console.log(get_user_from_cookie())
-    if(get_user_from_cookie() === "") {
+    function logout() {
+        sessionStorage.removeItem('user');
+        window.location.reload(false);
+    }
+
+    console.log(sessionStorage.getItem('user'))
+    if(!sessionStorage.getItem('user')) {
         return (
         <div id="background">
             <div id="homepage">
@@ -29,7 +29,10 @@ function HomePage() {
         <div id="background">
             <div id="homepage">
                 <div id="title">PurdueCircle</div>
-                successful sign in
+                successful sign in as {sessionStorage.getItem('user')}
+                <div id ="logoutbutton">
+                <button class="button" type="button" onClick={logout}>Logout</button>
+                </div>
             </div>
         </div>
     )

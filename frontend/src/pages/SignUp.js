@@ -22,11 +22,11 @@ function SignUp() {
       }
     }).then( res => {
         if (res.data.data) {
-            if (res.data.data === "username"){
+            if (res.data.data === "username") {
               alert("Username is taken")
-            } else alert("Email is already in use!")
+            } else alert("Email is already in use!");
         } else {
-            document.cookie = 'user=' + res.data.username + ';';
+            sessionStorage.setItem('user', user.username);
             navigate("/");
         }
         

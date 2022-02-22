@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Navbar from 'react-bootstrap/Navbar';
@@ -12,8 +12,14 @@ function Header() {
 	const [show, setShow] = useState(false);
 	const navigate = useNavigate();
 
+	useEffect(() => {
+		// console.log(localStorage.getItem('user'));
+		if (!localStorage.getItem('user')) navigate('/');
+	  },[]);
+
 	const handleClose = () => {
 		setShow(false);
+		localStorage.removeItem('user');
 		navigate('/');
 	}
 	const handleShow = () => setShow(true);

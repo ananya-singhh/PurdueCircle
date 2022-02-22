@@ -21,3 +21,5 @@ class User(object):
             'privacy_setting': self.privacy_setting,
             'profile_picture': self.profile_picture
         }
+        
+        

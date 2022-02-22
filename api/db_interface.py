@@ -20,7 +20,6 @@ class db_interface(object):
             return (True, 'email')
         return (False, None)
         
-        
     #create new user given info, can also add password checking for proper length etc
     def create_user(self, email, username, password):
         check = self.user_exists(username, email)
@@ -114,9 +113,8 @@ class db_interface(object):
         pass
     
     #search for a user
-    def search_user(self):
-        # TODO: implement
-        pass
+    def search_user(self, query):
+        return [user.id for user in self.users.stream() if query in user.id]
     
     #tag post with topic
     def tag_post_with_topic(self):

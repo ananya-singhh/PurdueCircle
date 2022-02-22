@@ -49,6 +49,13 @@ def delete_user():
     if not res:
         return {'data': 'Failed to delete user'}
     return username #else returns the username
+     
+@app.route('/search_user', methods=['GET'])
+def search_user():
+    request_data = request.get_json()
+    query = request_data['query']
+    res = db.search_user(query)
+    return {'users': res}
 
 if __name__ == "__main__":
     app.run(debug=True)

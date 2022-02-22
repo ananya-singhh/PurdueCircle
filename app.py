@@ -5,8 +5,6 @@ from flask_cors import CORS
 from api.User import User
 from api.db_interface import db_interface
 
-from api.Helper import *
-
 app = Flask(__name__, static_url_path='', static_folder='frontend/build')
 CORS(app)
 db = db_interface()
@@ -41,7 +39,7 @@ def edit_user():
     print(request_data)
     new_user = User(request_data['email'], request_data['username'], request_data['password'], request_data['bio'], request_data['profile_picture'], request_data['privacy_setting'])
     res = db.edit_user(new_user)
-    return to_dict(new_user) #else returns the user
+    return new_user.to_dict() #else returns the user
     
 @app.route('/delete_user', methods=['DELETE'])
 def delete_user():

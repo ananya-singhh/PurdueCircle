@@ -8,7 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from 'react-router-dom';
 
 function Header() {
-	const username = "dummy";
+	
 	const [show, setShow] = useState(false);
 	const navigate = useNavigate();
 
@@ -16,6 +16,8 @@ function Header() {
 		// console.log(localStorage.getItem('user'));
 		if (!localStorage.getItem('user')) navigate('/');
 	  },[]);
+
+	const user = JSON.parse(localStorage.getItem('user'));
 
 	const handleClose = () => {
 		setShow(false);
@@ -69,7 +71,7 @@ function Header() {
 				  <Nav.Link href="/">Search for User</Nav.Link>
 				  <Nav.Link href="/profile">Create Profile</Nav.Link>
 				  <Nav.Link href="/message">Direct Message</Nav.Link>
-				  <NavDropdown title={username} id="navbarScrollingDropdown">
+				  <NavDropdown title={user['username']} id="navbarScrollingDropdown">
 					  <NavDropdown.Item href="/editprofile">Edit Profile</NavDropdown.Item>
 					  <NavDropdown.Item href="/changepwd">Change Password</NavDropdown.Item>
 					  <NavDropdown.Divider />

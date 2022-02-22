@@ -32,6 +32,23 @@ def create_user():
     if user == None:
         return {'data': res[1]} #returns username if user is taken or email if email is taken
     return user.to_dict() #else returns the user
+    
+@app.route('/edit_user', methods=['PUT'])
+def edit_user():
+    request_data = request.get_json()
+    print(request_data)
+    new_user = User(request_data['email'], request_data['username'], request_data['password'], request_data['bio'], request_data['profile_picture'], request_data['privacy_setting'])
+    res = db.edit_user(new_user)
+    return new_user.to_dict() #else returns the user
+    
+@app.route('/delete_user', methods=['DELETE'])
+def delete_user():
+    request_data = request.get_json()
+    username = request_data['username']
+    res = db.delete_user(username)
+    if not res:
+        return {'data': 'Failed to delete user'}
+    return username #else returns the username
 
 if __name__ == "__main__":
     app.run(debug=True)

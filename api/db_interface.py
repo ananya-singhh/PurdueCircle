@@ -48,14 +48,15 @@ class db_interface(object):
 
     
     #edit user with given info
-    def edit_user(self):
-        # TODO: implement
-        pass
-    
+    def edit_user(self, user: User):
+        self.users.document(user.username).set(user.to_dict())
+            
     #delete user with username
     def delete_user(self, username):
-        # TODO: implement
-        pass
+        self.users.document(username).delete()
+        if self.users.where(u'username', u'==', username).get():
+            return None
+        return username
         
     #create a new post
     def create_post(self):
@@ -110,8 +111,8 @@ class db_interface(object):
     #save a post
     def save_post(self):
         # TODO: implement
-        
         pass
+    
     #search for a user
     def search_user(self):
         # TODO: implement

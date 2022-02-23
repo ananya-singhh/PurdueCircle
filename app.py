@@ -22,7 +22,7 @@ def login_user():
     user = db.login_user(request_data['username'], request_data['password'])
     if not user:
             return {'data': 'Failed'}
-    print(user.to_dict())
+    print(to_dict(user))
     return user.to_dict()
 
 @app.route('/create_user', methods=['POST'])
@@ -32,6 +32,14 @@ def create_user():
     user = res[0]
     if user == None:
         return {'data': res[1]} #returns username if user is taken or email if email is taken
+    return user.to_dict() #else returns the user
+    
+@app.route('/get_user', methods=['GET'])
+def get_user():
+    request_data = request.get_json()
+    user = db.get_user(request_data['username'])
+    if user == None:
+        return {'data': user} #returns username if user is taken or email if email is taken
     return user.to_dict() #else returns the user
     
 @app.route('/edit_user', methods=['PUT'])
@@ -50,6 +58,39 @@ def delete_user():
     if not res:
         return {'data': 'Failed to delete user'}
     return username #else returns the username
+    
+@app.route('/follow_user', methods=['PUT'])
+def follow_user():
+    request_data = request.get_json()
+    username = request_data['username']
+    username_to_follow = request_data['username_to_follow']
+    db.follow_user(username, username_to_follow)
+    return {'username':username, 'username_to_follow':username_to_follow} #else returns the username
+    
+@app.route('/unfollow_user', methods=['PUT'])
+def unfollow_user():
+    request_data = request.get_json()
+    username = request_data['username']
+    username_to_unfollow = request_data['username_to_unfollow']
+    db.unfollow_user(username, username_to_unfollow)
+    return {'username':username, 'username_to_unfollow':username_to_unfollow} #else returns the username
+    
+@app.route('/block_user', methods=['PUT'])
+def block_user():
+    request_data = request.get_json()
+    username = request_data['username']
+    username_to_block = request_data['username_to_block']
+    db.block_user(username, username_to_block)
+    return {'username':username, 'username_to_block':username_to_block} #else returns the username    
+    
+@app.route('/unblock_user', methods=['PUT'])
+def unblock_user():
+    request_data = request.get_json()
+    username = request_data['username']
+    username_to_unblock = request_data['username_to_unblock']
+    db.unblock_user(username, username_to_unblock)
+    return {'username':username, 'username_to_unfollow':username_to_unblock} #else returns the username
+
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -51,8 +51,8 @@ class db_interface(object):
 
     
     #edit user with given info
-    def edit_user(self, user: User):
-        self.users.document(user.username).set(to_dict(user))
+    def edit_user(self, user, updates: dict):
+        self.users.document(user.username).update(updates) # update is perfect for this
             
     #delete user with username
     def delete_user(self, username):
@@ -160,10 +160,21 @@ class db_interface(object):
         # TODO: implement
         pass
     
-    #search for a user
-    def search_user(self):
-        # TODO: implement
-        pass
+    #search for users
+    def search_user(self, query):
+        res = []
+        end = query[:]
+        end[-1] = chr(ord(query[-1]) + 1) # increment last char of end
+        
+        users = self.users.where('username', '>=', query).where('username', '<', end).stream() # cursed query to find users that start with the query
+         
+        for user in users:
+            res.append(user.username) # build list of usernames to return
+        return res
+    
+    #gets a user by username
+    def get_user(self, username):
+        return User(**self.users.document(username).get().to_dict())
     
     #tag post with topic
     def tag_post_with_topic(self):

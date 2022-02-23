@@ -163,13 +163,14 @@ class db_interface(object):
     #search for users
     def search_user(self, query):
         res = []
-        end = query[:]
-        end[-1] = chr(ord(query[-1]) + 1) # increment last char of end
+        end = query[0:-1]
+        end += str(chr(ord(query[-1]) + 1)) # increment last char of end
+        print(f'initial: {query}    end: {end}' )
         
         users = self.users.where('username', '>=', query).where('username', '<', end).stream() # cursed query to find users that start with the query
-         
         for user in users:
-            res.append(user.username) # build list of usernames to return
+            res.append(user.to_dict()['username']) # build list of usernames to return
+        print(res)
         return res
     
     #gets a user by username

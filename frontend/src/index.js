@@ -9,6 +9,8 @@ import Signup from './Signup';
 import Main from './Main';
 import Header from './Header';
 import Footer from './Footer';
+import ProfileNew from './ProfileNew';
+import EditProfile from './EditProfile';
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 
 /*ReactDOM.render(<App />, document.getElementById('root'));  */
@@ -22,6 +24,8 @@ const Routing = () => {
         <Route path="/Login" element={<Login />} />
 		    <Route path="/signup" element={<Signup />} />
         <Route path="/posts" element={<Main />} />
+        <Route path="/Profile/:username" element={<ProfileNew />} />
+        <Route path="/EditProfile" element={<EditProfile />} />
       </Routes>
 	  <Footer />
     </Router>

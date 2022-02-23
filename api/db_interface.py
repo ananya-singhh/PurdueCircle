@@ -1,4 +1,5 @@
 from hashlib import new
+from multiprocessing.dummy import Array
 from firebase_admin import credentials, firestore, initialize_app
 from .User import User
 from random import random
@@ -55,11 +56,42 @@ class db_interface(object):
             
     #delete user with username
     def delete_user(self, username):
-        self.users.document(username).delete()
+        user_to_del = self.users.document(username)
+        user_to_del.delete()
         if self.users.where(u'username', u'==', username).get():
             return None
         return username
+    
+    def follow_user(self, username, username_to_follow):
+        user = self.users.document(username)
+        user_to_follow = self.users.document(username_to_follow)
+        user.update({u'following': firestore.ArrayUnion([username_to_follow])})
+        user_to_follow.update({u'followers': firestore.ArrayUnion([username])})
         
+    def unfollow_user(self, username, username_to_unfollow):
+        user = self.users.document(username)
+        user_to_unfollow = self.users.document(username_to_unfollow)
+        user.update({u'following': firestore.ArrayRemove([username_to_unfollow])})
+        user_to_unfollow.update({u'followers': firestore.ArrayRemove([username])})
+        
+    #block a user
+    def block_user(self, username, username_to_block):
+        user = self.users.document(username)
+        user_to_block = self.users.document(username_to_block)
+        user.update({u'blocked': firestore.ArrayUnion([username_to_block])})
+        user_to_block.update({u'blocked_by': firestore.ArrayUnion([username])})
+    
+        user.update({u'followers': firestore.ArrayRemove([username_to_block])})
+        user.update({u'following': firestore.ArrayRemove([username_to_block])})
+        user_to_block.update({u'followers': firestore.ArrayRemove([username])})
+        user_to_block.update({u'following': firestore.ArrayRemove([username])})
+        
+    def unblock_user(self, username, username_to_unblock):
+        user = self.users.document(username)
+        user_to_unblock = self.users.document(username_to_unblock)
+        user.update({u'following': firestore.ArrayRemove([username_to_unblock])})
+        user_to_unblock.update({u'followers': firestore.ArrayRemove([username])})
+            
     #create a new post
     def create_post(self):
         # TODO: implement
@@ -92,11 +124,6 @@ class db_interface(object):
         
     #send a message
     def send_message(self):
-        # TODO: implement
-        pass
-        
-    #block a user
-    def block_user(self):
         # TODO: implement
         pass
         

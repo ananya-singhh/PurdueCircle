@@ -23,7 +23,7 @@ def login_user():
     if not user:
             return {'data': 'Failed'}
     print(to_dict(user))
-    return to_dict(user)
+    return user.to_dict()
 
 @app.route('/create_user', methods=['POST'])
 def create_user():
@@ -32,7 +32,7 @@ def create_user():
     user = res[0]
     if user == None:
         return {'data': res[1]} #returns username if user is taken or email if email is taken
-    return to_dict(user) #else returns the user
+    return user.to_dict() #else returns the user
     
 @app.route('/get_user', methods=['GET'])
 def get_user():
@@ -40,7 +40,7 @@ def get_user():
     user = db.get_user(request_data['username'])
     if user == None:
         return {'data': user} #returns username if user is taken or email if email is taken
-    return to_dict(user) #else returns the user
+    return user.to_dict() #else returns the user
     
 @app.route('/edit_user', methods=['PUT'])
 def edit_user():
@@ -48,7 +48,7 @@ def edit_user():
     print(request_data)
     new_user = User(request_data['email'], request_data['username'], request_data['password'], request_data['bio'], request_data['profile_picture'], request_data['privacy_setting'])
     res = db.edit_user(new_user)
-    return to_dict(new_user) #else returns the user
+    return new_user.to_dict() #else returns the user
     
 @app.route('/delete_user', methods=['DELETE'])
 def delete_user():

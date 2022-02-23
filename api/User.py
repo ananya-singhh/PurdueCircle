@@ -23,7 +23,6 @@ class User(object):
             'bio': self.bio,
             'privacy_setting': self.privacy_setting,
             'profile_picture': self.profile_picture,
-            'password': self.password,
             'followers': self.followers,
             'following': self.following,
             'blocked': self.blocked,

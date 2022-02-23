@@ -56,6 +56,24 @@ class db_interface(object):
             
     #delete user with username
     def delete_user(self, username):
+        user = to_dict(self.get_user(username))
+                
+        followers = user['followers']
+        for follower in followers:
+            self.users.document(follower).update({u'following': firestore.ArrayRemove([username])})
+        
+        following = user['following']
+        for following_ in following:
+            self.users.document(following_).update({u'followers': firestore.ArrayRemove([username])})
+        
+        blocked = user['blocked']
+        for blocked_ in blocked:
+            self.users.document(blocked_).update({u'blocked_by': firestore.ArrayRemove([username])})
+        
+        blocked_by = user['blocked_by']
+        for blocked_by_ in blocked_by:
+            self.users.document(blocked_by_).update({u'blocked': firestore.ArrayRemove([username])})
+        
         user_to_del = self.users.document(username)
         user_to_del.delete()
         if self.users.where(u'username', u'==', username).get():

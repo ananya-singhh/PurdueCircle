@@ -3,8 +3,6 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'

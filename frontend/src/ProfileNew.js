@@ -28,7 +28,7 @@ function ProfileNew() {
       <Card.Text>
         {user['bio']}
       </Card.Text>
-      <Button variant="primary">Edit Profile</Button>
+      <Button variant="primary" href="/EditProfile">Edit Profile</Button>
     </Card.Body>
   </Card>
   </Container>

@@ -13,7 +13,7 @@ function SearchResults() {
 
       <ListGroup variant="flush">
         {list.map((item) => (
-          <ListGroup.Item action variant="light" action href="#link1" onClick={() => navigate('/Profile/'+item)}>{item}</ListGroup.Item>
+          <ListGroup.Item action variant="light" action onClick={() => navigate('/Profile/'+item)}>{item}</ListGroup.Item>
         ))}
       </ListGroup>
     </Container>

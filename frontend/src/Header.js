@@ -8,6 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import { useNavigate } from 'react-router-dom';
+import InlineAlert from './InlineAlert';
 
 function Header() {
 	
@@ -27,6 +28,16 @@ function Header() {
 		navigate('/');
 	}
 	const handleShow = () => setShow(true);
+
+	const [query, setQuery] = useState("")
+
+	function handleSearch() {
+		if(query.length > 0) {
+			navigate('SearchResults/' + query);
+			window.location.reload(false);
+		} else alert('search is empty')
+
+	}
 	  
     if (window.location.pathname === '/Login' || window.location.pathname === '/signup')
 		return (
@@ -97,14 +108,15 @@ function Header() {
 			  <Nav className="me-auto">
 			</Nav>
 
-			  <Form className="d-flex">
+			  <Form className="d-flex" onSubmit={handleSearch}>
         		<FormControl
           		type="text"
           		placeholder="Search For Users"
           		className="me-2"
           		aria-label="Search"
+				onChange = {e => setQuery(e.target.value)} value={query}
         		/>
-        		<Button href="/SearchResults" variant="outline-success">Search</Button>
+        		<Button type='submit' variant="outline-success">Search</Button>
       			</Form>
 			  </Navbar.Collapse>
 			  </Container>

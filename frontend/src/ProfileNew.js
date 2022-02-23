@@ -10,11 +10,10 @@ function ProfileNew() {
 
   
 
-    const user = JSON.parse(localStorage.getItem('user'));
-    const username = useParams()['username'];
-    console.log(user['username'] + " " + username);
+  const user = JSON.parse(localStorage.getItem('user'));
+  const username = useParams()['username'];
 
-  if(username === user['username']) {
+  if(user && username === user['username']) {
 
   return (
   <Container className="App-pfpage">

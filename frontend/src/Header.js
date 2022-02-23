@@ -5,6 +5,8 @@ import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
 import { useNavigate } from 'react-router-dom';
 
 function Header() {
@@ -65,14 +67,13 @@ function Header() {
 			  <Navbar.Brand>PurdueCircle</Navbar.Brand>
 			  <Navbar.Toggle aria-controls="responsive-navbar-nav" />
 			  <Navbar.Collapse id="responsive-navbar-nav" collapseOnSelect="true">
-				<Nav className="me-auto">
-				</Nav>
+				
+
 				<Nav>
-				  <Nav.Link href="/">Search for User</Nav.Link>
 				  <Nav.Link href="/profile">Create Profile</Nav.Link>
 				  <Nav.Link href="/message">Direct Message</Nav.Link>
 				  <NavDropdown title={user['username']} id="navbarScrollingDropdown">
-					  <NavDropdown.Item href="/editprofile">Edit Profile</NavDropdown.Item>
+					  <NavDropdown.Item onClick={() => navigate('/Profile/'+user['username'])}>View Profile</NavDropdown.Item>
 					  <NavDropdown.Item href="/changepwd">Change Password</NavDropdown.Item>
 					  <NavDropdown.Divider />
 					  <NavDropdown.Item onClick={handleShow}>Logout</NavDropdown.Item>
@@ -92,6 +93,19 @@ function Header() {
 					</Modal.Footer>
 					</Modal>
 			  </Nav>
+
+			  <Nav className="me-auto">
+			</Nav>
+
+			  <Form className="d-flex">
+        		<FormControl
+          		type="text"
+          		placeholder="Search For Users"
+          		className="me-2"
+          		aria-label="Search"
+        		/>
+        		<Button href="/SearchResults" variant="outline-success">Search</Button>
+      			</Form>
 			  </Navbar.Collapse>
 			  </Container>
 			</Navbar>

@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory
 from firebase_admin import credentials, firestore, initialize_app
 from flask_cors import CORS
-
 from api.User import User
 from api.db_interface import db_interface
 from api.Helper import *

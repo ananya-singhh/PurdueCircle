@@ -8,6 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 import Image from 'react-bootstrap/Image'
+import FigureImage from 'react-bootstrap/FigureImage'
 
 import pic1 from "./images/1.jpg";
 import pic2 from "./images/2.jpg";
@@ -148,7 +149,7 @@ function ProfileNew() {
   function callback() {
     console.log("WE MADE IT")
     console.log(blocked)
-    document.getElementById('toggle-block').checked=blocked
+    //document.getElementById('toggle-block').checked=blocked
     if(blocked) {
       blockedText="Block";
     } else {
@@ -177,8 +178,8 @@ function ProfileNew() {
   <Container className="App-pfpage">
   <Card className="text-center" bg="light" style={{ width: '18rem' }}>
     <Card.Body>
-
-    <Card.Img as={Image} src={pic1} roundedCircle={true} alt="Card image" /> 
+    <FigureImage as={Image} width={125} height={125} src={pics[currentUser['profile_picture']]} roundedCircle={true} id="pfp" alt="Card image"/>
+    
 
       <Card.Title>{user ? user['username'] : "loading"}</Card.Title>
       <Row>
@@ -199,7 +200,7 @@ function ProfileNew() {
     <Card className="text-center" bg="light" style={{ width: '18rem' }}>
       <Card.Body>
 
-      <Card.Img as={Image} src={pic1} roundedCircle={true} alt="Card image" />
+      <FigureImage as={Image} width={125} height={125} src={pics[user['profile_picture']]} roundedCircle={true} id="pfp" alt="Card image"/>
 
         <Card.Title>{user ? user['username'] : "loading"}</Card.Title>
         <Row>

@@ -51,8 +51,8 @@ class db_interface(object):
 
     
     #edit user with given info
-    def edit_user(self, user, updates: dict):
-        self.users.document(user.username).update(updates) # update is perfect for this
+    def edit_user(self, username, updates: dict):
+        self.users.document(username).update(updates) # update is perfect for this
             
     #delete user with username
     def delete_user(self, username):

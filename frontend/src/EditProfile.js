@@ -12,6 +12,7 @@ import FigureImage from 'react-bootstrap/FigureImage'
 import Image from 'react-bootstrap/Image'
 import ListGroup from 'react-bootstrap/ListGroup';
 import Modal from 'react-bootstrap/Modal';
+import axios from 'axios';
 
 import pic1 from "./images/1.jpg";
 import pic2 from "./images/2.jpg";
@@ -23,15 +24,12 @@ import pic6 from "./images/6.jpg";
 
 
 function EditProfile() { 
-  var user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('user'));
 
     const pics = [pic1, pic2, pic3, pic4, pic5, pic6];
 
-    const [edit, setEdit] = useState({bio: user['bio'], image: user['profile_picture'], privacy: -1});
+    const [edit, setEdit] = useState({bio: user['bio'], image: user['profile_picture'], privacy: user['privacy_setting']});
     const navigate = useNavigate();
-
-    const username = useParams()['username'];
-    console.log(user['username'] + " " + username);
 
     const [show, setShow] = useState(false);
 
@@ -42,24 +40,57 @@ function EditProfile() {
         document.getElementById("pfp").src = arg;
         //console.log(pics.indexOf(arg));
         //setEdit({...edit, profile_picture: pics.indexOf(arg)});
-        edit.profile_picture = pics.indexOf(arg);
-        console.log(edit.profile_picture);
+        edit.image = pics.indexOf(arg);
       }
     }
     
     function saveChanges() {
-      
+      console.log("made it to save changes ig")
+      console.log(edit.image)
+      axios({
+        method: 'put',
+        url: 'http://127.0.0.1:5000/edit_user',
+        data: {
+          username: user['username'], 
+          bio: edit.bio,
+          profile_picture: edit.image,
+          privacy_setting: edit.privacy,
+        }
+      }).then( res => {
+        
+        console.log(res);
+        user['bio'] = edit.bio
+        user['profile_picture'] = edit.image
+        user['privacy_setting'] = edit.privacy
+        console.log(user)
+        localStorage.setItem('user', JSON.stringify(user))
+        navigate('/Profile/'+ user['username'])
+          
+      }).catch(error => {
+        console.log(error);
+        //navigate("/404");
+      })
     }
     
     const handleYes = () => { //TODO: DELETE THE ACC
       setShow(false);
-      localStorage.removeItem('user');
-      navigate('/');
+      axios({
+        method: 'delete',
+        url: 'http://127.0.0.1:5000/delete_user?username=' + user['username'],
+      }).then( res => {
+        localStorage.removeItem('user')
+        navigate('/')
+          
+      }).catch(error => {
+        console.log(error);
+        //navigate("/404");
+      })
     }
     const handleNo = () => {
       setShow(false);
     }
     const areYouSure = () => setShow(true);
+      
 
 
   return (
@@ -67,7 +98,7 @@ function EditProfile() {
     <Card className="text-center" bg="light" style={{ width: '18rem' }}>
     <Card.Body>
 
-    <FigureImage as={Image} width={125} height={125} src={pic1} roundedCircle={true} id="pfp" alt="Card image"/> 
+    <FigureImage as={Image} width={125} height={125} src={pics[user['profile_picture']]} roundedCircle={true} id="pfp" alt="Card image"/> 
     <div style={{marginTop: 10}}>
     <DropdownButton title="Change Profile Picture" id="picsbar" flip={true}>
         <ListGroup variant="flush">
@@ -93,7 +124,7 @@ function EditProfile() {
 
 
   
-    <Form.Group className="mb-3" controlId="formBasicEmail">
+    <Form.Group className="mb-3">
       <Form.Label>Edit Bio:</Form.Label>
       <Form.Control type="email" placeholder="Enter a bio" onChange = {e => setEdit({...edit, bio: e.target.value})} value={edit.bio}/>
     </Form.Group>
@@ -112,12 +143,12 @@ function EditProfile() {
     </Form.Group>
 
     <div class="col-sm-12 text-center">
-        <Button type= "submit" id="follow" class="btn btn-primary btn-md center-block" Style="width: 100px; margin-right: 25px;" OnClick={saveChanges()} >Confirm</Button>
+        <Button type= "submit" id="follow" class="btn btn-primary btn-md center-block" Style="width: 100px; margin-right: 25px;" onClick={ () => saveChanges()} >Confirm</Button>
          <Button id="block" variant="warning" class="btn btn-warning btn-md center-block" Style="width: 100px;" onClick={() => navigate('/Profile/'+user['username'])}>Cancel</Button>
          <Button id="del" variant="danger" class="btn btn-danger btn-md center-block" Style="width: 100px; margin-top: 25px;" onClick={areYouSure}>Delete Account</Button>
          <Modal show={show} onHide={handleNo}>
 					<Modal.Header closeButton>
-					  <Modal.Title>Logout</Modal.Title>
+					  <Modal.Title>Delete Account</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>Are you sure you want to delete your account?</Modal.Body>
 					<Modal.Footer>

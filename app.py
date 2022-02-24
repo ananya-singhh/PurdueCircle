@@ -45,9 +45,11 @@ def get_user():
 def edit_user():
     request_data = request.get_json()
     print(request_data)
-    new_user = User(request_data['email'], request_data['username'], request_data['password'], request_data['bio'], request_data['profile_picture'], request_data['privacy_setting'])
-    res = db.edit_user(new_user)
-    return new_user.to_dict() #else returns the user
+    copy = request_data.copy()
+    copy.pop('username')
+    print(copy)
+    res = db.edit_user(request_data['username'], copy)
+    return {"pog": "pog"} #else returns the user
     
 @app.route('/delete_user', methods=['DELETE'])
 def delete_user():

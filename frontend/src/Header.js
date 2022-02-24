@@ -22,11 +22,14 @@ function Header() {
 
 	const user = JSON.parse(localStorage.getItem('user'));
 
-	const handleClose = () => {
+	const handleYes = () => { 
 		setShow(false);
 		localStorage.removeItem('user');
 		navigate('/');
-	}
+	  }
+	  const handleNo = () => {
+		setShow(false);
+	  }
 	const handleShow = () => setShow(true);
 
 	const [query, setQuery] = useState("")
@@ -89,16 +92,16 @@ function Header() {
 					  <NavDropdown.Divider />
 					  <NavDropdown.Item onClick={handleShow}>Logout</NavDropdown.Item>
 				  </NavDropdown>
-					<Modal show={show} onHide={handleClose}>
+					<Modal show={show} onHide={handleNo}>
 					<Modal.Header closeButton>
 					  <Modal.Title>Logout</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>Are you sure you want to Logout?</Modal.Body>
 					<Modal.Footer>
-					  <Button variant="secondary" onClick={handleClose}>
+					  <Button variant="secondary" onClick={handleNo}>
 						No
 					  </Button>
-					  <Button variant="primary" onClick={handleClose}>
+					  <Button variant="primary" onClick={handleYes}>
 						Yes
 					  </Button>
 					</Modal.Footer>

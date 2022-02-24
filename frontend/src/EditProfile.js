@@ -11,6 +11,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import FigureImage from 'react-bootstrap/FigureImage'
 import Image from 'react-bootstrap/Image'
 import ListGroup from 'react-bootstrap/ListGroup';
+import Modal from 'react-bootstrap/Modal';
 
 import pic1 from "./images/1.jpg";
 import pic2 from "./images/2.jpg";
@@ -49,6 +50,16 @@ function EditProfile() {
     function saveChanges() {
       
     }
+    
+    const handleYes = () => { //TODO: DELETE THE ACC
+      setShow(false);
+      localStorage.removeItem('user');
+      navigate('/');
+    }
+    const handleNo = () => {
+      setShow(false);
+    }
+    const areYouSure = () => setShow(true);
 
 
   return (
@@ -102,7 +113,22 @@ function EditProfile() {
 
     <div class="col-sm-12 text-center">
         <Button type= "submit" id="follow" class="btn btn-primary btn-md center-block" Style="width: 100px; margin-right: 25px;" OnClick={saveChanges()} >Confirm</Button>
-         <Button id="block" class="btn btn-danger btn-md center-block" Style="width: 100px;" onClick={() => navigate('/Profile/'+user['username'])}>Cancel</Button>
+         <Button id="block" variant="warning" class="btn btn-warning btn-md center-block" Style="width: 100px;" onClick={() => navigate('/Profile/'+user['username'])}>Cancel</Button>
+         <Button id="del" variant="danger" class="btn btn-danger btn-md center-block" Style="width: 100px; margin-top: 25px;" onClick={areYouSure}>Delete Account</Button>
+         <Modal show={show} onHide={handleNo}>
+					<Modal.Header closeButton>
+					  <Modal.Title>Logout</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>Are you sure you want to delete your account?</Modal.Body>
+					<Modal.Footer>
+					  <Button variant="secondary" onClick={handleNo}>
+						No
+					  </Button>
+					  <Button variant="primary" onClick={handleYes}>
+						Yes
+					  </Button>
+					</Modal.Footer>
+					</Modal>
      </div>
 
     </Form>

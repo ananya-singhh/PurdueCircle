@@ -85,7 +85,7 @@ function Header() {
 				
 
 				<Nav>
-				  <Nav.Link href="/profile">Create Profile</Nav.Link>
+				  <Nav.Link href="/profile">Create Post</Nav.Link>
 				  <Nav.Link href="/message">Direct Message</Nav.Link>
 				  <NavDropdown title={user['username']} id="navbarScrollingDropdown">
 					  <NavDropdown.Item onClick={() => navigate('/Profile/'+user['username'])}>View Profile</NavDropdown.Item>

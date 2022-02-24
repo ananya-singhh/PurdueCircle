@@ -25,15 +25,16 @@ function Signup() {
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
   };
-  
+  const specials = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
    const handleSubmit = (event) => {
     const form = event.currentTarget;
 	event.preventDefault();
-
-    if (form.checkValidity() === false) {
-      event.stopPropagation();
-	  setValidated(true);
-    } else {
+	
+    if (!(specials.test(user.password)) || user.password.length < 8 || !(/[0-9]/.test(user.password)) || !(/[A-Z]/.test(user.password))) {
+      alert("Password does not meet listed requirements!" + user.password)
+    } else if (user.password !== user.password2) {
+		alert("Passwords do not match!")
+	} else {
 		axios({
 			method: 'post',
 			url: 'http://127.0.0.1:5000/create_user',
@@ -128,7 +129,6 @@ function Signup() {
 				minLength={8}
 				value={user.password}
 				valueAgain={user.password2}
-				onChange={(isValid) => {}}
 				/>
 		</Form>
 		</Col>

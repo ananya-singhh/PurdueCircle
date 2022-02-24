@@ -7,10 +7,21 @@ import Col from 'react-bootstrap/Col';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
+import Image from 'react-bootstrap/Image'
+
+import pic1 from "./images/1.jpg";
+import pic2 from "./images/2.jpg";
+import pic3 from "./images/3.jpg";
+import pic4 from "./images/4.jpg";
+import pic5 from "./images/5.jpg";
+import pic6 from "./images/6.jpg";
+
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'
 import ToggleButton from 'react-bootstrap/ToggleButton';
 
 function ProfileNew() { 
+
+  const pics = [pic1, pic2, pic3, pic4, pic5, pic6];
 
   
   const navigate = useNavigate();
@@ -166,6 +177,9 @@ function ProfileNew() {
   <Container className="App-pfpage">
   <Card className="text-center" bg="light" style={{ width: '18rem' }}>
     <Card.Body>
+
+    <Card.Img as={Image} src={pic1} roundedCircle={true} alt="Card image" /> 
+
       <Card.Title>{user ? user['username'] : "loading"}</Card.Title>
       <Row>
       <Col md={4}>{user['followers'] ? user['followers'].length + " Followers" : "Loading"}</Col>
@@ -184,6 +198,9 @@ function ProfileNew() {
     <Container className="App-pfpage">
     <Card className="text-center" bg="light" style={{ width: '18rem' }}>
       <Card.Body>
+
+      <Card.Img as={Image} src={pic1} roundedCircle={true} alt="Card image" />
+
         <Card.Title>{user ? user['username'] : "loading"}</Card.Title>
         <Row>
         <Col md={4}>{user['followers'] ? user['followers'].length + " Followers" : "Loading"}</Col>

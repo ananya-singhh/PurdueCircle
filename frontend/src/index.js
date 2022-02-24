@@ -27,7 +27,7 @@ const Routing = () => {
         <Route path="/posts" element={<Main />} />
         <Route path="/Profile/:username" element={<ProfileNew />} />
         <Route path="/EditProfile" element={<EditProfile />} />
-        <Route path="/SearchResults" element={<SearchResults />} />
+        <Route path="/SearchResults/:query" element={<SearchResults />} />
       </Routes>
 	  <Footer />
     </Router>

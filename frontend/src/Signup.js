@@ -9,13 +9,14 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import InlineAlert from './InlineAlert';
 import Alert from 'react-bootstrap/Alert';
+import PasswordChecklist from "react-password-checklist";
 
 function Signup() { 
 
   const navigate = useNavigate();
   const [passwordShown, setPasswordShown] = useState(false);
   const [validated, setValidated] = useState(false);
-  const [user, setUser] = useState({username: "", email: "", password: ""})
+  const [user, setUser] = useState({username: "", email: "", password: "", password2: ""})
   
   const formRef = useRef(null);
   
@@ -103,7 +104,7 @@ function Signup() {
 		  
 		  <Form.Group as={Col} controlId="formRePassword">
 			<Form.Label>Re-enter</Form.Label>
-			<Form.Control required type={passwordShown ? "text" : "password"} placeholder="Password" />
+			<Form.Control required type={passwordShown ? "text" : "password"} placeholder="Password" onChange = {e => setUser({...user, password2: e.target.value})} value={user.password2}/>
 			<Form.Control.Feedback type="invalid">
               Please re-enter password.
             </Form.Control.Feedback>
@@ -122,11 +123,18 @@ function Signup() {
 				<Button variant="link" onClick={handleLogin}>Login instead</Button>
 			  </Col>
 		  </Row>
-
+				<PasswordChecklist
+				rules={["minLength","specialChar","number","capital","match"]}
+				minLength={8}
+				value={user.password}
+				valueAgain={user.password2}
+				onChange={(isValid) => {}}
+				/>
 		</Form>
 		</Col>
 		<Col md={3} lg={4} />
 		</Row>
+		
 		</Container>
 		</>
 		);

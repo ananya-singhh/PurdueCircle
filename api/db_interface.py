@@ -107,8 +107,8 @@ class db_interface(object):
     def unblock_user(self, username, username_to_unblock):
         user = self.users.document(username)
         user_to_unblock = self.users.document(username_to_unblock)
-        user.update({u'following': firestore.ArrayRemove([username_to_unblock])})
-        user_to_unblock.update({u'followers': firestore.ArrayRemove([username])})
+        user.update({u'blocked': firestore.ArrayRemove([username_to_unblock])})
+        user_to_unblock.update({u'blocked_by': firestore.ArrayRemove([username])})
             
     #create a new post
     def create_post(self):

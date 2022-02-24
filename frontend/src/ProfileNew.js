@@ -35,6 +35,10 @@ function ProfileNew() {
   
 
   const [checked, setChecked] = useState(false); //change to set to true or false depending on if followed
+  var followingText = "Unfollow";
+  if(checked) {
+    followingText="Follow";
+  }
   
 
   const handleFollowing = (e) => { //you can add how to handle following/unfollowing in here
@@ -146,36 +150,23 @@ function ProfileNew() {
       //navigate("/404");
     })
   }
-  function callback() {
+  function callback() { // doesnt work cursed cursed cursed
     console.log("WE MADE IT")
     console.log(blocked)
     //document.getElementById('toggle-block').checked=blocked
-    if(blocked) {
-      blockedText="Block";
-    } else {
-      blockedText="Unblock";
-    }
-    if(checked) {
-      followingText="Block";
-    } else {
-      followingText="Unblock";
-    }
   }
 
   useEffect(() => {
       getUser()
-      setBlocked(true, callback());
-      // !currentUser['blocked'].includes(user['username'])
+      setBlocked(!currentUser['blocked'].includes(user['username']), callback());
+      setChecked(!currentUser['following'].includes(user['username']))
     }, [url]);
 
   
 
   
 
-  var followingText = "Unfollow";
-  if(checked) {
-    followingText="Follow";
-  }
+  
 
   if(currentUser && username === currentUser['username']) {
 

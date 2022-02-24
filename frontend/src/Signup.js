@@ -29,13 +29,16 @@ function Signup() {
    const handleSubmit = (event) => {
     const form = event.currentTarget;
 	event.preventDefault();
+
+
 	if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(user.email)) {
 		alert("Enter a valid email address")
-	}
-    if (!(specials.test(user.password)) || user.password.length < 8 || !(/[0-9]/.test(user.password)) || !(/[A-Z]/.test(user.password))) {
-      alert("Password does not meet listed requirements!" + user.password)
+	} else if (!(specials.test(user.password)) || user.password.length < 8 || !(/[0-9]/.test(user.password)) || !(/[A-Z]/.test(user.password))) {
+      alert("Password does not meet listed requirements!")
     } else if (user.password !== user.password2) {
 		alert("Passwords do not match!")
+	} else if (user.username.length === 0 || user.password.length === 0) {
+		alert("Fill in all the stuff")
 	} else {
 		axios({
 			method: 'post',

@@ -7,6 +7,9 @@ import Col from 'react-bootstrap/Col';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
+import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'
+import ToggleButton from 'react-bootstrap/ToggleButton';
+
 function ProfileNew() { 
 
   const currentUser = JSON.parse(localStorage.getItem('user'));
@@ -15,6 +18,37 @@ function ProfileNew() {
   const [user, setUser] = useState({})
   
   const url = window.location.pathname.split('/').pop();
+  
+
+  const [checked, setChecked] = useState(false); //change to set to true or false depending on if followed
+  var followingText = "Unfollow";
+  if(checked) {
+    followingText="Follow";
+  }
+
+  const handleFollowing = (e) => { //you can add how to handle following/unfollowing in here
+		setChecked(e.currentTarget.checked);
+    if(checked) {
+      followingText="Follow";
+    } else {
+      followingText="Unfollow";
+    }
+	}
+
+  const [blocked, setBlocked] = useState(false); //change to set to true or false depending on if blocked
+  var blockedText = "Unblock";
+  if(blocked) {
+    blockedText="Block";
+  }
+
+  const handleBlocking = (e) => { //you can add how to handle blocking/unblocking in here
+		setBlocked(e.currentTarget.checked);
+    if(blocked) {
+      blockedText="Block";
+    } else {
+      blockedText="Unblock";
+    }
+	}
 
   useEffect(() => {
     axios({
@@ -63,10 +97,38 @@ function ProfileNew() {
         <Card.Text>
           {user ? user['bio'] : "Loading"}
         </Card.Text>
-        <div class="col-sm-12 text-center">
-        <button id="follow" class="btn btn-primary btn-md center-block" Style="width: 100px; margin-right: 25px;" OnClick="follow" >Follow</button>
-         <button id="blockk" class="btn btn-danger btn-md center-block" Style="width: 100px;" OnClick="block" >Block</button>
-     </div>
+        <Row>
+        <Col md={{ span: 4, offset: 1 }}>
+        <ToggleButton
+        className="mb-2"
+        id="toggle-check"
+        type="checkbox"
+        variant="outline-primary"
+        checked={checked}
+        value="1"
+        onChange={handleFollowing}
+        Style="margin-right=25px;"
+      >
+        {followingText}
+      </ToggleButton>
+      </Col>
+
+      <Col md={{ span: 4, offset: 1 }}>
+      <ToggleButton
+        className="mb-2"
+        id="toggle-block"
+        type="checkbox"
+        variant="outline-primary"
+        checked={blocked}
+        value="1"
+        onChange={handleBlocking}
+        Style="margin-right=25px;"
+      >
+        {blockedText}
+      </ToggleButton>
+      </Col>
+      </Row>
+
       </Card.Body>
     </Card>
     </Container>

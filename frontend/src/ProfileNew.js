@@ -78,7 +78,7 @@ function ProfileNew() {
     }
 	}
 
-  const [blocked, setBlocked] = useState(); //change to set to true or false depending on if blocked
+  const [blocked, setBlocked] = useState(false); //change to set to true or false depending on if blocked
     var blockedText = "Unblock";
     if(blocked) {
       blockedText="Block";
@@ -155,12 +155,17 @@ function ProfileNew() {
     } else {
       blockedText="Unblock";
     }
+    if(checked) {
+      followingText="Block";
+    } else {
+      followingText="Unblock";
+    }
   }
 
   useEffect(() => {
       getUser()
-      setBlocked(!currentUser['blocked'].includes(user['username']), callback());
-      
+      setBlocked(true, callback());
+      // !currentUser['blocked'].includes(user['username'])
     }, [url]);
 
   

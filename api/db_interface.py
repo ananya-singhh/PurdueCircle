@@ -107,8 +107,8 @@ class db_interface(object):
     def unblock_user(self, username, username_to_unblock):
         user = self.users.document(username)
         user_to_unblock = self.users.document(username_to_unblock)
-        user.update({u'following': firestore.ArrayRemove([username_to_unblock])})
-        user_to_unblock.update({u'followers': firestore.ArrayRemove([username])})
+        user.update({u'blocked': firestore.ArrayRemove([username_to_unblock])})
+        user_to_unblock.update({u'blocked_by': firestore.ArrayRemove([username])})
             
     #create a new post
     def create_post(self):
@@ -163,18 +163,15 @@ class db_interface(object):
     #search for users
     def search_user(self, query):
         res = []
-        end = query[:]
-        end[-1] = chr(ord(query[-1]) + 1) # increment last char of end
+        end = query[0:-1]
+        end += str(chr(ord(query[-1]) + 1)) # increment last char of end
+        print(f'initial: {query}    end: {end}' )
         
         users = self.users.where('username', '>=', query).where('username', '<', end).stream() # cursed query to find users that start with the query
-         
         for user in users:
-            res.append(user.username) # build list of usernames to return
+            res.append(user.to_dict()['username']) # build list of usernames to return
+        print(res)
         return res
-    
-    #gets a user by username
-    def get_user(self, username):
-        return User(**self.users.document(username).get().to_dict())
     
     #tag post with topic
     def tag_post_with_topic(self):

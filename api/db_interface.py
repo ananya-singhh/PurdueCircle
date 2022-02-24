@@ -173,10 +173,6 @@ class db_interface(object):
         print(res)
         return res
     
-    #gets a user by username
-    def get_user(self, username):
-        return User(**self.users.document(username).get().to_dict())
-    
     #tag post with topic
     def tag_post_with_topic(self):
         # TODO: implement

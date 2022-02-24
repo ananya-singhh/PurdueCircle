@@ -75,7 +75,7 @@ function Header() {
 			<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 
 			  <Container>
-			  <Navbar.Brand onClick={navigate('/homepage')}>PurdueCircle</Navbar.Brand>
+			  <Navbar.Brand onClick= {() => navigate('/homepage')}>PurdueCircle</Navbar.Brand>
 			  <Navbar.Toggle aria-controls="responsive-navbar-nav" />
 			  <Navbar.Collapse id="responsive-navbar-nav" collapseOnSelect="true">
 				

@@ -1,11 +1,11 @@
 from flask import Flask, request, jsonify, send_from_directory
 from firebase_admin import credentials, firestore, initialize_app
 from flask_cors import CORS
-from itsdangerous import json
 
 from api.User import User
 from api.db_interface import db_interface
 from api.Helper import *
+import json
 
 app = Flask(__name__, static_url_path='', static_folder='frontend/build')
 CORS(app)
@@ -37,8 +37,7 @@ def create_user():
     
 @app.route('/get_user', methods=['GET'])
 def get_user():
-    request_data = request.get_json()
-    user = db.get_user(request_data['username'])
+    user = db.get_user(request.args['username'])
     if user == None:
         return {'data': user} #returns username if user is taken or email if email is taken
     return user.to_dict() #else returns the user
@@ -53,8 +52,7 @@ def edit_user():
     
 @app.route('/delete_user', methods=['DELETE'])
 def delete_user():
-    request_data = request.get_json()
-    username = request_data['username']
+    username = request.args['username']
     res = db.delete_user(username)
     if not res:
         return {'data': 'Failed to delete user'}

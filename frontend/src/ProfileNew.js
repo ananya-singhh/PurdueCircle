@@ -1,31 +1,52 @@
-import { React } from 'react';
+import { React, useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 function ProfileNew() { 
 
   
 
-  const user = JSON.parse(localStorage.getItem('user'));
-  const username = useParams()['username'];
+  const currentUser = JSON.parse(localStorage.getItem('user'));
+  
+  console.log(currentUser)
 
-  if(user && username === user['username']) {
+  const username = useParams()['username'];
+  const [user, setUser] = useState({})
+  
+  const url = window.location.pathname.split('/').pop();
+
+  useEffect(() => {
+    axios({
+      method: 'get',
+      url: 'http://127.0.0.1:5000/get_user?username=' + username,
+    }).then( res => {
+      if (res.data.data) {
+        setUser(res.data)
+      } 
+    }).catch(error => {
+      console.error(error);
+      //navigate("/404");
+    })
+  }, [url]);
+
+  if(currentUser && username === currentUser['username']) {
 
   return (
   <Container className="App-pfpage">
   <Card className="text-center" bg="light" style={{ width: '18rem' }}>
     <Card.Body>
-      <Card.Title>{user['username']}</Card.Title>
+      <Card.Title>{currentUser['username']}</Card.Title>
       <Row>
       <Col md={4}>0 Followers</Col>
-      <Col md={{ span: 4, offset: 4 }}>0 Following</Col>
+      <Col md={{ span: 4, offset: 4 }}>{currentUser['following'].length + " Followers"}</Col>
       </Row>
       <Card.Text>
-        {user['bio']}
+        {currentUser['bio']}
       </Card.Text>
       <Button variant="primary" href="/EditProfile">Edit Profile</Button>
     </Card.Body>
@@ -33,11 +54,7 @@ function ProfileNew() {
   </Container>
   );
 
-  }
-
-  
-
-  return (
+  } else return (
     <Container className="App-pfpage">
     <Card className="text-center" bg="light" style={{ width: '18rem' }}>
       <Card.Body>

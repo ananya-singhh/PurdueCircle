@@ -9,11 +9,7 @@ import axios from 'axios';
 
 function ProfileNew() { 
 
-  
-
   const currentUser = JSON.parse(localStorage.getItem('user'));
-  
-  console.log(currentUser)
 
   const username = useParams()['username'];
   const [user, setUser] = useState({})
@@ -25,8 +21,9 @@ function ProfileNew() {
       method: 'get',
       url: 'http://127.0.0.1:5000/get_user?username=' + username,
     }).then( res => {
-      if (res.data.data) {
+      if (!res.data.data) {
         setUser(res.data)
+        console.log(user)
       } 
     }).catch(error => {
       console.error(error);
@@ -40,13 +37,13 @@ function ProfileNew() {
   <Container className="App-pfpage">
   <Card className="text-center" bg="light" style={{ width: '18rem' }}>
     <Card.Body>
-      <Card.Title>{currentUser['username']}</Card.Title>
+      <Card.Title>{user ? user['username'] : "loading"}</Card.Title>
       <Row>
-      <Col md={4}>0 Followers</Col>
-      <Col md={{ span: 4, offset: 4 }}>{currentUser['following'].length + " Followers"}</Col>
+      <Col md={4}>{user['followers'] ? user['followers'].length + " Followers" : "Loading"}</Col>
+      <Col md={{ span: 4, offset: 4 }}>{user['following'] ?user['following'].length + " Following" : "Loading"}</Col>
       </Row>
       <Card.Text>
-        {currentUser['bio']}
+        {user ? user['bio'] : "Loading"}
       </Card.Text>
       <Button variant="primary" href="/EditProfile">Edit Profile</Button>
     </Card.Body>
@@ -58,13 +55,13 @@ function ProfileNew() {
     <Container className="App-pfpage">
     <Card className="text-center" bg="light" style={{ width: '18rem' }}>
       <Card.Body>
-        <Card.Title>randomUsername</Card.Title>
+        <Card.Title>{user ? user['username'] : "loading"}</Card.Title>
         <Row>
-        <Col md={4}>0 Followers</Col>
-        <Col md={{ span: 4, offset: 4 }}>0 Following</Col>
+        <Col md={4}>{user['followers'] ? user['followers'].length + " Followers" : "Loading"}</Col>
+      <Col md={{ span: 4, offset: 4 }}>{user['following'] ?user['following'].length + " Following" : "Loading"}</Col>
         </Row>
         <Card.Text>
-          randomBio
+          {user ? user['bio'] : "Loading"}
         </Card.Text>
         <div class="col-sm-12 text-center">
         <button id="follow" class="btn btn-primary btn-md center-block" Style="width: 100px; margin-right: 25px;" OnClick="follow" >Follow</button>

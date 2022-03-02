@@ -39,48 +39,55 @@ function ProfileNew() {
   if(checked) {
     followingText="Follow";
   }
+
+  function checkFollowing() {
+    return currentUser['following'].includes(user['username']);
+  }
+
+  function checkBlocking() {
+    return currentUser['blocked'].includes(user['username']); // returns true if user is blocked by logged in user
+  }
   
 
   const handleFollowing = (e) => { //you can add how to handle following/unfollowing in here
-		setChecked(e.currentTarget.checked);
-    if(checked) {
-      followingText="Follow";
-      axios({
-        method: 'put',
-        url: 'http://127.0.0.1:5000/follow_user',
-        data: {
-          username: currentUser['username'],
-          username_to_follow: user['username'],
-        }
-      }).then( res => {
-        console.log("followed lol")
-        currentUser['following'].push(user['username']);
-        localStorage.setItem('user', JSON.stringify(currentUser));
-        getUser();
-      }).catch(error => {
-        console.error(error);
-        //navigate("/404");
-      })
-    } else {
-      followingText="Unfollow";
-      axios({
-        method: 'put',
-        url: 'http://127.0.0.1:5000/unfollow_user',
-        data: {
-          username: currentUser['username'],
-          username_to_unfollow: user['username'],
-        }
-      }).then( res => {
-        console.log("unfollowed lol")
-        currentUser['following'].pop(user['username']);
-        localStorage.setItem('user', JSON.stringify(currentUser));
-        getUser();
-      }).catch(error => {
-        console.error(error);
-        //navigate("/404");
-      })
-    }
+    axios({
+      method: 'put',
+      url: 'http://127.0.0.1:5000/follow_user',
+      data: {
+        username: currentUser['username'],
+        username_to_follow: user['username'],
+      }
+    }).then( res => {
+      console.log("followed lol")
+      currentUser['following'].push(user['username']);
+      localStorage.setItem('user', JSON.stringify(currentUser));
+      getUser()
+      //setChecked(!checked) // literally does nothing
+    }).catch(error => {
+      console.error(error);
+      //navigate("/404");
+    })
 	}
+
+  const handleUnfollowing = (e) => {
+    axios({
+      method: 'put',
+      url: 'http://127.0.0.1:5000/unfollow_user',
+      data: {
+        username: currentUser['username'],
+        username_to_unfollow: user['username'],
+      }
+    }).then( res => {
+      console.log("unfollowed lol")
+      currentUser['following'].pop(user['username']);
+      localStorage.setItem('user', JSON.stringify(currentUser));
+      //setChecked(!checked) // literally does nothing
+      getUser()
+    }).catch(error => {
+      console.error(error);
+      //navigate("/404");
+    })
+  }
 
   const [blocked, setBlocked] = useState(false); //change to set to true or false depending on if blocked
     var blockedText = "Unblock";
@@ -89,46 +96,44 @@ function ProfileNew() {
     }
 
   const handleBlocking = (e) => { //you can add how to handle blocking/unblocking in here
-		setBlocked(e.currentTarget.checked);
-    if(blocked) {
-      blockedText="Block";
-      axios({
-        method: 'put',
-        url: 'http://127.0.0.1:5000/block_user',
-        data: {
-          username: currentUser['username'],
-          username_to_block: user['username'],
-        }
-      }).then( res => {
-        console.log("blocked lol")
-        currentUser['blocked'].push(user['username']);
-        localStorage.setItem('user', JSON.stringify(currentUser));
-      }).catch(error => {
-        console.error(error);
-        //navigate("/404");
-      })
-    } else {
-      blockedText="Unblock";
-      if(currentUser['blocked'].includes(user['username'])) {
-        axios({
-          method: 'put',
-          url: 'http://127.0.0.1:5000/unblock_user',
-          data: {
-            username: currentUser['username'],
-            username_to_unblock: user['username'],
-        }
-        }).then( res => {
-          console.log("unblocked lol")
-          currentUser['blocked'].pop(user['username']);
-          localStorage.setItem('user', JSON.stringify(currentUser));
-        }).catch(error => {
-          console.error(error);
-          //navigate("/404");
-        })
+		axios({
+      method: 'put',
+      url: 'http://127.0.0.1:5000/block_user',
+      data: {
+        username: currentUser['username'],
+        username_to_block: user['username'],
       }
-      
-    }
+    }).then( res => {
+      console.log("blocked lol")
+      currentUser['blocked'].push(user['username']);
+      localStorage.setItem('user', JSON.stringify(currentUser));
+      setBlocked(!blocked)
+    }).catch(error => {
+      console.error(error);
+      //navigate("/404");
+    })
+     // does nothing, just changes state to force reload
 	}
+
+  const handleUnblocking = (e) => {
+    axios({
+      method: 'put',
+      url: 'http://127.0.0.1:5000/unblock_user',
+      data: {
+        username: currentUser['username'],
+        username_to_unblock: user['username'],
+    }
+    }).then( res => {
+      console.log("unblocked lol")
+      currentUser['blocked'].pop(user['username']);
+      localStorage.setItem('user', JSON.stringify(currentUser));
+      setBlocked(!blocked)
+    }).catch(error => {
+      console.error(error);
+      //navigate("/404");
+    })
+     // does nothing, just changes state to force reload
+  }
 
   if(currentUser && user['blocked'] && user['blocked'].includes(currentUser['username'])) {
     alert('This User has you blocked!')
@@ -143,23 +148,15 @@ function ProfileNew() {
       if (!res.data.data) {
         setUser(res.data);
         console.log(user);
-        
       } 
     }).catch(error => {
       console.error(error);
       //navigate("/404");
     })
   }
-  function callback() { // doesnt work cursed cursed cursed
-    console.log("WE MADE IT")
-    console.log(blocked)
-    //document.getElementById('toggle-block').checked=blocked
-  }
 
   useEffect(() => {
       getUser()
-      setBlocked(!currentUser['blocked'].includes(user['username']), callback());
-      setChecked(!currentUser['following'].includes(user['username']))
     }, [url]);
 
   
@@ -191,7 +188,9 @@ function ProfileNew() {
   </Container>
   );
 
-  } return (
+  } 
+  console.log("i rendered with the blocked status of: " + checkBlocking());
+  return (
     <Container className="App-pfpage">
     <Card className="text-center" bg="light" style={{ width: '18rem' }}>
       <Card.Body>
@@ -208,33 +207,59 @@ function ProfileNew() {
         </Card.Text>
         <Row>
         <Col md={{ span: 4, offset: 1 }}>
+          {user && checkFollowing() && (checked || !checked) ?
         <ToggleButton
         className="mb-2"
         id="toggle-check"
         type="checkbox"
         variant="outline-primary"
-        checked={checked}
+        checked={false}
         value="1"
-        onChange={handleFollowing}
+        onChange={handleUnfollowing}
         Style="margin-right=25px;"
       >
-        {followingText}
-      </ToggleButton>
+        Unfollow
+      </ToggleButton> :
+      <ToggleButton
+      className="mb-2"
+      id="toggle-check"
+      type="checkbox"
+      variant="outline-primary"
+      checked={true}
+      value="1"
+      onClick={handleFollowing}
+      Style="margin-right=25px;"
+    >
+      Follow
+    </ToggleButton>}
       </Col>
 
       <Col md={{ span: 4, offset: 1 }}>
+        {user && checkBlocking() && (blocked || !blocked) ? 
       <ToggleButton
         className="mb-2"
         id="toggle-block"
         type="checkbox"
         variant="outline-primary"
-        checked={blocked}
+        checked={false}
         value="1"
-        onChange={handleBlocking}
+        onClick={handleUnblocking}
         Style="margin-right=25px;"
         >
-        {blockedText}
-      </ToggleButton>
+        Unblock
+      </ToggleButton> : 
+      <ToggleButton
+        className="mb-2"
+        id="toggle-block"
+        type="checkbox"
+        variant="outline-primary"
+        checked={true}
+        value="1"
+        onClick={handleBlocking}
+        Style="margin-right=25px;"
+        >
+        Block
+      </ToggleButton>}
       </Col>
       </Row>
 

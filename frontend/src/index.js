@@ -12,6 +12,7 @@ import Footer from './Footer';
 import ProfileNew from './ProfileNew';
 import EditProfile from './EditProfile';
 import SearchResults from './SearchResults';
+import SavedPosts from './SavedPosts';
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 
 /*ReactDOM.render(<App />, document.getElementById('root'));  */
@@ -22,6 +23,7 @@ const Routing = () => {
 	  <Header />
       <Routes>
         <Route path="/" element ={<DefHomepage />} />
+        <Route path="/SavedPosts" element ={<SavedPosts />} />
         <Route path="/Login" element={<Login />} />
 		    <Route path="/signup" element={<Signup />} />
         <Route path="/posts" element={<Main />} />

@@ -17,9 +17,9 @@ import pic4 from "./images/4.jpg";
 import pic5 from "./images/5.jpg";
 import pic6 from "./images/6.jpg";
 
-import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'
-import ToggleButton from 'react-bootstrap/ToggleButton';
 
+import ToggleButton from 'react-bootstrap/ToggleButton';
+import CommentsPage from './CommentsPage';
 //TODO: Add href to comments page, make a pretty like button, add actual values for likes and comments, add functionality for liking n commenting
 
 
@@ -27,7 +27,7 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
     
     function Post() {
         const [checked, setChecked] = useState(false);
-
+        const [commentsVisible, setCommentsVisible] = useState(false);
         const handleUnlike = (e) => {
             console.log("unliked");
             setChecked(!checked);
@@ -38,6 +38,13 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
         }
         function checkLiked() {
             return checked;
+        }
+        
+        function checkCommentsVisible() {
+            return commentsVisible;
+        }
+        const toggleComments = (e) => {
+            setCommentsVisible(!commentsVisible);
         }
         return (
             <Container className="App-post" Style="margin-bottom: 10px;">
@@ -54,8 +61,9 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
                 <Container>
                     <Row>
                         <Col md={{ span: 2 }}>0 Likes</Col>
-                        <Col md={{ span: 2 }}>0 Comments</Col>
-                        <Col md={{ span: 2, offset: 4}}>{(checkLiked()) ?
+                        <Col md={{ span: 3 }}>0 Comments</Col>
+                        <Col md={{span: 1, offset: 3}}><Button variant="link" onClick={toggleComments}>Comments</Button></Col>
+                        <Col md={{ span: 2, offset: 1}}>{(checkLiked()) ?
                         <ToggleButton
                         className="mb-2"
                         id="toggle-check"
@@ -80,7 +88,11 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
                         >
                         Like
                         </ToggleButton>}</Col>
-                        <Col md={{span: 1}}><Button variant="primary" href="./CommentsPage">Comments</Button></Col>
+                    </Row>
+                    <Row>
+                        
+                        {(checkCommentsVisible()) ? <CommentsPage  /> : null}
+                        
                     </Row>
                 </Container>
             </Card.Footer>

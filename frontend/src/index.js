@@ -13,7 +13,9 @@ import ProfileNew from './ProfileNew';
 import EditProfile from './EditProfile';
 import SearchResults from './SearchResults';
 import SavedPosts from './SavedPosts';
+
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import CommentsPage from './CommentsPage';
 
 /*ReactDOM.render(<App />, document.getElementById('root'));  */
 
@@ -30,6 +32,8 @@ const Routing = () => {
         <Route path="/Profile/:username" element={<ProfileNew />} />
         <Route path="/EditProfile" element={<EditProfile />} />
         <Route path="/SearchResults/:query" element={<SearchResults />} />
+        <Route path="/homepage" element={<Main />} />
+        <Route path="/CommentsPage" element={<CommentsPage />} />
       </Routes>
 	  <Footer />
     </Router>

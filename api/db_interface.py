@@ -122,13 +122,13 @@ class db_interface(object):
         return Post(username, post_info.id, topic, title, content, current_date)
         
     #edit a post
-    def edit_post(self):
-        # TODO: implement
-        pass
+    def edit_post(self, id, changes: dict):
+        self.posts.document(id).update(changes)
+        return True
     
     #delete a post
-    def delete_post(self):
-        # TODO: implement
+    def delete_post(self, id):
+        self.posts.document(id).delete()
         pass
     
     #create a new comment

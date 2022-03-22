@@ -27,7 +27,7 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 function CommentsPage() {
     return (
         <Container>
-        <Post />
+        
         
         <Card>
             <Card.Body>

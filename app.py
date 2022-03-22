@@ -100,6 +100,21 @@ def search_for_user():
         return {'data': 'No Results'}
     return json.dumps(list)
 
+@app.route('/create_post', methods=['POST'])
+def create_post():
+    request_data = request.get_json()
+    created_post = db.create_post(request_data['content'], request_data['title'], request_data['username'], request_data['topic'])
+    return to_dict(created_post)
+
+@app.route('/create_topic', methods=['POST'])
+def create_topic(): # returns exists if topic exists
+    request_data  = request.get_json()
+    topic_name = request_data['name']
+    if db.create_topic(topic_name):
+        return {'data': topic_name}
+    else: 
+        return {'data': 'exists'}
+
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -2,9 +2,10 @@ from hashlib import new
 from multiprocessing.dummy import Array
 from firebase_admin import credentials, firestore, initialize_app
 from .User import User
+from .Post import Post
 from random import random
 from .Helper import *
-
+import datetime
 
 class db_interface(object):
     def __init__(self):
@@ -12,7 +13,9 @@ class db_interface(object):
         cred = credentials.Certificate("api/key.json")
         initialize_app(cred)
         db = firestore.client()
-        self.users = db.collection('users')
+        self.users = db.collection(u'users')
+        self.posts = db.collection(u'posts')
+        self.topics = db.collection(u'topics')
         
     
     #checks if user with same username or email exists
@@ -111,18 +114,21 @@ class db_interface(object):
         user_to_unblock.update({u'blocked_by': firestore.ArrayRemove([username])})
             
     #create a new post
-    def create_post(self):
-        # TODO: implement
-        pass
+    def create_post(self, content, title, username, topic):
+        post = self.posts.document() # ref to new document
+        current_date = datetime.datetime.now(tz=datetime.timezone.utc)
+        post.set({'title': title, 'content': content, 'author': username, 'topic': topic, 'date_posted': current_date})
+        post_info = post.get()
+        return Post(username, post_info.id, topic, title, content, current_date)
         
     #edit a post
-    def edit_post(self):
-        # TODO: implement
-        pass
+    def edit_post(self, id, changes: dict):
+        self.posts.document(id).update(changes)
+        return True
     
     #delete a post
-    def delete_post(self):
-        # TODO: implement
+    def delete_post(self, id):
+        self.posts.document(id).delete()
         pass
     
     #create a new comment
@@ -189,9 +195,13 @@ class db_interface(object):
         pass
     
     #create a new topic
-    def create_topic(self):
-        # TODO: implement
-        pass
+    def create_topic(self, name):
+        topic = self.topics.document(name)
+        if topic.get().exists:
+            return False
+        else:
+            topic.set({'time_created': datetime.datetime.now(tz=datetime.timezone.utc)})
+            return True
     
     #search for a topic
     def search_topic(self):

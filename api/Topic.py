@@ -1,5 +1,5 @@
+from typing import List
 class Topic(object):
     
-    def __init__(self, label: str = None, topic_id: str = None):
+    def __init__(self, label: str = None):
         self.label = label
-        self.topic_id = topic_id

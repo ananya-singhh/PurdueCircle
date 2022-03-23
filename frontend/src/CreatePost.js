@@ -21,7 +21,7 @@ import pic6 from "./images/6.jpg";
 
 
     
-    function CreatePost(props) {
+    function CreatePost() {
         
         const user = JSON.parse(localStorage.getItem('user'));
         const [content, setContent] = useState({content: "", title: ""});

@@ -133,7 +133,8 @@ class db_interface(object):
     
     #get a post
     def get_post(self, id):
-        post = self.posts.document(id).get()
+        post = self.posts.document(u'ToKlnJpMvi0ixGG59MaC').get()
+        print(post.to_dict())
         return post.to_dict()
     
     #create a new comment

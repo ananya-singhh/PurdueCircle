@@ -11,9 +11,8 @@ function Main() {
   <p>Main</p>
   <Row>
   <Col xs={10}>
-    <Post />
-    <Post />
-    <Post />
+    <Post id="ToKlnJpMvi0ixGG59MaC"/>
+    <Post id="WhntppauoyNo69qeePEa"/>
   </Col>
   <Col>
   <Button variant="primary" href="/CreatePost">Create a Post</Button>

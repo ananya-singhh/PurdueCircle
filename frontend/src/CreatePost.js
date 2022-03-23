@@ -44,10 +44,10 @@ import pic6 from "./images/6.jpg";
         }*/
         return (
             <Container className="App-post" Style="margin-bottom: 10px;">
+            <h1 Style="margin-top: 10px;"><strong>Create a Post</strong></h1>
             <Card className="text-left" bg="light">
             <Card.Header>
                 <Card.Title>
-                    Create a Post
                     <Form.Control placeholder="Enter a title for your post" />
                 </Card.Title> 
                 <Card.Subtitle>@sampleUser</Card.Subtitle>

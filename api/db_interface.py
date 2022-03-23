@@ -131,6 +131,11 @@ class db_interface(object):
         self.posts.document(id).delete()
         pass
     
+    #get a post
+    def get_post(self, id):
+        post = self.posts.document(id).get()
+        return post.to_dict()
+    
     #create a new comment
     def create_comment(self):
         # TODO: implement
@@ -186,11 +191,10 @@ class db_interface(object):
     
     #get timeline of a user
     def get_timeline(self):
-        # TODO: implement
         res = []
         posts = self.posts.stream()
         for post in posts:
-            res.append(post.to_dict()['id'])
+            res.append(post.id)
         return res
     
     #get userline of a user

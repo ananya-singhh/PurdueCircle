@@ -119,5 +119,12 @@ def create_topic(): # returns exists if topic exists
 def get_timeline():
     return json.dumps(db.get_timeline())
 
+@app.route('/get_post', methods=['GET'])
+def get_post():
+    id = request.args['id']
+    return db.get_post(id)
+    
+    
+
 if __name__ == "__main__":
     app.run(debug=True)

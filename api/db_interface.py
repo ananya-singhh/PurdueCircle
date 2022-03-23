@@ -187,7 +187,11 @@ class db_interface(object):
     #get timeline of a user
     def get_timeline(self):
         # TODO: implement
-        pass
+        res = []
+        posts = self.posts.stream()
+        for post in posts:
+            res.append(post.to_dict()['id'])
+        return res
     
     #get userline of a user
     def get_userline(self):

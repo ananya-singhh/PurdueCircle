@@ -115,6 +115,9 @@ def create_topic(): # returns exists if topic exists
     else: 
         return {'data': 'exists'}
 
+@app.route('/get_timeline', methods=['GET'])
+def get_timeline():
+    return json.dumps(db.get_timeline())
 
 if __name__ == "__main__":
     app.run(debug=True)

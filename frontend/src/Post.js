@@ -26,8 +26,8 @@ import CommentsPage from './CommentsPage';
     
     
     function Post(props) {
-        const id = props.id; // pass id to the post, ex. <Post id={"exampleID"}/>, the id in this line will be "exampleID"
 
+        var id = props.id; // pass id to the post, ex. <Post id={"exampleID"}/>, the id in this line will be "exampleID"
         const [postInfo, setPostInfo] = useState({});
 
         const [checked, setChecked] = useState(false);
@@ -56,15 +56,14 @@ import CommentsPage from './CommentsPage';
                 method: 'get',
                 url: 'http://127.0.0.1:5000/get_post?id=' + id,
               }).then( res => {
-                if (!res.data.data) {
-                  setPostInfo(res.data);
-                  console.log(postInfo);
-                } 
+                setPostInfo(res.data);
+                console.log(id)
+                console.log(postInfo['title'])
               }).catch(error => {
                 console.error(error);
                 //navigate("/404");
               })
-            }, []);
+        }, [id]);
 
         return (
             <Container className="App-post" Style="margin-bottom: 10px;">
@@ -112,7 +111,6 @@ import CommentsPage from './CommentsPage';
                     <Row>
                         
                         {(checkCommentsVisible()) ? <CommentsPage  /> : null}
-                        
                     </Row>
                 </Container>
             </Card.Footer>

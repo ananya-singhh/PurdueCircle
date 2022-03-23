@@ -21,7 +21,7 @@ import pic6 from "./images/6.jpg";
 
 
     
-    function CreatePost() {
+    function CreatePost(props) {
         
         const user = JSON.parse(localStorage.getItem('user'));
         const [content, setContent] = useState({content: "", title: ""});
@@ -64,7 +64,7 @@ import pic6 from "./images/6.jpg";
             </Card.Header>
             <Card.Body>
                 Post Content
-                <Form.Control placeholder="What's on your mind?" onChange = {e => setContent({...content, content: e.target.value})} value={content.content} />
+                <Form.Control as="textarea" placeholder="What's on your mind?" onChange = {e => setContent({...content, content: e.target.value})} value={content.content} />
             </Card.Body>
             <Card.Footer>
                 <div className="d-grid gap-2">

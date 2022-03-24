@@ -25,7 +25,11 @@ import CommentsPage from './CommentsPage';
 
     
     
-    function Post() {
+    function Post(props) {
+
+        var id = props.id; // pass id to the post, ex. <Post id={"exampleID"}/>, the id in this line will be "exampleID"
+        const [postInfo, setPostInfo] = useState({});
+
         const [checked, setChecked] = useState(false);
         const [commentsVisible, setCommentsVisible] = useState(false);
         const handleUnlike = (e) => {
@@ -46,15 +50,30 @@ import CommentsPage from './CommentsPage';
         const toggleComments = (e) => {
             setCommentsVisible(!commentsVisible);
         }
+
+        useEffect(() => {
+            axios({
+                method: 'get',
+                url: 'http://127.0.0.1:5000/get_post?id=' + id,
+              }).then( res => {
+                setPostInfo(res.data);
+                console.log(id)
+                console.log(postInfo['title'])
+              }).catch(error => {
+                console.error(error);
+                //navigate("/404");
+              })
+        }, [id]);
+
         return (
             <Container className="App-post" Style="margin-bottom: 10px;">
             <Card className="text-left" bg="light">
             <Card.Header>
-                <Card.Title>Sample Title Here</Card.Title> 
-                <Card.Subtitle>@sampleUser</Card.Subtitle>
+                <Card.Title>{postInfo['title'] ? postInfo['title'] : "Loading..."}</Card.Title> 
+                <Card.Subtitle>{postInfo['author'] ? "@" + postInfo['author'] : "Loading..."}</Card.Subtitle>
             </Card.Header>
             <Card.Body>
-                I went to the store and they didn't have any fucking milk!!!!!11!1!
+                {postInfo['content'] ? postInfo['content'] : "Loading..."}
             
             </Card.Body>
             <Card.Footer>
@@ -92,7 +111,6 @@ import CommentsPage from './CommentsPage';
                     <Row>
                         
                         {(checkCommentsVisible()) ? <CommentsPage  /> : null}
-                        
                     </Row>
                 </Container>
             </Card.Footer>

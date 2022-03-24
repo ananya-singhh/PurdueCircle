@@ -122,7 +122,9 @@ def get_timeline():
 @app.route('/get_post', methods=['GET'])
 def get_post():
     id = request.args['id']
-    return db.get_post(id)
+    dict = db.get_post(id)
+    print(dict)
+    return dict
     
     
 

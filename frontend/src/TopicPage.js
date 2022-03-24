@@ -35,7 +35,7 @@ function TopicPage() {
                   //console.error(error);
                   //navigate("/404");
                 })
-              });
+              }, []);
 
         return (  
         <Container className="App-Topic">

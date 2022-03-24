@@ -14,6 +14,7 @@ import EditProfile from './EditProfile';
 import SearchResults from './SearchResults';
 import SavedPosts from './SavedPosts';
 import CreatePost from './CreatePost';
+import CreateTopic from './CreateTopic';
 
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import CommentsPage from './CommentsPage';
@@ -36,6 +37,7 @@ const Routing = () => {
         <Route path="/homepage" element={<Main />} />
         <Route path="/CommentsPage" element={<CommentsPage />} />
         <Route path="/createPost" element={<CreatePost />} />
+        <Route path="/createTopic" element={<CreateTopic />} />
       </Routes>
 	  <Footer />
     </Router>

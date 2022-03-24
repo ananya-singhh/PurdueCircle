@@ -21,8 +21,7 @@ import pic6 from "./images/6.jpg";
 
 
 function TopicPage() { 
-        
-        
+
         const [list, setList] = useState([])
         useEffect(() => {
                 axios({
@@ -37,7 +36,6 @@ function TopicPage() {
                   //navigate("/404");
                 })
               });
-
 
         return (  
         <Container className="App-Topic">

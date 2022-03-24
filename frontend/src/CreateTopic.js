@@ -16,49 +16,44 @@ import pic4 from "./images/4.jpg";
 import pic5 from "./images/5.jpg";
 import pic6 from "./images/6.jpg";
 
-
-
-
     function CreateTopic(props) {
+            
+        const navigate = useNavigate();
+        const [title, setTitle] = useState("");
         
-        const [list, setList] = useState([])
-        useEffect(() => {
-                axios({
-                  method: 'get',
-                  url: 'http://127.0.0.1:5000/get_timeline',
-                }).then( res => {
-                  if (res.data.data !== "No Results") {
-                    setList(res.data)
-                  } 
-                }).catch(error => {
-                  //console.error(error);
-                  //navigate("/404");
-                })
-              });
+        function create() {
+            axios({
+              method: 'POST',
+              url: 'http://127.0.0.1:5000/create_topic',
+              data: {
+                title: title
+              }
+            }).then( res => {
+              
+              navigate('/homepage/')
+                
+            }).catch(error => {
+              console.log(error);
+            })
+          }
 
-
-        return (  
-        <Container className="App-Topic">
-        <h1 Style="margin-top: 10px;"><strong>Topic Name</strong></h1>
-        <ListGroup variant="flush">
-        {list.map((item) => (
-          <ListGroup.Item action variant="light">{item}</ListGroup.Item>
-        ))}
-        </ListGroup>
-        </Container>
-        );
-        
-        
-        
-        
-        
-        
-    //     return (
-    //         <Container className="App-post" Style="margin-bottom: 10px;">
-    //         <h1 Style="margin-top: 10px;"><strong>Create a Topic</strong></h1>
-    //         </Container> 
-    //   );
-
-
+        return (
+            <Container className="App-post" Style="margin-bottom: 10px;">
+            <h1 Style="margin-top: 10px;"><strong>Create a Topic</strong></h1>
+            <Card className="text-left" bg="light">
+            <Card.Header>
+                <Card.Title>
+                    <Form.Control placeholder="Enter Topic Title" onChange = {e => setTitle(e.target.value)} value={title} />
+                </Card.Title> 
+            </Card.Header>
+            <Card.Footer>
+                <div className="d-grid gap-2">
+                    <Button variant="primary" size="lg" onClick={ () => create()}>Create Topic!</Button>
+                </div>
+            </Card.Footer>
+            </Card>
+            <Button variant="link" size="sm" href="/homepage">Return to homepage</Button>
+            </Container> 
+      );
     }
 export default CreateTopic;

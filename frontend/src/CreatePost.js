@@ -24,8 +24,6 @@ import pic6 from "./images/6.jpg";
         const navigate = useNavigate();
 
         function create() {
-            
-
             axios({
               method: 'POST',
               url: 'http://127.0.0.1:5000/create_post',

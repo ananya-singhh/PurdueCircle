@@ -117,6 +117,19 @@ def create_topic(): # returns exists if topic exists
 
 @app.route('/get_timeline', methods=['GET'])
 def get_timeline():
+    """_summary_
+
+    Returns:
+        list of post ids
+    
+    takes request and returns correct timeline,
+    if you want to get all posts with a specific topic, the request url is /get_timeline?topic="INSERT TOPIC NAME",
+    if you want all posts made by a user, the request url is /get_timeline?user="*username to get posts of*"
+    
+    if you just request /get_timeline, it will return all posts in the db
+    
+    """
+    
     if (request.args['topic']):
         return db.get_timeline_topic(request.args['topic'])
     if (request.args['user']):

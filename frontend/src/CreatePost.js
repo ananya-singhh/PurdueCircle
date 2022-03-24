@@ -17,10 +17,6 @@ import pic5 from "./images/5.jpg";
 import pic6 from "./images/6.jpg";
 
 
-
-
-
-    
     function CreatePost(props) {
         
         const user = JSON.parse(localStorage.getItem('user'));

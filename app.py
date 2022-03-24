@@ -117,16 +117,17 @@ def create_topic(): # returns exists if topic exists
 
 @app.route('/get_timeline', methods=['GET'])
 def get_timeline():
+    if (request.args['topic']):
+        return db.get_timeline_topic(request.args['topic'])
+    if (request.args['user']):
+        return db.get_timeline_user(request.args['user'])
     return json.dumps(db.get_timeline())
 
 @app.route('/get_post', methods=['GET'])
 def get_post():
     id = request.args['id']
     dict = db.get_post(id)
-    print(dict)
     return dict
-    
-    
 
 if __name__ == "__main__":
     app.run(debug=True)

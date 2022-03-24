@@ -12,6 +12,7 @@ function SearchResults() {
   const [list, setList] = useState([])
   const query = useParams()['query'];
   const url = window.location.pathname.split('/').pop();
+  
   useEffect(() => {
     axios({
       method: 'get',

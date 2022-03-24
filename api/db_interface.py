@@ -198,6 +198,21 @@ class db_interface(object):
             res.append(post.id)
         return res
     
+    def get_timeline_topic(self, topic):
+        res = []
+        posts = self.posts.where('topic', '==', topic)
+        for post in posts:
+            res.append(post.id)
+        return res
+    
+    #given username, return all of those users posts
+    def get_timeline_user(self, username):
+        res = []
+        posts = self.posts.where('author', '==', username).stream()
+        for post in posts:
+            res.append(post.id)
+        return res
+    
     #get userline of a user
     def get_userline(self):
         # TODO: implement
@@ -209,8 +224,16 @@ class db_interface(object):
         if topic.get().exists:
             return False
         else:
-            topic.set({'time_created': datetime.datetime.now(tz=datetime.timezone.utc)})
+            topic.set({'time_created': datetime.datetime.now(tz=datetime.timezone.utc), 'followed_by':[]})
             return True
+        
+    def follow_topic(self, topic_name, user):
+        topic = self.topics.document(topic_name)
+        if topic.get().exists:
+            topic.update({u'followed_by': firestore.ArrayUnion([user])})
+            return True
+        else:
+            return False
     
     #search for a topic
     def search_topic(self):

@@ -169,6 +169,7 @@ function ProfileNew() {
 
   return (
   <Container className="App-pfpage">
+    // own 
   <Card className="text-center" bg="light" style={{ width: '18rem' }}>
     <Card.Body>
     <FigureImage as={Image} width={125} height={125} src={pics[currentUser['profile_picture']]} roundedCircle={true} id="pfp" alt="Card image"/>
@@ -192,6 +193,7 @@ function ProfileNew() {
   console.log("i rendered with the blocked status of: " + checkBlocking());
   return (
     <Container className="App-pfpage">
+      // others
     <Card className="text-center" bg="light" style={{ width: '18rem' }}>
       <Card.Body>
 

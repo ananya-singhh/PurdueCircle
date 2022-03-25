@@ -28,7 +28,7 @@ function Homepage() {
      
     
         return (
-          <Container className="My-main">
+          <Container>
 
           <Col md={3} lg={4} />
 

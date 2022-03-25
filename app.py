@@ -136,6 +136,17 @@ def get_timeline():
         # return json.dumps(db.get_timeline_user(request.args['user']))
     return json.dumps(db.get_timeline())
 
+@app.route('/get_timeline_user', methods=['GET'])
+def get_timeline_user():    
+    return json.dumps(db.get_timeline_user(request.args['user']))
+
+@app.route('/get_timeline_topic', methods=['GET'])
+def get_timeline():
+    return json.dumps(db.get_timeline_topic(request.args['topic']))
+    
+  
+    
+
 
 
 @app.route('/get_post', methods=['GET'])

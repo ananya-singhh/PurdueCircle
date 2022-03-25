@@ -131,9 +131,9 @@ def get_timeline():
     """
     
     if (request.args['topic']):
-        return db.get_timeline_topic(request.args['topic'])
+        return json.dumps(db.get_timeline_topic(request.args['topic']))
     if (request.args['user']):
-        return db.get_timeline_user(request.args['user'])
+        return json.dumps(db.get_timeline_user(request.args['user']))
     return json.dumps(db.get_timeline())
 
 @app.route('/get_post', methods=['GET'])

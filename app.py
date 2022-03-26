@@ -143,12 +143,16 @@ def get_timeline_user():
 @app.route('/get_timeline_topic', methods=['GET'])
 def get_timeline_topic():
     return json.dumps(db.get_timeline_topic(request.args['topic']))
-    
+
+@app.route('/search_for_topic', methods=['GET'])
+def search_for_topic():
+    query = request.args['query']
+    print(query)
+    list = db.search_topic(query)
+    if not list:
+        return {'data': 'No Results'}
+    return json.dumps(list)
   
-    
-
-
-
 @app.route('/get_post', methods=['GET'])
 def get_post():
     id = request.args['id']

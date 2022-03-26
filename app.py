@@ -44,10 +44,10 @@ def get_user():
 @app.route('/edit_user', methods=['PUT'])
 def edit_user():
     request_data = request.get_json()
-    print(request_data)
+    #print(request_data)
     copy = request_data.copy()
     copy.pop('username')
-    print(copy)
+    #print(copy)
     res = db.edit_user(request_data['username'], copy)
     return {"pog": "pog"} #else returns the user
     
@@ -141,6 +141,29 @@ def get_post():
     id = request.args['id']
     dict = db.get_post(id)
     return dict
+
+@app.route('/create_comment', methods=['POST'])
+def create_comment():
+    request_data = request.get_json()
+    created_comment = db.create_comment(request_data['username'], request_data['content'], request_data['post_id'])
+    return to_dict(created_comment)
+
+@app.route('/edit_comment', methods=['PUT'])
+def edit_comment():
+    request_data = request.get_json()
+    db.edit_comment(request_data['id'], {'content': request_data['content']})
+    return {"uhh":"idk"}
+    
+@app.route('/delete_comment', methods=['DELETE'])
+def delete_comment():
+    db.delete_comment(request.args['id'])
+    return {"uhh":"idk"}
+    
+@app.route('/get_comments', methods=['GET'])
+def get_comments():
+    request_data = request.get_json()
+    comments = db.get_comments(request_data['post_id'])
+    return comments
 
 if __name__ == "__main__":
     app.run(debug=True)

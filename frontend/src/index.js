@@ -16,6 +16,7 @@ import SavedPosts from './SavedPosts';
 import CreatePost from './CreatePost';
 import CreateTopic from './CreateTopic';
 import HomePage from './Homepage';
+import TopicPage from './TopicPage';
 
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import CommentsPage from './CommentsPage';
@@ -39,6 +40,7 @@ const Routing = () => {
         <Route path="/CommentsPage" element={<CommentsPage />} />
         <Route path="/createPost" element={<CreatePost />} />
         <Route path="/createTopic" element={<CreateTopic />} />
+        <Route path="/Topic/:name" element={<TopicPage />} />
       </Routes>
 	  <Footer />
     </Router>

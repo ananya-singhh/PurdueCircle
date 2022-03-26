@@ -26,7 +26,7 @@ import pic6 from "./images/6.jpg";
               method: 'POST',
               url: 'http://127.0.0.1:5000/create_topic',
               data: {
-                title: title
+                name: title
               }
             }).then( res => {
               

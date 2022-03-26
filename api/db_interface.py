@@ -1,8 +1,10 @@
 from hashlib import new
 from multiprocessing.dummy import Array
+from turtle import pos
 from firebase_admin import credentials, firestore, initialize_app
 from .User import User
 from .Post import Post
+from .Comment import Comment
 from random import random
 from .Helper import *
 import datetime
@@ -16,6 +18,7 @@ class db_interface(object):
         self.users = db.collection(u'users')
         self.posts = db.collection(u'posts')
         self.topics = db.collection(u'topics')
+        self.comments = db.collection(u'comments')
         
     
     #checks if user with same username or email exists
@@ -129,7 +132,6 @@ class db_interface(object):
     #delete a post
     def delete_post(self, id):
         self.posts.document(id).delete()
-        pass
     
     #get a post
     def get_post(self, id):
@@ -138,20 +140,29 @@ class db_interface(object):
         return post.to_dict()
     
     #create a new comment
-    def create_comment(self):
-        # TODO: implement
-        pass
+    def create_comment(self, username, content, post_id):
+        comment = self.comments.document() # ref to new document
+        current_date = datetime.datetime.now(tz=datetime.timezone.utc)
+        comment.set({'post_id': post_id, 'content': content, 'author': username, 'date_posted': current_date})
+        comment_info = comment.get()
+        return Comment(username, comment_info.id, post_id, content, current_date)
     
     #edit a comment
-    def edit_comment(self):
-        # TODO: implement
-        pass
+    def edit_comment(self, id, changes: dict):
+        self.comments.document(id).update(changes)
         
     #delete comment
-    def delete_comment(self):
-        # TODO: implement
-        pass
+    def delete_comment(self, id):
+        self.comments.document(id).delete()
         
+    # returns the comments by post id
+    def get_comments(self, post_id):
+        comments = self.comments.where(u'post_id', u'==', post_id).stream()
+        res = {}
+        for comment in comments:
+            res[to_dict(comment)['id']] = to_dict(comment)
+        return res
+                
     #send a message
     def send_message(self):
         # TODO: implement

@@ -247,9 +247,13 @@ class db_interface(object):
             return False
     
     #search for a topic
-    def search_topic(self):
-        # TODO: implement
-        pass
+    def search_topic(self, query):
+        res = []
+        topics = self.topics.stream() # cursed query to find topics that start with the query
+        for topic in topics:
+            if topic.id.startswith(query): res.append(topic.id) # build list of topic names to return
+        print(res)
+        return res
     
     #create a message thread between two users
     def create_thread(self):

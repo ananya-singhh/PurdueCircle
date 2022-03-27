@@ -156,14 +156,20 @@ def edit_comment():
     
 @app.route('/delete_comment', methods=['DELETE'])
 def delete_comment():
-    db.delete_comment(request.args['id'])
+    db.delete_comment(request.get_json()['id'])
     return {"uhh":"idk"}
+    
+@app.route('/get_comment', methods=['GET'])
+def get_comment():
+    request_data = request.get_json()
+    comment = db.get_comment(request_data['id'])
+    return comment
     
 @app.route('/get_comments', methods=['GET'])
 def get_comments():
     request_data = request.get_json()
     comments = db.get_comments(request_data['post_id'])
-    return comments
+    return {"comments":comments}
 
 if __name__ == "__main__":
     app.run(debug=True)

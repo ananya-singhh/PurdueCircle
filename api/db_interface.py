@@ -155,12 +155,17 @@ class db_interface(object):
     def delete_comment(self, id):
         self.comments.document(id).delete()
         
+    # returns the comment info by comment id
+    def get_comment(self, id):
+        comment = self.comments.document(id).get()
+        return comment.to_dict()
+        
     # returns the comments by post id
     def get_comments(self, post_id):
         comments = self.comments.where(u'post_id', u'==', post_id).stream()
-        res = {}
+        res = []
         for comment in comments:
-            res[to_dict(comment)['id']] = to_dict(comment)
+            res.append(comment.id)
         return res
                 
     #send a message

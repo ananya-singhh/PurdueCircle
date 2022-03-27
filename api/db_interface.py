@@ -216,7 +216,7 @@ class db_interface(object):
     
     def get_timeline_topic(self, topic):
         res = []
-        posts = self.posts.where('topic', '==', topic)
+        posts = self.posts.where('topic', '==', topic).stream()
         for post in posts:
             res.append(post.id)
         return res

@@ -54,6 +54,7 @@ def edit_user():
 @app.route('/delete_user', methods=['DELETE'])
 def delete_user():
     username = request.args['username']
+    #username = request.get_json()['username']
     res = db.delete_user(username)
     if not res:
         return {'data': 'Failed to delete user'}
@@ -114,7 +115,23 @@ def create_topic(): # returns exists if topic exists
         return {'data': topic_name}
     else: 
         return {'data': 'exists'}
-
+        
+@app.route('/follow_topic', methods=['PUT'])
+def follow_topic():
+    request_data = request.get_json()
+    username = request_data['username']
+    topic_name = request_data['topic_name']
+    db.follow_topic(topic_name, username)
+    return {'username':username, 'topic_name':topic_name}
+    
+@app.route('/unfollow_topic', methods=['PUT'])
+def unfollow_topic():
+    request_data = request.get_json()
+    username = request_data['username']
+    topic_name = request_data['topic_name']
+    db.unfollow_topic(topic_name, username)
+    return {'username':username, 'topic_name':topic_name}
+        
 @app.route('/get_timeline', methods=['GET'])
 def get_timeline():
     """_summary_

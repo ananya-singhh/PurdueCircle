@@ -10,7 +10,7 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 
 function TopicPage() { 
   const title = useParams()['name'];
-  const currentTopic = JSON.parse(localStorage.getItem('name'));
+  const currentTopic = JSON.parse(localStorage.getItem(title));
   const currentUser = JSON.parse(localStorage.getItem('user'));
   const [user, setUser] = useState({})
   const username = useParams()['username'];
@@ -19,6 +19,7 @@ function TopicPage() {
   function checkFollowing() {
     return currentUser['following'].includes(user['username']);
   }
+
   const handleFollowing = (e) => { //you can add how to handle following/unfollowing in here
     axios({
       method: 'put',

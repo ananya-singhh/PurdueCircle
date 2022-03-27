@@ -80,6 +80,10 @@ class db_interface(object):
         for blocked_by_ in blocked_by:
             self.users.document(blocked_by_).update({u'blocked': firestore.ArrayRemove([username])})
         
+        followed_topics = user['followed_topics']
+        for topic in followed_topics:
+            self.topics.document(topic).update({u'followed_by': firestore.ArrayRemove([username])})
+        
         user_to_del = self.users.document(username)
         user_to_del.delete()
         if self.users.where(u'username', u'==', username).get():
@@ -184,10 +188,17 @@ class db_interface(object):
         pass
     
     #save a post
-    def save_post(self):
-        # TODO: implement
-        pass
+    def save_post(self, username, post_id):
+        user = self.users.document(username)
+        post = self.posts.document(post_id)
+        user.update({u'saved_posts': firestore.ArrayUnion([post.id])})
     
+    #unsave a post
+    def unsave_post(self, username, post_id):
+        user = self.users.document(username)
+        post = self.posts.document(post_id)
+        user.update({u'saved_posts': firestore.ArrayRemove([post.id])})
+        
     #search for users
     def search_user(self, query):
         res = []
@@ -243,10 +254,22 @@ class db_interface(object):
             topic.set({'time_created': datetime.datetime.now(tz=datetime.timezone.utc), 'followed_by':[]})
             return True
         
-    def follow_topic(self, topic_name, user):
+    def follow_topic(self, topic_name, username):
         topic = self.topics.document(topic_name)
+        user = self.users.document(username)
         if topic.get().exists:
-            topic.update({u'followed_by': firestore.ArrayUnion([user])})
+            topic.update({u'followed_by': firestore.ArrayUnion([username])})
+            user.update({u'followed_topics': firestore.ArrayUnion([topic_name])})
+            return True
+        else:
+            return False
+    
+    def unfollow_topic(self, topic_name, username):
+        topic = self.topics.document(topic_name)
+        user = self.users.document(username)
+        if topic.get().exists:
+            topic.update({u'followed_by': firestore.ArrayRemove([username])})
+            user.update({u'followed_topics': firestore.ArrayRemove([topic_name])})
             return True
         else:
             return False

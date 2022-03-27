@@ -9,6 +9,7 @@ import axios from 'axios';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Image from 'react-bootstrap/Image'
 import FigureImage from 'react-bootstrap/FigureImage'
+import ToggleButton from 'react-bootstrap/ToggleButton';
 
 import Post from "./Post"
 
@@ -45,6 +46,34 @@ function TopicPage() {
           <ListGroup.Item action variant="light">{item}</ListGroup.Item>
         ))}
         </ListGroup>
+        <Row>
+        <Col sm={1}>
+        <ToggleButton
+        className="mb-2"
+        id="toggle-check"
+        type="checkbox"
+        variant="outline-primary"
+        checked={false}
+        value="1"
+        Style="margin-right=25px;"
+      >
+        Unfollow
+      </ToggleButton> 
+      </Col>
+        <Col sm={1}>
+      <ToggleButton
+      className="mb-2"
+      id="toggle-check"
+      type="checkbox"
+      variant="outline-primary"
+      checked={true}
+      value="1"
+      Style="margin-right=25px;"
+    >
+      Follow
+    </ToggleButton>
+      </Col>
+      </Row>
         </Container>
         );
 }

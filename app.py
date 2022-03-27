@@ -187,6 +187,22 @@ def get_comments():
     request_data = request.get_json()
     comments = db.get_comments(request_data['post_id'])
     return {"comments":comments}
+    
+@app.route('/save_post', methods=['PUT'])
+def save_post():
+    request_data = request.get_json()
+    username = request_data['username']
+    post_id = request_data['post_id']
+    db.save_post(username, post_id)
+    return {'username':username, 'post_id':post_id} #else returns the username
+    
+@app.route('/unsave_post', methods=['PUT'])
+def unsave_post():
+    request_data = request.get_json()
+    username = request_data['username']
+    post_id = request_data['post_id']
+    db.unsave_post(username, post_id)
+    return {'username':username, 'post_id':post_id} #else returns the username
 
 if __name__ == "__main__":
     app.run(debug=True)

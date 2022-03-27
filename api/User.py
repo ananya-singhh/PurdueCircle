@@ -3,7 +3,7 @@ from .Constants import *
 
 class User(object):
     
-    def __init__(self, email: str = None, username: str = None, password: str = None, bio: str = None, profile_picture: int = 0, privacy_setting: int = 0, followers: List = list(), following: List = list(), blocked: List = list(), blocked_by: List = list()):
+    def __init__(self, email: str = None, username: str = None, password: str = None, bio: str = None, profile_picture: int = 0, privacy_setting: int = 0, followers: List = list(), following: List = list(), blocked: List = list(), blocked_by: List = list(), saved_posts: List = list()):
         self.username = username
         self.email = email
         self.password = password
@@ -14,6 +14,7 @@ class User(object):
         self.following = following
         self.blocked = blocked
         self.blocked_by = blocked_by
+        self.saved_posts = saved_posts
         
     
     def to_dict(self):
@@ -26,7 +27,8 @@ class User(object):
             'followers': self.followers,
             'following': self.following,
             'blocked': self.blocked,
-            'blocked_by': self.blocked_by
+            'blocked_by': self.blocked_by,
+            'saved_posts': self.saved_posts
         }
         
         

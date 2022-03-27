@@ -184,10 +184,17 @@ class db_interface(object):
         pass
     
     #save a post
-    def save_post(self):
-        # TODO: implement
-        pass
+    def save_post(self, username, post_id):
+        user = self.users.document(username)
+        post = self.posts.document(post_id)
+        user.update({u'saved_posts': firestore.ArrayUnion([post.id])})
     
+    #unsave a post
+    def unsave_post(self, username, post_id):
+        user = self.users.document(username)
+        post = self.posts.document(post_id)
+        user.update({u'saved_posts': firestore.ArrayRemove([post.id])})
+        
     #search for users
     def search_user(self, query):
         res = []

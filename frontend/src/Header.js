@@ -117,7 +117,7 @@ function Header() {
 			  <Form className="d-flex" onSubmit={handleSearch}>
         		<FormControl
           		type="text"
-          		placeholder="Search For Users"
+          		placeholder="Search For User or Topic"
           		className="me-2"
           		aria-label="Search"
 				onChange = {e => setQuery(e.target.value)} value={query}

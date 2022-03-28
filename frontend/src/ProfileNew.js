@@ -19,12 +19,15 @@ import pic6 from "./images/6.jpg";
 
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'
 import ToggleButton from 'react-bootstrap/ToggleButton';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Post from './Post';
+
 
 function ProfileNew() { 
 
   const pics = [pic1, pic2, pic3, pic4, pic5, pic6];
 
-  
+  const [list, setList] = useState([])
   const navigate = useNavigate();
   const currentUser = JSON.parse(localStorage.getItem('user'));
 
@@ -155,11 +158,25 @@ function ProfileNew() {
     })
   }
 
-  useEffect(() => {
+  /*useEffect(() => {
       getUser()
-    }, [url]);
+    }, [url]);*/
 
-  
+    useEffect(() => {
+      getUser()
+      // if (localStorage.getItem('user')) navigate('/homepage');
+      axios({
+        method: 'get',
+        url: 'http://127.0.0.1:5000/get_timeline_user?user='+currentUser['username'],
+      }).then( res => {
+        if (res.data.data !== "No Results") {
+          setList(res.data)
+        } 
+      }).catch(error => {
+        //console.error(error);
+        //navigate("/404");
+      })
+    },[]);
 
   
 
@@ -169,7 +186,8 @@ function ProfileNew() {
 
   return (
   <Container className="App-pfpage">
-    // own 
+    <Row>
+    <Col md={{ span: 6, offset: 4}}>
   <Card className="text-center" bg="light" style={{ width: '18rem' }}>
     <Card.Body>
     <FigureImage as={Image} width={125} height={125} src={pics[currentUser['profile_picture']]} roundedCircle={true} id="pfp" alt="Card image"/>
@@ -186,6 +204,18 @@ function ProfileNew() {
       <Button variant="primary" href="/EditProfile">Edit Profile</Button>
     </Card.Body>
   </Card>
+  </Col>
+  </Row>
+  <Row>
+  <Col md={{ span: 9, offset: 1}}>
+  <ListGroup variant="flush">
+  {list.map((item) => (
+    <Post id={item}/>
+  ))}
+</ListGroup>
+</Col>
+</Row>
+
   </Container>
   );
 
@@ -194,6 +224,7 @@ function ProfileNew() {
   return (
     <Container className="App-pfpage">
       // others
+      
     <Card className="text-center" bg="light" style={{ width: '18rem' }}>
       <Card.Body>
 
@@ -267,6 +298,9 @@ function ProfileNew() {
 
       </Card.Body>
     </Card>
+
+  
+
     </Container>
   )
 }

@@ -236,5 +236,13 @@ def unlike_post():
     db.unlike_post(username, post_id)
     return {'username':username, 'post_id':post_id} #else return
 
+@app.route('/get_topic', methods=['GET'])
+def get_topic():
+    ret = db.get_topic(request.args['name'])
+    if ret:
+        return ret
+    else:
+        return {"data" : "failed"}
+
 if __name__ == "__main__":
     app.run(debug=True)

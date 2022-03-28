@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import ListGroup from 'react-bootstrap/ListGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
+import Button from 'react-bootstrap/Button';
 
 
 function TopicPage() { 
@@ -132,6 +133,12 @@ function TopicPage() {
       Follow
     </ToggleButton>}
       </Col>
+
+      <Col sm={1}>
+            <Button type="submit">
+              Create Post
+            </Button>
+            </Col>
         </Container>
         );
 }

@@ -10,7 +10,6 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 
 function TopicPage() { 
   const title = useParams()['name'];
-  const currentTopic = JSON.parse(localStorage.getItem(title));
   const currentUser = JSON.parse(localStorage.getItem('user'));
   const [user, setUser] = useState({})
   const username = useParams()['username'];
@@ -25,7 +24,7 @@ function TopicPage() {
       method: 'put',
       url: 'http://127.0.0.1:5000/follow_topic',
       data: {
-        topic_name: currentTopic['name'],
+        topic_name: title,
         user: user['username'],
       }
     }).then( res => {
@@ -45,7 +44,7 @@ function TopicPage() {
       method: 'put',
       url: 'http://127.0.0.1:5000/unfollow_topic',
       data: {
-        topic_name: currentTopic['name'],
+        topic_name: title,
         user: user['username'],
       }
     }).then( res => {

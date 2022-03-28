@@ -240,6 +240,9 @@ class db_interface(object):
             res.append(post.id)
         return res
     
+    #given username, return all of the posts from people that the user follows 
+
+
     #get userline of a user
     def get_userline(self):
         # TODO: implement

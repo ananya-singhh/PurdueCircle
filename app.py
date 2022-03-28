@@ -219,6 +219,22 @@ def unsave_post():
     post_id = request_data['post_id']
     db.unsave_post(username, post_id)
     return {'username':username, 'post_id':post_id} #else returns the username
+    
+@app.route('/like_post', methods=['PUT'])
+def like_post():
+    request_data = request.get_json()
+    username = request_data['username']
+    post_id = request_data['post_id']
+    db.like_post(username, post_id)
+    return {'username':username, 'post_id':post_id} #else returns the username
+    
+@app.route('/unlike_post', methods=['PUT'])
+def unlike_post():
+    request_data = request.get_json()
+    username = request_data['username']
+    post_id = request_data['post_id']
+    db.unlike_post(username, post_id)
+    return {'username':username, 'post_id':post_id} #else return
 
 if __name__ == "__main__":
     app.run(debug=True)

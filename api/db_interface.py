@@ -183,10 +183,18 @@ class db_interface(object):
         pass
     
     #add a reaction
-    def add_reaction(self):
-        # TODO: implement
-        pass
+    def like_post(self, username, post_id):
+        user = self.users.document(username)
+        post = self.posts.document(post_id)
+        user.update({u'liked_posts': firestore.ArrayUnion([post_id])})
+        post.update({u'liked_by': firestore.ArrayUnion([username])})
     
+    def unlike_post(self, username, post_id):
+        user = self.users.document(username)
+        post = self.posts.document(post_id)
+        user.update({u'liked_posts': firestore.ArrayRemove([post_id])})
+        post.update({u'liked_by': firestore.ArrayRemove([username])})
+        
     #save a post
     def save_post(self, username, post_id):
         user = self.users.document(username)

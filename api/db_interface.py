@@ -286,6 +286,13 @@ class db_interface(object):
         print(res)
         return res
     
+    def get_topic(self, name):
+        topic = self.topics.document(name).get()
+        if topic.exists:
+            return topic.to_dict()
+        else:
+            return None
+    
     #create a message thread between two users
     def create_thread(self):
         # TODO: implement

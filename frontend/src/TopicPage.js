@@ -12,28 +12,19 @@ import Button from 'react-bootstrap/Button';
 function TopicPage() { 
   const title = useParams()['name'];
   const currentUser = JSON.parse(localStorage.getItem('user'));
-  const [user, setUser] = useState({})
-  const username = useParams()['username'];
-  const url = window.location.pathname.split('/').pop();
-  const [checked, setChecked] = useState(false); //change to set to true or false depending on if followed
-  function checkFollowing() {
-    return currentUser['following'].includes(user['username']);
-  }
-
+  const [topic, setTopic] = useState({})
+  const [followed, setFollowed] = useState(false);
+  
   const handleFollowing = (e) => { //you can add how to handle following/unfollowing in here
     axios({
       method: 'put',
       url: 'http://127.0.0.1:5000/follow_topic',
       data: {
         topic_name: title,
-        user: user['username'],
+        user: currentUser['username'],
       }
     }).then( res => {
-      console.log("followed lol")
-      currentUser['following'].push(user['username']);
-      localStorage.setItem('user', JSON.stringify(currentUser));
-      getUser()
-      //setChecked(!checked) // literally does nothing
+      
     }).catch(error => {
       console.error(error);
       //navigate("/404");
@@ -46,55 +37,41 @@ function TopicPage() {
       url: 'http://127.0.0.1:5000/unfollow_topic',
       data: {
         topic_name: title,
-        user: user['username'],
+        user: currentUser['username'],
       }
     }).then( res => {
-      console.log("unfollowed lol")
-      currentUser['following'].pop(user['username']);
-      localStorage.setItem('user', JSON.stringify(currentUser));
-      //setChecked(!checked) // literally does nothing
-      getUser()
+      //
     }).catch(error => {
       console.error(error);
       //navigate("/404");
     })
-  }
-
-  async function getUser() {
-    await axios({
-      method: 'get',
-      url: 'http://127.0.0.1:5000/get_user?username=' + username,
-    }).then( res => {
-      if (!res.data.data) {
-        setUser(res.data);
-        console.log(user);
-      } 
-    }).catch(error => {
-      console.error(error);
-      //navigate("/404");
-    })
-  }
-
+  }  
+  const [list, setList] = useState([])
   useEffect(() => {
-      getUser()
-    }, [url]);
-
-
-        
-        const [list, setList] = useState([])
-        useEffect(() => {
-                axios({
-                  method: 'get',
-                  url: 'http://127.0.0.1:5000/get_timeline_topic?topic='+title,
-                }).then( res => {
-                  if (res.data.data !== "No Results") {
-                    setList(res.data)
-                  } 
-                }).catch(error => {
-                  //console.error(error);
-                  //navigate("/404");
-                })
-              }, []);
+          axios({
+            method: 'get',
+            url: 'http://127.0.0.1:5000/get_timeline_topic?topic='+title,
+          }).then( res => {
+            if (res.data.data !== "No Results") {
+              setList(res.data)
+            } 
+          }).catch(error => {
+            //console.error(error);
+            //navigate("/404");
+          })
+          axios({
+            method: 'get',
+            url: 'http://127.0.0.1:5000/get_topic?name='+title,
+          }).then( res => {
+            if (res.data.data !== "failed") {
+              setTopic(res.data);
+              console.log(res.data);
+            } 
+          }).catch(error => {
+            //console.error(error);
+            //navigate("/404");
+          })
+        }, []);
 
         return (  
         <Container className="App-Topic">
@@ -106,7 +83,7 @@ function TopicPage() {
         </ListGroup>
     
         <Col sm={1}>
-        {user && checkFollowing() && (checked || !checked) ?
+        {followed ?
         <ToggleButton
         className="mb-2"
         id="toggle-check"

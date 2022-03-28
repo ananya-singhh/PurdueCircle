@@ -54,7 +54,6 @@ def edit_user():
 @app.route('/delete_user', methods=['DELETE'])
 def delete_user():
     username = request.args['username']
-    #username = request.get_json()['username']
     res = db.delete_user(username)
     if not res:
         return {'data': 'Failed to delete user'}
@@ -190,7 +189,7 @@ def edit_comment():
     
 @app.route('/delete_comment', methods=['DELETE'])
 def delete_comment():
-    db.delete_comment(request.get_json()['id'])
+    db.delete_comment(request.args['id'])
     return {"uhh":"idk"}
     
 @app.route('/get_comment', methods=['GET'])

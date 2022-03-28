@@ -235,7 +235,7 @@ class db_interface(object):
     
     def get_timeline_topic(self, topic):
         res = []
-        posts = self.posts.where('topic', '==', topic)
+        posts = self.posts.where('topic', '==', topic).stream()
         for post in posts:
             res.append(post.id)
         return res
@@ -248,6 +248,9 @@ class db_interface(object):
             res.append(post.id)
         return res
     
+    #given username, return all of the posts from people that the user follows 
+
+
     #get userline of a user
     def get_userline(self):
         # TODO: implement
@@ -290,6 +293,13 @@ class db_interface(object):
             if topic.id.startswith(query): res.append(topic.id) # build list of topic names to return
         print(res)
         return res
+    
+    def get_topic(self, name):
+        topic = self.topics.document(name).get()
+        if topic.exists:
+            return topic.to_dict()
+        else:
+            return None
     
     #create a message thread between two users
     def create_thread(self):

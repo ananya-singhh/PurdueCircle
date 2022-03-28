@@ -53,7 +53,7 @@ function SearchResults() {
       <ListGroup variant="flush">
         <h1 Style="margin-top: 10px;"><strong>Users:</strong></h1>
         {userList.map((item) => (
-          <ListGroup.Item action variant="light" action onClick={() => navigate('/Profile/'+item)}>{item}</ListGroup.Item>
+          <ListGroup.Item action variant="light" onClick={() => navigate('/Profile/'+item)}>{item}</ListGroup.Item>
         ))}
       </ListGroup> : <h1 Style="margin-top: 10px;"><strong>No User Results</strong></h1> 
         }
@@ -63,7 +63,7 @@ function SearchResults() {
       <ListGroup variant="flush">
         <h1 Style="margin-top: 10px;"><strong>Topics:</strong></h1>
         {topicList.map((item) => (
-          <ListGroup.Item action variant="light" action onClick={() => navigate('/Topic/'+item)}>{item}</ListGroup.Item>
+          <ListGroup.Item action variant="light" onClick={() => navigate('/Topic/'+item)}>{item}</ListGroup.Item>
         ))}
       </ListGroup> : <h1 Style="margin-top: 10px;"><strong>No Topic Results</strong></h1>
       }

@@ -103,9 +103,20 @@ def search_for_user():
 @app.route('/create_post', methods=['POST'])
 def create_post():
     request_data = request.get_json()
-    created_post = db.create_post(request_data['content'], request_data['title'], request_data['username'], request_data['topic'])
+    created_post = db.create_post(request_data['content'], request_data['title'], request_data['username'], request_data['topic'], request_data['anonymous'])
     return to_dict(created_post)
-
+    
+@app.route('/edit_post', methods=['PUT'])
+def edit_post():
+    request_data = request.get_json()
+    db.edit_post(request_data['id'], {'content': request_data['content']})
+    return {"uhh":"idk"}
+    
+@app.route('/delete_post', methods=['DELETE'])
+def delete_post():
+    db.delete_post(request.args['id'])
+    return {"uhh":"idk"}
+    
 @app.route('/create_topic', methods=['POST'])
 def create_topic(): # returns exists if topic exists
     request_data  = request.get_json()

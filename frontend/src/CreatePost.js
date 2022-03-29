@@ -11,7 +11,7 @@ import axios from 'axios';
     function CreatePost() {
         const topic = useParams()['topic']
         const user = JSON.parse(localStorage.getItem('user'));
-        const [content, setContent] = useState({content: "", title: ""});
+        const [content, setContent] = useState({content: "", title: "", anonymous: false});
         const navigate = useNavigate();
 
         function create() {
@@ -23,6 +23,7 @@ import axios from 'axios';
                 title: content.title,
                 username: user['username'],
                 topic: topic,
+                anonymous: content.anonymous,
               }
             }).then( res => {
               navigate('/homepage/')

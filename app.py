@@ -103,9 +103,15 @@ def search_for_user():
 @app.route('/create_post', methods=['POST'])
 def create_post():
     request_data = request.get_json()
-    created_post = db.create_post(request_data['content'], request_data['title'], request_data['username'], request_data['topic'])
+    created_post = db.create_post(request_data['content'], request_data['title'], request_data['username'], request_data['topic'], request_data['anonymous'])
     return to_dict(created_post)
-
+    
+@app.route('/edit_post', methods=['PUT'])
+def edit_post():
+    request_data = request.get_json()
+    db.edit_post(request_data['id'], {'content': request_data['content']})
+    return {"uhh":"idk"}
+    
 @app.route('/create_topic', methods=['POST'])
 def create_topic(): # returns exists if topic exists
     request_data  = request.get_json()
@@ -158,7 +164,12 @@ def get_timeline_user():
 
 @app.route('/get_timeline_topic', methods=['GET'])
 def get_timeline_topic():
-    return json.dumps(db.get_timeline_topic(request.args['topic']))
+    return json.dumps(db.get_timeline_topic(request.args['topic'], request.args['user']))
+
+# get_userline
+@app.route('/get_userline', methods=['GET'])
+def get_userline():
+    return json.dumps(db.get_userline(request.args['user'], request.args['is_self']))
 
 @app.route('/search_for_topic', methods=['GET'])
 def search_for_topic():
@@ -175,15 +186,6 @@ def get_post():
     dict = db.get_post(id)
     return dict
 
-@app.route('/edit_post', methods=['PUT'])
-def edit_post():
-    request_data = request.get_json()
-    #print(request_data)
-    copy = request_data.copy()
-    copy.pop('id')
-    #print(copy)
-    res = db.edit_post(request_data['id'], copy)
-    return{"no" : "bitches"}
 
 @app.route('/delete_post', methods=['DELETE'])
 def delete_post():

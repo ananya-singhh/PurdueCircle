@@ -113,8 +113,6 @@ function TopicPage() {
       </Col>
       </Row>
 
-            // timeline below
-
             <ListGroup variant="flush">
         {list.map((item) => (
           <ListGroup.Item action variant="light">{item}</ListGroup.Item>

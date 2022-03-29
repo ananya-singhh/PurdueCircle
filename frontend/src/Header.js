@@ -85,7 +85,6 @@ function Header() {
 				
 
 				<Nav>
-				  <Nav.Link href="/createPost">Create Post</Nav.Link>
 				  <Nav.Link href="/createTopic">Create Topic</Nav.Link>
 				  <Nav.Link href="/message">Direct Message</Nav.Link>
 				  <Nav.Link href="/SavedPosts">Saved Posts</Nav.Link>

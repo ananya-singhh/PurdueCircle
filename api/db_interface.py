@@ -2,7 +2,6 @@ from hashlib import new
 from multiprocessing.dummy import Array
 from turtle import pos
 from firebase_admin import credentials, firestore, initialize_app
-from sympy import Id
 from .User import User
 from .Post import Post
 from .Comment import Comment
@@ -284,7 +283,7 @@ class db_interface(object):
         posts = self.posts.where(u'topic', u'==', topic).stream()
         posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
-            if not self.users.document(username).get().to_dict()['blocked_users']:
+            if not self.users.document(username).get().to_dict()['blocked']:
                 res.append(post.id)
         return res
     
@@ -292,13 +291,24 @@ class db_interface(object):
     def get_timeline_user(self, username):
         res = []
         user = self.users.document(username).get().to_dict()
-        posts1 = self.posts.where(u'author', u'in', user['following']).stream()
-        posts2 = self.posts.where(u'topic', u'in', user['followed_topics']).stream()
-        posts = posts1 + posts2
-        posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
-        for post in posts:
-            if not self.users.document(username).get().to_dict()['blocked_users']:
-                res.append(post.id)
+        posts1 = None
+        posts2 = None
+        if len(user['following']) > 0:
+            posts1 = self.posts.where(u'author', u'in', user['following']).stream()
+        if len(user['followed_topics']) > 0:
+            posts2 = self.posts.where(u'topic', u'in', user['followed_topics']).stream()
+            
+            
+        if posts1: posts1 = sorted(posts1, key=lambda x: x.to_dict()['date_posted'], reverse=True)
+        if posts2: posts2 = sorted(posts2, key=lambda x: x.to_dict()['date_posted'], reverse=True)
+        if posts1:
+            for post in posts1:
+                if not self.users.document(username).get().to_dict()['blocked']:
+                    res.append(post.id)
+        if posts2:
+            for post in posts2:
+                if not self.users.document(username).get().to_dict()['blocked']:
+                    res.append(post.id)
         return res
 
     #get userline of a user

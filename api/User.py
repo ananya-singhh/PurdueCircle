@@ -1,6 +1,4 @@
 from typing import List
-
-from sympy import postfixes
 from .Constants import *
 
 class User(object):

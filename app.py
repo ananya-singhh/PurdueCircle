@@ -112,11 +112,6 @@ def edit_post():
     db.edit_post(request_data['id'], {'content': request_data['content']})
     return {"uhh":"idk"}
     
-@app.route('/delete_post', methods=['DELETE'])
-def delete_post():
-    db.delete_post(request.args['id'])
-    return {"uhh":"idk"}
-    
 @app.route('/create_topic', methods=['POST'])
 def create_topic(): # returns exists if topic exists
     request_data  = request.get_json()
@@ -191,15 +186,6 @@ def get_post():
     dict = db.get_post(id)
     return dict
 
-@app.route('/edit_post', methods=['PUT'])
-def edit_post():
-    request_data = request.get_json()
-    #print(request_data)
-    copy = request_data.copy()
-    copy.pop('id')
-    #print(copy)
-    res = db.edit_post(request_data['id'], copy)
-    return{"no" : "bitches"}
 
 @app.route('/delete_post', methods=['DELETE'])
 def delete_post():

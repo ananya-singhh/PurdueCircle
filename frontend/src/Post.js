@@ -28,7 +28,7 @@ import CommentsPage from './CommentsPage';
     
     
     function Post(props) {
-
+        var random = 0;
         var id = props.id; // pass id to the post, ex. <Post id={"exampleID"}/>, the id in this line will be "exampleID"
         const [postInfo, setPostInfo] = useState({});
         const currentUser = JSON.parse(localStorage.getItem('user'));
@@ -36,12 +36,37 @@ import CommentsPage from './CommentsPage';
         const [checked, setChecked] = useState(false);
         const [commentsVisible, setCommentsVisible] = useState(false);
         const handleUnlike = (e) => {
-            console.log("unliked");
-            setChecked(!checked);
+            axios({
+                method: 'put',
+                url: 'http://127.0.0.1:5000/unlike_post',
+                data: {
+                  post_id: id,
+                  username: currentUser['username'],
+                }
+              }).then( res => {
+                setChecked(!checked);
+                getPost();
+              }).catch(error => {
+                console.error(error);
+                //navigate("/404");
+              })
         }
         const handleLike = (e) => {
-            console.log("liked");
-            setChecked(!checked);
+            axios({
+                method: 'put',
+                url: 'http://127.0.0.1:5000/like_post',
+                data: {
+                  post_id: id,
+                  username: currentUser['username'],
+                }
+              }).then( res => {
+                setChecked(!checked);
+                getPost();
+              }).catch(error => {
+                console.error(error);
+                //navigate("/404");
+              })
+              
         }
         function checkLiked() {
             return checked;
@@ -73,9 +98,6 @@ import CommentsPage from './CommentsPage';
                 console.error(error);
                 //navigate("/404");
               })
-
-
-
             getPost();
         }
 
@@ -85,8 +107,6 @@ import CommentsPage from './CommentsPage';
                 url: 'http://127.0.0.1:5000/get_post?id=' + id,
               }).then( res => {
                 setPostInfo(res.data);
-                console.log(id)
-                console.log(postInfo['title'])
               }).catch(error => {
                 console.error(error);
                 //navigate("/404");
@@ -94,7 +114,7 @@ import CommentsPage from './CommentsPage';
         }
         useEffect(() => {
             getPost();
-        }, [id]);
+        }, [random]);
 
         const [show, setShow] = useState(false);
         const handleNo = () => {
@@ -108,21 +128,19 @@ import CommentsPage from './CommentsPage';
               method: 'delete',
               url: 'http://127.0.0.1:5000/delete_post?id=' + id,
             }).then( res => {
-              
-              
-                
+              window.location.reload(true);
             }).catch(error => {
               console.log(error);
               //navigate("/404");
             })
-            window.location.reload(true);
+            
           }
 
         return (
             <Container className="App-post" Style="margin-bottom: 10px;">
             <Card className="text-left" bg="light">
             
-            {postInfo['author'] === currentUser['username'] ?
+            {postInfo['author'] && currentUser && postInfo['author'] === currentUser['username'] ?
                 <Card.Header>
                 <Row>
                 <Col>
@@ -174,10 +192,10 @@ import CommentsPage from './CommentsPage';
             <Card.Footer>
                 <Container>
                     <Row>
+                        <Col md={{ span: 2 }}>{postInfo['liked_by'] && postInfo['liked_by'].length > 0 ? postInfo['liked_by'].length : 0} Likes</Col>
                         <Col md={{ span: 2 }}>0 Likes</Col>
-                        <Col md={{ span: 3 }}>0 Comments</Col>
                         <Col md={{span: 1, offset: 3}}><Button variant="link" onClick={toggleComments}>Comments</Button></Col>
-                        <Col md={{ span: 2, offset: 1}}>{(checkLiked()) ?
+                        <Col md={{ span: 2, offset: 1}}>{postInfo && checkLiked() ?
                         <ToggleButton
                         className="mb-2"
                         id="toggle-check"
@@ -205,7 +223,7 @@ import CommentsPage from './CommentsPage';
                     </Row>
                     <Row>
                         
-                        {(checkCommentsVisible()) ? <CommentsPage curPostId={id}/> : null}
+                        {(checkCommentsVisible()) ? <CommentsPage curPostId={id} /> : null}
                     </Row>
                 </Container>
             </Card.Footer>

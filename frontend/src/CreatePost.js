@@ -6,19 +6,10 @@ import Form from 'react-bootstrap/Form';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
-import Image from 'react-bootstrap/Image'
-import FigureImage from 'react-bootstrap/FigureImage'
-
-import pic1 from "./images/1.jpg";
-import pic2 from "./images/2.jpg";
-import pic3 from "./images/3.jpg";
-import pic4 from "./images/4.jpg";
-import pic5 from "./images/5.jpg";
-import pic6 from "./images/6.jpg";
 
 
     function CreatePost() {
-        
+        const topic = useParams()['topic']
         const user = JSON.parse(localStorage.getItem('user'));
         const [content, setContent] = useState({content: "", title: ""});
         const navigate = useNavigate();
@@ -31,11 +22,9 @@ import pic6 from "./images/6.jpg";
                 content: content.content,
                 title: content.title,
                 username: user['username'],
-                topic: "",
+                topic: topic,
               }
             }).then( res => {
-              
-              
               navigate('/homepage/')
                 
             }).catch(error => {

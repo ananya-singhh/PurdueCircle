@@ -91,7 +91,6 @@ function Header() {
 				  <Nav.Link href="/SavedPosts">Saved Posts</Nav.Link>
 				  <NavDropdown title={user['username']} id="navbarScrollingDropdown">
 					  <NavDropdown.Item onClick={() => navigate('/Profile/'+user['username'])}>View Profile</NavDropdown.Item>
-					  <NavDropdown.Item href="/changepwd">Change Password</NavDropdown.Item>
 					  <NavDropdown.Divider />
 					  <NavDropdown.Item onClick={handleShow}>Logout</NavDropdown.Item>
 				  </NavDropdown>

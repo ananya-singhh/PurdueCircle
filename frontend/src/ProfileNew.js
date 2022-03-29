@@ -186,6 +186,7 @@ function ProfileNew() {
 
   return (
   <Container className="App-pfpage">
+    <br></br>
     <Row>
     <Col md={{ span: 6, offset: 4}}>
   <Card className="text-center" bg="light" style={{ width: '18rem' }}>
@@ -213,6 +214,7 @@ function ProfileNew() {
   </Card>
   </Col>
   </Row>
+  <br></br>
   <Row>
   <Col md={{ span: 9, offset: 1}}>
   <ListGroup variant="flush">
@@ -230,7 +232,6 @@ function ProfileNew() {
   console.log("i rendered with the blocked status of: " + checkBlocking());
   return (
     <Container className="App-pfpage">
-      // others
       
     <Card className="text-center" bg="light" style={{ width: '18rem' }}>
       <Card.Body>

@@ -31,6 +31,7 @@ function Homepage() {
         return (
 
           <Container className="App-Topic">
+            <br></br>
           <ListGroup variant="flush">
           {list.map((item) => (
             <Post id={item}/>

@@ -175,6 +175,24 @@ def get_post():
     dict = db.get_post(id)
     return dict
 
+@app.route('/edit_post', methods=['PUT'])
+def edit_post():
+    request_data = request.get_json()
+    #print(request_data)
+    copy = request_data.copy()
+    copy.pop('id')
+    #print(copy)
+    res = db.edit_post(request_data['id'], copy)
+    return{"no" : "bitches"}
+
+@app.route('/delete_post', methods=['DELETE'])
+def delete_post():
+    id = request.args['id']
+    res = db.delete_post(id)
+    if not res:
+        return {'data': 'Failed to delete post'}
+    return id #else returns the username
+
 @app.route('/create_comment', methods=['POST'])
 def create_comment():
     request_data = request.get_json()

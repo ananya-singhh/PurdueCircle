@@ -230,7 +230,6 @@ function ProfileNew() {
   console.log("i rendered with the blocked status of: " + checkBlocking());
   return (
     <Container className="App-pfpage">
-      // others
       
     <Card className="text-center" bg="light" style={{ width: '18rem' }}>
       <Card.Body>

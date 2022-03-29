@@ -201,7 +201,14 @@ function ProfileNew() {
       <Card.Text>
         {user ? user['bio'] : "Loading"}
       </Card.Text>
+      <Row>
+      <Col>
       <Button variant="primary" href="/EditProfile">Edit Profile</Button>
+      </Col>
+      <Col>
+      <Button variant="primary" href="/createPost">Create Post</Button>
+      </Col>
+      </Row>
     </Card.Body>
   </Card>
   </Col>

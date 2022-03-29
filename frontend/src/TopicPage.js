@@ -14,6 +14,11 @@ function TopicPage() {
   const currentUser = JSON.parse(localStorage.getItem('user'));
   const [topic, setTopic] = useState({})
   const [followed, setFollowed] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCreateProfile = (event) => {
+	  navigate('/createPost/' + title);
+  }
   
   const handleFollowing = (e) => { //you can add how to handle following/unfollowing in here
     axios({
@@ -76,12 +81,7 @@ function TopicPage() {
         return (  
         <Container className="App-Topic">
         <h1 Style="margin-top: 10px;"><strong>{title}</strong></h1>
-        <ListGroup variant="flush">
-        {list.map((item) => (
-          <ListGroup.Item action variant="light">{item}</ListGroup.Item>
-        ))}
-        </ListGroup>
-    
+          <Row>
         <Col sm={1}>
         {topic && followed ?
         <ToggleButton
@@ -111,11 +111,18 @@ function TopicPage() {
     </ToggleButton>}
       </Col>
 
-      <Col sm={1}>
-            <Button type="submit">
+      <Col sm={2}>
+            <Button type="submit" onClick={handleCreateProfile}>
               Create Post
             </Button>
-            </Col>
+      </Col>
+      </Row>
+
+            <ListGroup variant="flush">
+        {list.map((item) => (
+          <ListGroup.Item action variant="light">{item}</ListGroup.Item>
+        ))}
+        </ListGroup>
         </Container>
         );
 }

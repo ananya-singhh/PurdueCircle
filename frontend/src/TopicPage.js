@@ -21,10 +21,10 @@ function TopicPage() {
       url: 'http://127.0.0.1:5000/follow_topic',
       data: {
         topic_name: title,
-        user: currentUser['username'],
+        username: currentUser['username'],
       }
     }).then( res => {
-      
+      setFollowed(!followed)
     }).catch(error => {
       console.error(error);
       //navigate("/404");
@@ -37,10 +37,10 @@ function TopicPage() {
       url: 'http://127.0.0.1:5000/unfollow_topic',
       data: {
         topic_name: title,
-        user: currentUser['username'],
+        username: currentUser['username'],
       }
     }).then( res => {
-      //
+      setFollowed(!followed)
     }).catch(error => {
       console.error(error);
       //navigate("/404");
@@ -65,7 +65,7 @@ function TopicPage() {
           }).then( res => {
             if (res.data.data !== "failed") {
               setTopic(res.data);
-              console.log(res.data);
+              setFollowed(res.data['followed_by'].includes(currentUser['username']));
             } 
           }).catch(error => {
             //console.error(error);
@@ -83,7 +83,7 @@ function TopicPage() {
         </ListGroup>
     
         <Col sm={1}>
-        {followed ?
+        {topic && followed ?
         <ToggleButton
         className="mb-2"
         id="toggle-check"

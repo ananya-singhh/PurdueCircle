@@ -205,15 +205,13 @@ def delete_comment():
     
 @app.route('/get_comment', methods=['GET'])
 def get_comment():
-    request_data = request.get_json()
-    comment = db.get_comment(request_data['id'])
+    comment = db.get_comment(request.args['id'])
     return comment
     
 @app.route('/get_comments', methods=['GET'])
 def get_comments():
-    request_data = request.get_json()
-    comments = db.get_comments(request_data['post_id'])
-    return {"comments":comments}
+    comments = db.get_comments(request.args['post_id'])
+    return json.dumps(comments)
     
 @app.route('/save_post', methods=['PUT'])
 def save_post():

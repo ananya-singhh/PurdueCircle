@@ -38,7 +38,7 @@ const Routing = () => {
         <Route path="/SearchResults/:query" element={<SearchResults />} />
         <Route path="/homepage" element={<HomePage />} />
         <Route path="/CommentsPage" element={<CommentsPage />} />
-        <Route path="/createPost" element={<CreatePost />} />
+        <Route path="/createPost/:topic" element={<CreatePost />} />
         <Route path="/createTopic" element={<CreateTopic />} />
         <Route path="/Topic/:name" element={<TopicPage />} />
       </Routes>

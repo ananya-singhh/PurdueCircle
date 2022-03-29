@@ -84,6 +84,18 @@ class db_interface(object):
         for topic in followed_topics:
             self.topics.document(topic).update({u'followed_by': firestore.ArrayRemove([username])})
         
+        posts = user['posts']
+        for post in posts:
+            self.delete_post(post)
+            
+        posts = user['anonymous_posts']
+        for post in posts:
+            self.delete_post(post)
+        
+        comments = user['comments']
+        for comment in comments:
+            self.delete_comment(comment)
+        
         user_to_del = self.users.document(username)
         user_to_del.delete()
         if self.users.where(u'username', u'==', username).get():
@@ -121,20 +133,45 @@ class db_interface(object):
         user_to_unblock.update({u'blocked_by': firestore.ArrayRemove([username])})
             
     #create a new post
-    def create_post(self, content, title, username, topic):
+    def create_post(self, content, title, username, topic, anonymous):
         post = self.posts.document() # ref to new document
         current_date = datetime.datetime.now(tz=datetime.timezone.utc)
-        post.set({'title': title, 'content': content, 'author': username, 'topic': topic, 'date_posted': current_date})
+        new_post = Post(author=username, content=content, title=title, topic=topic, date_posted=current_date, anonymous=anonymous)
+        post.set(to_dict(new_post))
         post_info = post.get()
-        return Post(username, post_info.id, topic, title, content, current_date)
+        if anonymous:
+            self.users.document(username).update({u'anonymous_posts': firestore.ArrayUnion([post_info.id])})
+        else:
+            self.users.document(username).update({u'posts': firestore.ArrayUnion([post_info.id])})
+        return Post(username, post_info.id, topic, title, content, current_date, anonymous=anonymous)
         
     #edit a post
     def edit_post(self, id, changes: dict):
         self.posts.document(id).update(changes)
-        return True
     
     #delete a post
     def delete_post(self, id):
+        post = to_dict(Post(**self.get_post(id)))
+        username = post['author']
+        
+        user = self.users.document(username)
+        if post['anonymous']:
+            user.update({u'anonymous_posts': firestore.ArrayRemove([id])})
+        else:
+            user.update({u'posts': firestore.ArrayRemove([id])})
+        
+        liked_by = post['liked_by']
+        for liked in liked_by:
+            self.users.document(liked).update({u'liked_posts': firestore.ArrayRemove([id])})
+        
+        saved_by = post['saved_by']
+        for saved in saved_by:
+            self.users.document(saved).update({u'saved_posts': firestore.ArrayRemove([id])})
+        
+        comments = post['comments']
+        for comment in comments:
+            self.delete_comment(comment)
+
         self.posts.document(id).delete()
     
     #get a post
@@ -147,8 +184,11 @@ class db_interface(object):
     def create_comment(self, username, content, post_id):
         comment = self.comments.document() # ref to new document
         current_date = datetime.datetime.now(tz=datetime.timezone.utc)
-        comment.set({'post_id': post_id, 'content': content, 'author': username, 'date_posted': current_date})
+        new_comment = Comment(author=username, content=content, date_posted=current_date, post_id=post_id)
+        comment.set(to_dict(new_comment))
         comment_info = comment.get()
+        self.posts.document(post_id).update({u'comments': firestore.ArrayUnion([comment_info.id])})
+        self.users.document(username).update({u'comments': firestore.ArrayUnion([comment_info.id])})
         return Comment(username, comment_info.id, post_id, content, current_date)
     
     #edit a comment
@@ -201,12 +241,14 @@ class db_interface(object):
         user = self.users.document(username)
         post = self.posts.document(post_id)
         user.update({u'saved_posts': firestore.ArrayUnion([post.id])})
+        post.update({u'saved_by': firestore.ArrayUnion([username])})
     
     #unsave a post
     def unsave_post(self, username, post_id):
         user = self.users.document(username)
         post = self.posts.document(post_id)
         user.update({u'saved_posts': firestore.ArrayRemove([post.id])})
+        post.update({u'saved_by': firestore.ArrayRemove([username])})
         
     #search for users
     def search_user(self, query):
@@ -226,36 +268,60 @@ class db_interface(object):
         # TODO: implement
         pass
     
-    #get timeline of a user
+    # get the default timeline with all posts, sorted by date
     def get_timeline(self):
         res = []
         posts = self.posts.stream()
+        posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
             res.append(post.id)
         return res
     
-    def get_timeline_topic(self, topic):
+    # get the timeline by topic, filtering out posts by users the user has blocked
+    def get_timeline_topic(self, topic, username):
         res = []
-        posts = self.posts.where('topic', '==', topic).stream()
+        posts = self.posts.where(u'topic', u'==', topic).stream()
+        posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
-            res.append(post.id)
+            if not self.users.document(username).get().to_dict()['blocked']:
+                res.append(post.id)
         return res
     
-    #given username, return all of those users posts
+    # given username, return all of those posts by users the user follows or of topics the user follows, filtering out posts by users the user has blocked
     def get_timeline_user(self, username):
         res = []
-        posts = self.posts.where('author', '==', username).stream()
+        user = self.users.document(username).get().to_dict()
+        posts1 = None
+        posts2 = None
+        if len(user['following']) > 0:
+            posts1 = self.posts.where(u'author', u'in', user['following']).stream()
+        if len(user['followed_topics']) > 0:
+            posts2 = self.posts.where(u'topic', u'in', user['followed_topics']).stream()
+            
+            
+        if posts1: posts1 = sorted(posts1, key=lambda x: x.to_dict()['date_posted'], reverse=True)
+        if posts2: posts2 = sorted(posts2, key=lambda x: x.to_dict()['date_posted'], reverse=True)
+        if posts1:
+            for post in posts1:
+                if not self.users.document(username).get().to_dict()['blocked']:
+                    res.append(post.id)
+        if posts2:
+            for post in posts2:
+                if not self.users.document(username).get().to_dict()['blocked']:
+                    res.append(post.id)
+        return res
+
+    #get userline of a user
+    def get_userline(self, username, is_self):
+        res = []
+        if is_self:
+            posts = self.posts.where('author', '==', username).stream()
+        else:
+            posts = self.posts.where('author', '==', username).where('anonymous', '==', False).stream()
+        posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
             res.append(post.id)
         return res
-    
-    #given username, return all of the posts from people that the user follows 
-
-
-    #get userline of a user
-    def get_userline(self):
-        # TODO: implement
-        pass
     
     #create a new topic
     def create_topic(self, name):

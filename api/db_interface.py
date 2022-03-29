@@ -2,6 +2,7 @@ from hashlib import new
 from multiprocessing.dummy import Array
 from turtle import pos
 from firebase_admin import credentials, firestore, initialize_app
+from sympy import Id
 from .User import User
 from .Post import Post
 from .Comment import Comment
@@ -84,6 +85,18 @@ class db_interface(object):
         for topic in followed_topics:
             self.topics.document(topic).update({u'followed_by': firestore.ArrayRemove([username])})
         
+        posts = user['posts']
+        for post in posts:
+            self.delete_post(post)
+            
+        posts = user['anonymous_posts']
+        for post in posts:
+            self.delete_post(post)
+        
+        comments = user['comments']
+        for comment in comments:
+            self.delete_comment(comment)
+        
         user_to_del = self.users.document(username)
         user_to_del.delete()
         if self.users.where(u'username', u'==', username).get():
@@ -121,20 +134,44 @@ class db_interface(object):
         user_to_unblock.update({u'blocked_by': firestore.ArrayRemove([username])})
             
     #create a new post
-    def create_post(self, content, title, username, topic):
+    def create_post(self, content, title, username, topic, anonymous):
         post = self.posts.document() # ref to new document
         current_date = datetime.datetime.now(tz=datetime.timezone.utc)
-        post.set({'title': title, 'content': content, 'author': username, 'topic': topic, 'date_posted': current_date})
+        post.set({'title': title, 'content': content, 'author': username, 'topic': topic, 'date_posted': current_date, 'anonymous': anonymous})
         post_info = post.get()
-        return Post(username, post_info.id, topic, title, content, current_date)
+        if anonymous:
+            self.users.document(username).update({u'anonymous_posts': firestore.ArrayUnion([post_info.id])})
+        else:
+            self.users.document(username).update({u'posts': firestore.ArrayUnion([post_info.id])})
+        return Post(username, post_info.id, topic, title, content, current_date, anonymous=anonymous)
         
     #edit a post
     def edit_post(self, id, changes: dict):
         self.posts.document(id).update(changes)
-        return True
     
     #delete a post
     def delete_post(self, id):
+        post = to_dict(Post(**self.get_post(id)))
+        username = post['author']
+        
+        user = self.users.document(username)
+        if post['anonymous']:
+            user.update({u'anonymous_posts': firestore.ArrayRemove([id])})
+        else:
+            user.update({u'posts': firestore.ArrayRemove([id])})
+        
+        liked_by = post['liked_by']
+        for liked in liked_by:
+            self.users.document(liked).update({u'liked_posts': firestore.ArrayRemove([id])})
+        
+        saved_by = post['saved_by']
+        for saved in saved_by:
+            self.users.document(saved).update({u'saved_posts': firestore.ArrayRemove([id])})
+        
+        comments = post['comments']
+        for comment in comments:
+            self.delete_comment(comment)
+
         self.posts.document(id).delete()
     
     #get a post
@@ -149,6 +186,8 @@ class db_interface(object):
         current_date = datetime.datetime.now(tz=datetime.timezone.utc)
         comment.set({'post_id': post_id, 'content': content, 'author': username, 'date_posted': current_date})
         comment_info = comment.get()
+        self.posts.document(post_id).update({u'comments': firestore.ArrayUnion([comment_info.id])})
+        self.users.document(username).update({u'comments': firestore.ArrayUnion([comment_info.id])})
         return Comment(username, comment_info.id, post_id, content, current_date)
     
     #edit a comment
@@ -200,12 +239,14 @@ class db_interface(object):
         user = self.users.document(username)
         post = self.posts.document(post_id)
         user.update({u'saved_posts': firestore.ArrayUnion([post.id])})
+        post.update({u'saved_by': firestore.ArrayUnion([username])})
     
     #unsave a post
     def unsave_post(self, username, post_id):
         user = self.users.document(username)
         post = self.posts.document(post_id)
         user.update({u'saved_posts': firestore.ArrayRemove([post.id])})
+        post.update({u'saved_by': firestore.ArrayRemove([username])})
         
     #search for users
     def search_user(self, query):

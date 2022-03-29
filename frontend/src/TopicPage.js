@@ -17,7 +17,7 @@ function TopicPage() {
   const navigate = useNavigate();
 
   const handleCreateProfile = (event) => {
-	  navigate('/createPost/topicName');
+	  navigate('/createPost/' + title);
   }
   
   const handleFollowing = (e) => { //you can add how to handle following/unfollowing in here

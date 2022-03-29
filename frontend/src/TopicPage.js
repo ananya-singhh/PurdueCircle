@@ -14,6 +14,11 @@ function TopicPage() {
   const currentUser = JSON.parse(localStorage.getItem('user'));
   const [topic, setTopic] = useState({})
   const [followed, setFollowed] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCreateProfile = (event) => {
+	  navigate('/createPost/topicName');
+  }
   
   const handleFollowing = (e) => { //you can add how to handle following/unfollowing in here
     axios({
@@ -107,7 +112,7 @@ function TopicPage() {
       </Col>
 
       <Col sm={2}>
-            <Button type="submit">
+            <Button type="submit" onClick={handleCreateProfile}>
               Create Post
             </Button>
       </Col>

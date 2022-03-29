@@ -137,7 +137,8 @@ class db_interface(object):
     def create_post(self, content, title, username, topic, anonymous):
         post = self.posts.document() # ref to new document
         current_date = datetime.datetime.now(tz=datetime.timezone.utc)
-        post.set({'title': title, 'content': content, 'author': username, 'topic': topic, 'date_posted': current_date, 'anonymous': anonymous})
+        new_post = Post(author=username, content=content, title=title, topic=topic, date_posted=current_date, anonymous=anonymous)
+        post.set(to_dict(new_post))
         post_info = post.get()
         if anonymous:
             self.users.document(username).update({u'anonymous_posts': firestore.ArrayUnion([post_info.id])})
@@ -184,7 +185,8 @@ class db_interface(object):
     def create_comment(self, username, content, post_id):
         comment = self.comments.document() # ref to new document
         current_date = datetime.datetime.now(tz=datetime.timezone.utc)
-        comment.set({'post_id': post_id, 'content': content, 'author': username, 'date_posted': current_date})
+        new_comment = Comment(author=username, content=content, date_posted=current_date, post_id=post_id)
+        comment.set(to_dict(new_comment))
         comment_info = comment.get()
         self.posts.document(post_id).update({u'comments': firestore.ArrayUnion([comment_info.id])})
         self.users.document(username).update({u'comments': firestore.ArrayUnion([comment_info.id])})
@@ -266,36 +268,49 @@ class db_interface(object):
         # TODO: implement
         pass
     
-    #get timeline of a user
+    # get the default timeline with all posts, sorted by date
     def get_timeline(self):
         res = []
         posts = self.posts.stream()
+        posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
             res.append(post.id)
         return res
     
-    def get_timeline_topic(self, topic):
+    # get the timeline by topic, filtering out posts by users the user has blocked
+    def get_timeline_topic(self, topic, username):
         res = []
-        posts = self.posts.where('topic', '==', topic).stream()
+        posts = self.posts.where(u'topic', u'==', topic).stream()
+        posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
-            res.append(post.id)
+            if not self.users.document(username).get().to_dict()['blocked_users']:
+                res.append(post.id)
         return res
     
-    #given username, return all of those users posts
+    # given username, return all of those posts by users the user follows or of topics the user follows, filtering out posts by users the user has blocked
     def get_timeline_user(self, username):
         res = []
-        posts = self.posts.where('author', '==', username).stream()
+        user = self.users.document(username).get().to_dict()
+        posts1 = self.posts.where(u'author', u'in', user['following']).stream()
+        posts2 = self.posts.where(u'topic', u'in', user['followed_topics']).stream()
+        posts = posts1 + posts2
+        posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
+        for post in posts:
+            if not self.users.document(username).get().to_dict()['blocked_users']:
+                res.append(post.id)
+        return res
+
+    #get userline of a user
+    def get_userline(self, username, is_self):
+        res = []
+        if is_self:
+            posts = self.posts.where('author', '==', username).stream()
+        else:
+            posts = self.posts.where('author', '==', username).where('anonymous', '==', False).stream()
+        posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
             res.append(post.id)
         return res
-    
-    #given username, return all of the posts from people that the user follows 
-
-
-    #get userline of a user
-    def get_userline(self):
-        # TODO: implement
-        pass
     
     #create a new topic
     def create_topic(self, name):

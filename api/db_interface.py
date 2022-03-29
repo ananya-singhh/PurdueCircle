@@ -170,6 +170,7 @@ class db_interface(object):
         res = []
         for comment in comments:
             res.append(comment.id)
+            print(comment.id)
         return res
                 
     #send a message

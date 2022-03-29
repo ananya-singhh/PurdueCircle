@@ -76,12 +76,7 @@ function TopicPage() {
         return (  
         <Container className="App-Topic">
         <h1 Style="margin-top: 10px;"><strong>{title}</strong></h1>
-        <ListGroup variant="flush">
-        {list.map((item) => (
-          <ListGroup.Item action variant="light">{item}</ListGroup.Item>
-        ))}
-        </ListGroup>
-    
+          <Row>
         <Col sm={1}>
         {topic && followed ?
         <ToggleButton
@@ -111,11 +106,20 @@ function TopicPage() {
     </ToggleButton>}
       </Col>
 
-      <Col sm={1}>
+      <Col sm={2}>
             <Button type="submit">
               Create Post
             </Button>
-            </Col>
+      </Col>
+      </Row>
+
+            // timeline below
+
+            <ListGroup variant="flush">
+        {list.map((item) => (
+          <ListGroup.Item action variant="light">{item}</ListGroup.Item>
+        ))}
+        </ListGroup>
         </Container>
         );
 }

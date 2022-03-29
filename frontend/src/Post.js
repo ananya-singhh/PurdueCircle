@@ -110,7 +110,7 @@ import CommentsPage from './CommentsPage';
                     </Row>
                     <Row>
                         
-                        {(checkCommentsVisible()) ? <CommentsPage  /> : null}
+                        {(checkCommentsVisible()) ? <CommentsPage curPostId={id}/> : null}
                     </Row>
                 </Container>
             </Card.Footer>

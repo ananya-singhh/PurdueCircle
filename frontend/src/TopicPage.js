@@ -7,6 +7,7 @@ import axios from 'axios';
 import ListGroup from 'react-bootstrap/ListGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import Button from 'react-bootstrap/Button';
+import Post from './Post'
 
 
 function TopicPage() { 
@@ -55,7 +56,7 @@ function TopicPage() {
   useEffect(() => {
           axios({
             method: 'get',
-            url: 'http://127.0.0.1:5000/get_timeline_topic?topic='+title,
+            url: 'http://127.0.0.1:5000/get_timeline_topic?topic='+title + '&user=' + currentUser['username'],
           }).then( res => {
             if (res.data.data !== "No Results") {
               setList(res.data)
@@ -66,7 +67,7 @@ function TopicPage() {
           })
           axios({
             method: 'get',
-            url: 'http://127.0.0.1:5000/get_topic?name='+title,
+            url: 'http://127.0.0.1:5000/get_topic?name='+title ,
           }).then( res => {
             if (res.data.data !== "failed") {
               setTopic(res.data);
@@ -119,9 +120,9 @@ function TopicPage() {
       </Row>
 
             <ListGroup variant="flush">
-        {list.map((item) => (
-          <ListGroup.Item action variant="light">{item}</ListGroup.Item>
-        ))}
+            {list.map((item) => (
+                <Post id={item}/>
+              ))}
         </ListGroup>
         </Container>
         );

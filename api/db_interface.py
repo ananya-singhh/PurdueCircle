@@ -1,6 +1,6 @@
 from hashlib import new
 from multiprocessing.dummy import Array
-from turtle import pos
+#from turtle import pos
 from firebase_admin import credentials, firestore, initialize_app
 from .User import User
 from .Post import Post
@@ -139,6 +139,30 @@ class db_interface(object):
         print(post.to_dict())
         return post.to_dict()
     
+    #get a post with its title
+    def get_post2(self, title):
+        posts = self.posts.where(u'title', u"==", title).limit(1).stream()
+        post = next(posts,None)
+        if not post:
+            return None
+        return post.to_dict(),
+    
+    #get a post's id with its title
+    def get_post_id(self, title):
+        posts = self.posts.where(u'title', u"==", title).limit(1).stream()
+        res = []
+        # posts = self.posts.where('author', '==', username).stream()
+        for post in posts:
+            res.append(post.id)
+        return res[0]
+        
+        # post = self.posts.where(u'title', u'==', u'test').stream()
+        # print(post)
+        # print(post.to_dict())
+        # return post.to_dict()
+    
+    
+    
     #create a new comment
     def create_comment(self, username, content, post_id):
         comment = self.comments.document() # ref to new document
@@ -162,7 +186,14 @@ class db_interface(object):
         for comment in comments:
             res[to_dict(comment)['id']] = to_dict(comment)
         return res
-                
+    
+    # def get_comments2(self, title):
+    #     comments = self.comments.where(u'title', u'==', title).stream()
+    #     res = {}
+    #     for comment in comments:
+    #         res[to_dict(comment)['title']] = to_dict(comment)
+    #     return res
+         
     #send a message
     def send_message(self):
         # TODO: implement

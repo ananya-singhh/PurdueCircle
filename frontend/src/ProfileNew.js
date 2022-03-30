@@ -165,6 +165,7 @@ function ProfileNew() {
     useEffect(() => {
       getUser()
       // if (localStorage.getItem('user')) navigate('/homepage');
+      
       axios({
         method: 'get',
         url: 'http://127.0.0.1:5000/get_timeline_user?user='+currentUser['username'],

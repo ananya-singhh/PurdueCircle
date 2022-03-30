@@ -250,6 +250,15 @@ class db_interface(object):
         user.update({u'saved_posts': firestore.ArrayRemove([post.id])})
         post.update({u'saved_by': firestore.ArrayRemove([username])})
         
+    def saved_timeline(self, username):
+        res = []
+        posts = self.posts.where(u'saved_by', u'array_contains', username).stream()
+        if not posts:
+            return res
+        for post in posts:
+            res.append(post.id)
+        return res 
+         
     #search for users
     def search_user(self, query):
         res = []
@@ -283,7 +292,7 @@ class db_interface(object):
         posts = self.posts.where(u'topic', u'==', topic).stream()
         posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
-            if not self.users.document(username).get().to_dict()['blocked']:
+            if post['author'] not in self.users.document(username).get().to_dict()['blocked']:
                 res.append(post.id)
         return res
     
@@ -303,11 +312,11 @@ class db_interface(object):
         if posts2: posts2 = sorted(posts2, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         if posts1:
             for post in posts1:
-                if not self.users.document(username).get().to_dict()['blocked']:
+                if post['author'] not in self.users.document(username).get().to_dict()['blocked']:
                     res.append(post.id)
         if posts2:
             for post in posts2:
-                if not self.users.document(username).get().to_dict()['blocked']:
+                if post['author'] not in self.users.document(username).get().to_dict()['blocked']:
                     res.append(post.id)
         return res
 

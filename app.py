@@ -261,6 +261,14 @@ def get_topic():
         return ret
     else:
         return {"data" : "failed"}
+    
+@app.route('/get_saved_posts', methods=['GET'])
+def get_saved_posts():
+    ret = db.saved_timeline(request.args['username'])
+    if ret:
+        return json.dumps(ret)
+    else:
+        return {"data" : "failed"}
 
 if __name__ == "__main__":
     app.run(debug=True)

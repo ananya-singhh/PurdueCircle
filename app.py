@@ -103,9 +103,15 @@ def search_for_user():
 @app.route('/create_post', methods=['POST'])
 def create_post():
     request_data = request.get_json()
-    created_post = db.create_post(request_data['content'], request_data['title'], request_data['username'], request_data['topic'])
+    created_post = db.create_post(request_data['content'], request_data['title'], request_data['username'], request_data['topic'], request_data['anonymous'])
     return to_dict(created_post)
-
+    
+@app.route('/edit_post', methods=['PUT'])
+def edit_post():
+    request_data = request.get_json()
+    db.edit_post(request_data['id'], {'content': request_data['content']})
+    return {"uhh":"idk"}
+    
 @app.route('/create_topic', methods=['POST'])
 def create_topic(): # returns exists if topic exists
     request_data  = request.get_json()
@@ -114,7 +120,23 @@ def create_topic(): # returns exists if topic exists
         return {'data': topic_name}
     else: 
         return {'data': 'exists'}
-
+        
+@app.route('/follow_topic', methods=['PUT'])
+def follow_topic():
+    request_data = request.get_json()
+    username = request_data['username']
+    topic_name = request_data['topic_name']
+    db.follow_topic(topic_name, username)
+    return {'username':username, 'topic_name':topic_name}
+    
+@app.route('/unfollow_topic', methods=['PUT'])
+def unfollow_topic():
+    request_data = request.get_json()
+    username = request_data['username']
+    topic_name = request_data['topic_name']
+    db.unfollow_topic(topic_name, username)
+    return {'username':username, 'topic_name':topic_name}
+        
 @app.route('/get_timeline', methods=['GET'])
 def get_timeline():
     """_summary_
@@ -137,12 +159,20 @@ def get_timeline():
     return json.dumps(db.get_timeline())
 
 @app.route('/get_timeline_user', methods=['GET'])
-def get_timeline_user():    
+def get_timeline_user(): 
+    print("")   
     return json.dumps(db.get_timeline_user(request.args['user']))
 
 @app.route('/get_timeline_topic', methods=['GET'])
 def get_timeline_topic():
-    return json.dumps(db.get_timeline_topic(request.args['topic']))
+    print("")
+    return json.dumps(db.get_timeline_topic(request.args['topic'], request.args['user']))
+
+# get_userline
+@app.route('/get_userline', methods=['GET'])
+def get_userline():
+    print('I am here')
+    return json.dumps(db.get_userline(request.args['user'], request.args['is_self']))
 
 @app.route('/search_for_topic', methods=['GET'])
 def search_for_topic():
@@ -158,6 +188,15 @@ def get_post():
     id = request.args['id']
     dict = db.get_post(id)
     return dict
+
+
+@app.route('/delete_post', methods=['DELETE'])
+def delete_post():
+    id = request.args['id']
+    res = db.delete_post(id)
+    if not res:
+        return {'data': 'Failed to delete post'}
+    return id #else returns the username
 
 @app.route('/create_comment', methods=['POST'])
 def create_comment():
@@ -176,11 +215,63 @@ def delete_comment():
     db.delete_comment(request.args['id'])
     return {"uhh":"idk"}
     
+@app.route('/get_comment', methods=['GET'])
+def get_comment():
+    comment = db.get_comment(request.args['id'])
+    return comment
+    
 @app.route('/get_comments', methods=['GET'])
 def get_comments():
+    comments = db.get_comments(request.args['post_id'])
+    return json.dumps(comments)
+    
+@app.route('/save_post', methods=['PUT'])
+def save_post():
     request_data = request.get_json()
-    comments = db.get_comments(request_data['post_id'])
-    return comments
+    username = request_data['username']
+    post_id = request_data['post_id']
+    db.save_post(username, post_id)
+    return {'username':username, 'post_id':post_id} #else returns the username
+    
+@app.route('/unsave_post', methods=['PUT'])
+def unsave_post():
+    request_data = request.get_json()
+    username = request_data['username']
+    post_id = request_data['post_id']
+    db.unsave_post(username, post_id)
+    return {'username':username, 'post_id':post_id} #else returns the username
+    
+@app.route('/like_post', methods=['PUT'])
+def like_post():
+    request_data = request.get_json()
+    username = request_data['username']
+    post_id = request_data['post_id']
+    db.like_post(username, post_id)
+    return {'username':username, 'post_id':post_id} #else returns the username
+    
+@app.route('/unlike_post', methods=['PUT'])
+def unlike_post():
+    request_data = request.get_json()
+    username = request_data['username']
+    post_id = request_data['post_id']
+    db.unlike_post(username, post_id)
+    return {'username':username, 'post_id':post_id} #else return
+
+@app.route('/get_topic', methods=['GET'])
+def get_topic():
+    ret = db.get_topic(request.args['name'])
+    if ret:
+        return ret
+    else:
+        return {"data" : "failed"}
+    
+@app.route('/get_saved_posts', methods=['GET'])
+def get_saved_posts():
+    ret = db.saved_timeline(request.args['username'])
+    if ret:
+        return json.dumps(ret)
+    else:
+        return {"data" : "failed"}
 
 if __name__ == "__main__":
     app.run(debug=True)

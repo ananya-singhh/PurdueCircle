@@ -24,7 +24,49 @@ import pic6 from "./images/6.jpg";
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'
 import ToggleButton from 'react-bootstrap/ToggleButton';
 //TODO: implement posting comment functionality
-function CommentsPage() {
+function CommentsPage(props) {
+    var curPostId = props.curPostId;
+    const user = JSON.parse(localStorage.getItem('user'));
+    const [content, setContent] = useState("");
+    const navigate = useNavigate();
+
+    function createComment() {
+        axios({
+          method: 'POST',
+          url: 'http://127.0.0.1:5000/create_comment',
+          data: {
+            content: content,
+            username: user['username'],
+            post_id: curPostId,
+          }
+        }).then( res => {
+          getComments();
+        }).catch(error => {
+          console.log(error);
+          //navigate("/404");
+        })
+        //getComments();
+      }
+
+    function getComments() {
+        axios({
+            method: 'get',
+            url: 'http://127.0.0.1:5000/get_comments?post_id=' + curPostId,
+          }).then( res => {
+            if (res.data.data !== "No Results") {
+              setCommentsList(res.data)
+              console.log(res.data)
+            } 
+          }).catch(error => {
+            //console.error(error);
+            //navigate("/404");
+          })
+    }
+    const [commentsList, setCommentsList] = useState([]);
+    useEffect(() => {
+        getComments();
+      }, []);
+
     return (
         <Container>
         
@@ -33,15 +75,18 @@ function CommentsPage() {
             <Card.Body>
                 <Form>
                     <Card.Title>Add a Comment...</Card.Title>
-                    <Form.Control placeholder="Type your comment here" Style="margin-bottom: 10px;"/>
-                    <Button variant="primary" type="submit">Post</Button>
+                    <Form.Control placeholder="Type your comment here" Style="margin-bottom: 10px;" onChange = {e => setContent(e.target.value)} value={content}/>
+                    <Button variant="primary" onClick={ () => createComment()}>Post</Button>
                 </Form>
             <Card.Title Style="margin-top: 10px;">Comments</Card.Title>
+            <Card.Subtitle>{commentsList && commentsList.length != 1 ? commentsList.length + " Comments" : "1 Comment"} </Card.Subtitle>
+            {commentsList && commentsList.length > 0 ?
             <ListGroup variant="flush">
-                <ListGroup.Item><Comment /></ListGroup.Item>
-                <ListGroup.Item><Comment /></ListGroup.Item>
-                <ListGroup.Item><Comment /></ListGroup.Item>
-            </ListGroup>
+                {commentsList.map((item) => (
+                <ListGroup.Item><Comment commentId={item}/></ListGroup.Item>
+                ))}
+            </ListGroup> : <h1 Style="margin-top: 10px;"><strong>No Comments</strong></h1>
+            }
             </Card.Body>
         </Card>
         </Container>

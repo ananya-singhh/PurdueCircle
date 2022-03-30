@@ -85,13 +85,11 @@ function Header() {
 				
 
 				<Nav>
-				  <Nav.Link href="/createPost">Create Post</Nav.Link>
 				  <Nav.Link href="/createTopic">Create Topic</Nav.Link>
 				  <Nav.Link href="/message">Direct Message</Nav.Link>
 				  <Nav.Link href="/SavedPosts">Saved Posts</Nav.Link>
 				  <NavDropdown title={user['username']} id="navbarScrollingDropdown">
 					  <NavDropdown.Item onClick={() => navigate('/Profile/'+user['username'])}>View Profile</NavDropdown.Item>
-					  <NavDropdown.Item href="/changepwd">Change Password</NavDropdown.Item>
 					  <NavDropdown.Divider />
 					  <NavDropdown.Item onClick={handleShow}>Logout</NavDropdown.Item>
 				  </NavDropdown>
@@ -117,7 +115,7 @@ function Header() {
 			  <Form className="d-flex" onSubmit={handleSearch}>
         		<FormControl
           		type="text"
-          		placeholder="Search For Users"
+          		placeholder="Search For User or Topic"
           		className="me-2"
           		aria-label="Search"
 				onChange = {e => setQuery(e.target.value)} value={query}

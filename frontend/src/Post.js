@@ -32,6 +32,20 @@ import CommentsPage from './CommentsPage';
         var id = props.id; // pass id to the post, ex. <Post id={"exampleID"}/>, the id in this line will be "exampleID"
         const [postInfo, setPostInfo] = useState({});
         const currentUser = JSON.parse(localStorage.getItem('user'));
+      
+
+        const [saved, setSaved] = useState(false);
+        const handleUnsave = (e) => {
+            setSaved(!saved);
+        }
+        const handleSave = (e) => {
+            setSaved(!saved);
+        }
+        function checkSaved() {
+            return saved;
+        }
+
+
 
         const [checked, setChecked] = useState(false);
         const [commentsVisible, setCommentsVisible] = useState(false);
@@ -194,9 +208,8 @@ import CommentsPage from './CommentsPage';
                 <Container>
                     <Row>
                         <Col md={{ span: 2 }}>{postInfo['liked_by'] && postInfo['liked_by'].length > 0 ? postInfo['liked_by'].length : 0} Likes</Col>
-                        <Col md={{ span: 2 }}>0 Likes</Col>
-                        <Col md={{span: 1, offset: 3}}><Button variant="link" onClick={toggleComments}>Comments</Button></Col>
-                        <Col md={{ span: 2, offset: 1}}>{postInfo && checkLiked() ?
+                        <Col md={{span: 1, offset: 4}}><Button variant="link" onClick={toggleComments}>Comments</Button></Col>
+                        <Col xs={2} md={{offset: 1}}>{postInfo && checkLiked() ?
                         <ToggleButton
                         className="mb-2"
                         id="toggle-check"
@@ -220,6 +233,32 @@ import CommentsPage from './CommentsPage';
                         Style="margin-right=25px;"
                         >
                         Like
+                        </ToggleButton>}</Col>
+
+                        <Col xs={1}>{postInfo && checkSaved() ?
+                        <ToggleButton
+                        className="mb-2"
+                        id="toggle-check"
+                        type="checkbox"
+                        variant="outline-primary"
+                        checked={false}
+                        value="1"
+                        onClick={handleUnsave}
+                        Style="margin-right=25px;"
+                        >
+                        Unsave
+                        </ToggleButton> :
+                        <ToggleButton
+                        className="mb-2"
+                        id="toggle-check"
+                        type="checkbox"
+                        variant="outline-primary"
+                        checked={true}
+                        value="1"
+                        onClick={handleSave}
+                        Style="margin-right=25px;"
+                        >
+                        Save
                         </ToggleButton>}</Col>
                     </Row>
                     <Row>

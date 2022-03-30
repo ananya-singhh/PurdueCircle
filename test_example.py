@@ -94,7 +94,7 @@ def edit_post():
 
 # user story 12
 def test_delete_post():
-    
+    db.delete_post(post_id)
     
     
     
@@ -118,7 +118,7 @@ def test_user_posts():
 
    
 create_post()
-# comment_post()
+comment_post()
 print(post_id)
 edit_post()
 

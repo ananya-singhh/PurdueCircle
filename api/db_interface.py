@@ -292,7 +292,7 @@ class db_interface(object):
         posts = self.posts.where(u'topic', u'==', topic).stream()
         posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
-            if post['author'] not in self.users.document(username).get().to_dict()['blocked']:
+            if post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked']:
                 res.append(post.id)
         return res
     
@@ -312,11 +312,11 @@ class db_interface(object):
         if posts2: posts2 = sorted(posts2, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         if posts1:
             for post in posts1:
-                if post['author'] not in self.users.document(username).get().to_dict()['blocked']:
+                if post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked']:
                     res.append(post.id)
         if posts2:
             for post in posts2:
-                if post['author'] not in self.users.document(username).get().to_dict()['blocked']:
+                if post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked']:
                     res.append(post.id)
         return res
 
@@ -330,6 +330,7 @@ class db_interface(object):
         posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
             res.append(post.id)
+        print(res)
         return res
     
     #create a new topic

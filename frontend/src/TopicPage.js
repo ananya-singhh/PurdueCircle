@@ -59,6 +59,7 @@ function TopicPage() {
             url: 'http://127.0.0.1:5000/get_timeline_topic?topic='+title + '&user=' + currentUser['username'],
           }).then( res => {
             if (res.data.data !== "No Results") {
+              console.log(res.data)
               setList(res.data)
             } 
           }).catch(error => {

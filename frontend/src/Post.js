@@ -216,7 +216,7 @@ import CommentsPage from './CommentsPage';
                 <Card.Header>
                 <Card.Title>{postInfo['title'] ? postInfo['title'] : "Loading..."}</Card.Title> 
                 <Card.Subtitle>{postInfo['author'] ? "@" + postInfo['author'] : "Loading..."}</Card.Subtitle>
-                {postInfo['anonymous'] ? "@" + postInfo['anonymous'] : "Loading..."}
+                {postInfo['anonymous'] ? "Anonymous User" : "Loading..."}
                 </Card.Header>
                 }
         

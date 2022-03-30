@@ -177,7 +177,7 @@ class db_interface(object):
     #get a post
     def get_post(self, id):
         post = self.posts.document(id).get()
-        print(post.to_dict())
+        #print(post.to_dict())
         return post.to_dict()
     
     #create a new comment
@@ -210,7 +210,7 @@ class db_interface(object):
         res = []
         for comment in comments:
             res.append(comment.id)
-            print(comment.id)
+            #print(comment.id)
         return res
                 
     #send a message
@@ -264,12 +264,12 @@ class db_interface(object):
         res = []
         end = query[0:-1]
         end += str(chr(ord(query[-1]) + 1)) # increment last char of end
-        print(f'initial: {query}    end: {end}' )
+        #print(f'initial: {query}    end: {end}' )
         
         users = self.users.where('username', '>=', query).where('username', '<', end).stream() # cursed query to find users that start with the query
         for user in users:
             res.append(user.to_dict()['username']) # build list of usernames to return
-        print(res)
+        #print(res)
         return res
     
     #tag post with topic
@@ -330,7 +330,7 @@ class db_interface(object):
         posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
             res.append(post.id)
-        print(res)
+        #print(res)
         return res
     
     #create a new topic
@@ -368,7 +368,7 @@ class db_interface(object):
         topics = self.topics.stream() # cursed query to find topics that start with the query
         for topic in topics:
             if topic.id.startswith(query): res.append(topic.id) # build list of topic names to return
-        print(res)
+        #print(res)
         return res
     
     def get_topic(self, name):

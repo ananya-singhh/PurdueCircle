@@ -177,7 +177,7 @@ def get_userline():
 @app.route('/search_for_topic', methods=['GET'])
 def search_for_topic():
     query = request.args['query']
-    print(query)
+    
     list = db.search_topic(query)
     if not list:
         return {'data': 'No Results'}

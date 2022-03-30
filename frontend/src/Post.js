@@ -36,14 +36,38 @@ import CommentsPage from './CommentsPage';
 
         const [saved, setSaved] = useState(false);
         const handleUnsave = (e) => {
-            setSaved(!saved);
+            axios({
+              method: 'put',
+              url: 'http://127.0.0.1:5000/unsave_post',
+              data: {
+                post_id: id,
+                username: currentUser['username'],
+              }
+            }).then( res => {
+              setSaved(!saved);
+              //getPost();
+            }).catch(error => {
+              console.error(error);
+              //navigate("/404");
+            })
         }
         const handleSave = (e) => {
+          axios({
+            method: 'put',
+            url: 'http://127.0.0.1:5000/save_post',
+            data: {
+              post_id: id,
+              username: currentUser['username'],
+            }
+          }).then( res => {
             setSaved(!saved);
+            //getPost();
+          }).catch(error => {
+            console.error(error);
+            //navigate("/404");
+          })
         }
-        function checkSaved() {
-            return saved;
-        }
+        
 
 
 
@@ -235,7 +259,7 @@ import CommentsPage from './CommentsPage';
                         Like
                         </ToggleButton>}</Col>
 
-                        <Col xs={1}>{postInfo && checkSaved() ?
+                        <Col xs={1}>{postInfo && saved ?
                         <ToggleButton
                         className="mb-2"
                         id="toggle-check"

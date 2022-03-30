@@ -1,6 +1,6 @@
 from hashlib import new
 from multiprocessing.dummy import Array
-#from turtle import pos
+from turtle import pos
 from firebase_admin import credentials, firestore, initialize_app
 from .User import User
 from .Post import Post
@@ -80,6 +80,22 @@ class db_interface(object):
         for blocked_by_ in blocked_by:
             self.users.document(blocked_by_).update({u'blocked': firestore.ArrayRemove([username])})
         
+        followed_topics = user['followed_topics']
+        for topic in followed_topics:
+            self.topics.document(topic).update({u'followed_by': firestore.ArrayRemove([username])})
+        
+        posts = user['posts']
+        for post in posts:
+            self.delete_post(post)
+            
+        posts = user['anonymous_posts']
+        for post in posts:
+            self.delete_post(post)
+        
+        comments = user['comments']
+        for comment in comments:
+            self.delete_comment(comment)
+        
         user_to_del = self.users.document(username)
         user_to_del.delete()
         if self.users.where(u'username', u'==', username).get():
@@ -117,20 +133,45 @@ class db_interface(object):
         user_to_unblock.update({u'blocked_by': firestore.ArrayRemove([username])})
             
     #create a new post
-    def create_post(self, content, title, username, topic):
+    def create_post(self, content, title, username, topic, anonymous):
         post = self.posts.document() # ref to new document
         current_date = datetime.datetime.now(tz=datetime.timezone.utc)
-        post.set({'title': title, 'content': content, 'author': username, 'topic': topic, 'date_posted': current_date})
+        new_post = Post(author=username, content=content, title=title, topic=topic, date_posted=current_date, anonymous=anonymous)
+        post.set(to_dict(new_post))
         post_info = post.get()
-        return Post(username, post_info.id, topic, title, content, current_date)
+        if anonymous:
+            self.users.document(username).update({u'anonymous_posts': firestore.ArrayUnion([post_info.id])})
+        else:
+            self.users.document(username).update({u'posts': firestore.ArrayUnion([post_info.id])})
+        return Post(username, post_info.id, topic, title, content, current_date, anonymous=anonymous)
         
     #edit a post
     def edit_post(self, id, changes: dict):
         self.posts.document(id).update(changes)
-        return True
     
     #delete a post
     def delete_post(self, id):
+        post = to_dict(Post(**self.get_post(id)))
+        username = post['author']
+        
+        user = self.users.document(username)
+        if post['anonymous']:
+            user.update({u'anonymous_posts': firestore.ArrayRemove([id])})
+        else:
+            user.update({u'posts': firestore.ArrayRemove([id])})
+        
+        liked_by = post['liked_by']
+        for liked in liked_by:
+            self.users.document(liked).update({u'liked_posts': firestore.ArrayRemove([id])})
+        
+        saved_by = post['saved_by']
+        for saved in saved_by:
+            self.users.document(saved).update({u'saved_posts': firestore.ArrayRemove([id])})
+        
+        comments = post['comments']
+        for comment in comments:
+            self.delete_comment(comment)
+
         self.posts.document(id).delete()
     
     #get a post
@@ -139,29 +180,15 @@ class db_interface(object):
         print(post.to_dict())
         return post.to_dict()
     
-    #get a post with its title
-    def get_post2(self, title):
-        posts = self.posts.where(u'title', u"==", title).limit(1).stream()
-        post = next(posts,None)
-        if not post:
-            return None
-        return post.to_dict(),
-    
-    #get a post's id with its title
-    def get_post_id(self, title):
-        posts = self.posts.where(u'title', u"==", title).limit(1).stream()
-        res = []
-        # posts = self.posts.where('author', '==', username).stream()
-        for post in posts:
-            res.append(post.id)
-        return res[0]   
-    
     #create a new comment
     def create_comment(self, username, content, post_id):
         comment = self.comments.document() # ref to new document
         current_date = datetime.datetime.now(tz=datetime.timezone.utc)
-        comment.set({'post_id': post_id, 'content': content, 'author': username, 'date_posted': current_date})
+        new_comment = Comment(author=username, content=content, date_posted=current_date, post_id=post_id)
+        comment.set(to_dict(new_comment))
         comment_info = comment.get()
+        self.posts.document(post_id).update({u'comments': firestore.ArrayUnion([comment_info.id])})
+        self.users.document(username).update({u'comments': firestore.ArrayUnion([comment_info.id])})
         return Comment(username, comment_info.id, post_id, content, current_date)
     
     #edit a comment
@@ -172,21 +199,20 @@ class db_interface(object):
     def delete_comment(self, id):
         self.comments.document(id).delete()
         
+    # returns the comment info by comment id
+    def get_comment(self, id):
+        comment = self.comments.document(id).get()
+        return comment.to_dict()
+        
     # returns the comments by post id
     def get_comments(self, post_id):
         comments = self.comments.where(u'post_id', u'==', post_id).stream()
-        res = {}
+        res = []
         for comment in comments:
-            res[to_dict(comment)['id']] = to_dict(comment)
+            res.append(comment.id)
+            print(comment.id)
         return res
-    
-    # def get_comments2(self, title):
-    #     comments = self.comments.where(u'title', u'==', title).stream()
-    #     res = {}
-    #     for comment in comments:
-    #         res[to_dict(comment)['title']] = to_dict(comment)
-    #     return res
-         
+                
     #send a message
     def send_message(self):
         # TODO: implement
@@ -198,15 +224,41 @@ class db_interface(object):
         pass
     
     #add a reaction
-    def add_reaction(self):
-        # TODO: implement
-        pass
+    def like_post(self, username, post_id):
+        user = self.users.document(username)
+        post = self.posts.document(post_id)
+        user.update({u'liked_posts': firestore.ArrayUnion([post_id])})
+        post.update({u'liked_by': firestore.ArrayUnion([username])})
     
+    def unlike_post(self, username, post_id):
+        user = self.users.document(username)
+        post = self.posts.document(post_id)
+        user.update({u'liked_posts': firestore.ArrayRemove([post_id])})
+        post.update({u'liked_by': firestore.ArrayRemove([username])})
+        
     #save a post
-    def save_post(self):
-        # TODO: implement
-        pass
+    def save_post(self, username, post_id):
+        user = self.users.document(username)
+        post = self.posts.document(post_id)
+        user.update({u'saved_posts': firestore.ArrayUnion([post.id])})
+        post.update({u'saved_by': firestore.ArrayUnion([username])})
     
+    #unsave a post
+    def unsave_post(self, username, post_id):
+        user = self.users.document(username)
+        post = self.posts.document(post_id)
+        user.update({u'saved_posts': firestore.ArrayRemove([post.id])})
+        post.update({u'saved_by': firestore.ArrayRemove([username])})
+        
+    def saved_timeline(self, username):
+        res = []
+        posts = self.posts.where(u'saved_by', u'array_contains', username).stream()
+        if not posts:
+            return res
+        for post in posts:
+            res.append(post.id)
+        return res 
+         
     #search for users
     def search_user(self, query):
         res = []
@@ -225,33 +277,61 @@ class db_interface(object):
         # TODO: implement
         pass
     
-    #get timeline of a user
+    # get the default timeline with all posts, sorted by date
     def get_timeline(self):
         res = []
         posts = self.posts.stream()
+        posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
             res.append(post.id)
         return res
     
-    def get_timeline_topic(self, topic):
+    # get the timeline by topic, filtering out posts by users the user has blocked
+    def get_timeline_topic(self, topic, username):
         res = []
-        posts = self.posts.where('topic', '==', topic)
+        posts = self.posts.where(u'topic', u'==', topic).stream()
+        posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
-            res.append(post.id)
+            if post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked']:
+                res.append(post.id)
         return res
     
-    #given username, return all of those users posts
+    # given username, return all of those posts by users the user follows or of topics the user follows, filtering out posts by users the user has blocked
     def get_timeline_user(self, username):
         res = []
-        posts = self.posts.where('author', '==', username).stream()
+        user = self.users.document(username).get().to_dict()
+        posts1 = None
+        posts2 = None
+        if len(user['following']) > 0:
+            posts1 = self.posts.where(u'author', u'in', user['following']).stream()
+        if len(user['followed_topics']) > 0:
+            posts2 = self.posts.where(u'topic', u'in', user['followed_topics']).stream()
+            
+            
+        if posts1: posts1 = sorted(posts1, key=lambda x: x.to_dict()['date_posted'], reverse=True)
+        if posts2: posts2 = sorted(posts2, key=lambda x: x.to_dict()['date_posted'], reverse=True)
+        if posts1:
+            for post in posts1:
+                if post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked']:
+                    res.append(post.id)
+        if posts2:
+            for post in posts2:
+                if post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked']:
+                    res.append(post.id)
+        return res
+
+    #get userline of a user
+    def get_userline(self, username, is_self):
+        res = []
+        if is_self:
+            posts = self.posts.where('author', '==', username).stream()
+        else:
+            posts = self.posts.where('author', '==', username).where('anonymous', '==', False).stream()
+        posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
             res.append(post.id)
+        print(res)
         return res
-    
-    #get userline of a user
-    def get_userline(self):
-        # TODO: implement
-        pass
     
     #create a new topic
     def create_topic(self, name):
@@ -262,10 +342,22 @@ class db_interface(object):
             topic.set({'time_created': datetime.datetime.now(tz=datetime.timezone.utc), 'followed_by':[]})
             return True
         
-    def follow_topic(self, topic_name, user):
+    def follow_topic(self, topic_name, username):
         topic = self.topics.document(topic_name)
+        user = self.users.document(username)
         if topic.get().exists:
-            topic.update({u'followed_by': firestore.ArrayUnion([user])})
+            topic.update({u'followed_by': firestore.ArrayUnion([username])})
+            user.update({u'followed_topics': firestore.ArrayUnion([topic_name])})
+            return True
+        else:
+            return False
+    
+    def unfollow_topic(self, topic_name, username):
+        topic = self.topics.document(topic_name)
+        user = self.users.document(username)
+        if topic.get().exists:
+            topic.update({u'followed_by': firestore.ArrayRemove([username])})
+            user.update({u'followed_topics': firestore.ArrayRemove([topic_name])})
             return True
         else:
             return False
@@ -278,6 +370,13 @@ class db_interface(object):
             if topic.id.startswith(query): res.append(topic.id) # build list of topic names to return
         print(res)
         return res
+    
+    def get_topic(self, name):
+        topic = self.topics.document(name).get()
+        if topic.exists:
+            return topic.to_dict()
+        else:
+            return None
     
     #create a message thread between two users
     def create_thread(self):

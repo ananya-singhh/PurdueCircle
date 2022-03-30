@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import FormCheck from 'react-bootstrap/FormCheck';
 
 
 
@@ -26,6 +27,7 @@ import axios from 'axios';
                 anonymous: content.anonymous,
               }
             }).then( res => {
+              console.log(content.anonymous);
               navigate('/homepage/')
                 
             }).catch(error => {
@@ -53,6 +55,12 @@ import axios from 'axios';
             <Card.Footer>
                 <div className="d-grid gap-2">
                     <Button variant="primary" size="lg" onClick={ () => create()}>Post!</Button>
+                    <Form.Check 
+                    type="switch"
+                    id="custom-switch"
+                    label="Post anonymously"
+                    onChange={e => setContent({...content, anonymous: !content.anonymous})} value={content.anonymous}
+                    />
                 </div>
             </Card.Footer>
             </Card>

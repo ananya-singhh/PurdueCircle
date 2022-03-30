@@ -165,13 +165,13 @@ function ProfileNew() {
     useEffect(() => {
       getUser()
       // if (localStorage.getItem('user')) navigate('/homepage');
-      
       axios({
         method: 'get',
-        url: 'http://127.0.0.1:5000/get_timeline_user?user='+currentUser['username'],
+        url: 'http://127.0.0.1:5000/get_userline?user=' + currentUser['username'] + '&is_self=' + ((currentUser && username === currentUser['username']) ? 1 : 0),
       }).then( res => {
         if (res.data.data !== "No Results") {
-          setList(res.data)
+          console.log(res.data);
+          setList(res.data);
         } 
       }).catch(error => {
         //console.error(error);
@@ -218,11 +218,13 @@ function ProfileNew() {
   <br></br>
   <Row>
   <Col md={{ span: 9, offset: 1}}>
+  {list && list.length > 0 ? 
   <ListGroup variant="flush">
   {list.map((item) => (
     <Post id={item}/>
   ))}
-</ListGroup>
+</ListGroup> : ""
+  }
 </Col>
 </Row>
 

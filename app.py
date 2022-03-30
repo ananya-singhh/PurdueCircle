@@ -159,16 +159,19 @@ def get_timeline():
     return json.dumps(db.get_timeline())
 
 @app.route('/get_timeline_user', methods=['GET'])
-def get_timeline_user():    
+def get_timeline_user(): 
+    print("")   
     return json.dumps(db.get_timeline_user(request.args['user']))
 
 @app.route('/get_timeline_topic', methods=['GET'])
 def get_timeline_topic():
+    print("")
     return json.dumps(db.get_timeline_topic(request.args['topic'], request.args['user']))
 
 # get_userline
 @app.route('/get_userline', methods=['GET'])
 def get_userline():
+    print('I am here')
     return json.dumps(db.get_userline(request.args['user'], request.args['is_self']))
 
 @app.route('/search_for_topic', methods=['GET'])

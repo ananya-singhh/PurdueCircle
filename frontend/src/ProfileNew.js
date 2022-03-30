@@ -208,7 +208,7 @@ function ProfileNew() {
       <Button variant="primary" href="/EditProfile">Edit Profile</Button>
       </Col>
       <Col>
-      <Button variant="primary" href="/createPost">Create Post</Button>
+      <Button variant="primary" href="/createPost/notopic">Create Post</Button>
       </Col>
       </Row>
     </Card.Body>

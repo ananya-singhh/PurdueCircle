@@ -40,12 +40,12 @@ function CommentsPage(props) {
             post_id: curPostId,
           }
         }).then( res => {
-          
+          getComments();
         }).catch(error => {
           console.log(error);
           //navigate("/404");
         })
-        getComments();
+        //getComments();
       }
 
     function getComments() {
@@ -79,6 +79,7 @@ function CommentsPage(props) {
                     <Button variant="primary" onClick={ () => createComment()}>Post</Button>
                 </Form>
             <Card.Title Style="margin-top: 10px;">Comments</Card.Title>
+            <Card.Subtitle>{commentsList && commentsList.length != 1 ? commentsList.length + " Comments" : "1 Comment"} </Card.Subtitle>
             {commentsList && commentsList.length > 0 ?
             <ListGroup variant="flush">
                 {commentsList.map((item) => (

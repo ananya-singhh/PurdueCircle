@@ -65,12 +65,21 @@ function Header() {
 				<Navbar.Collapse id="responsive-navbar-nav" collapseOnSelect="true">
   				<Nav className="me-auto">
   				</Nav>
-  				<Nav>
-				<Nav.Link href="/">Search for User</Nav.Link>
-				</Nav>
+
+
+				<Form className="d-flex" onSubmit={handleSearch}>
+        		<FormControl
+          		type="text"
+          		placeholder="Search For User or Topic"
+          		className="me-2"
+          		aria-label="Search"
+				onChange = {e => setQuery(e.target.value)} value={query}
+        		/>
+        		<Button type='submit' variant="outline-success">Search</Button>
+      			</Form>
 				</Navbar.Collapse>
-				</Container>
-				</Navbar>
+			</Container>
+			</Navbar>
         </div>
 	);
     return (

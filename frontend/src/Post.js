@@ -145,7 +145,7 @@ import CommentsPage from './CommentsPage';
                 <Row>
                 <Col>
                 <Card.Title>{postInfo['title'] ? postInfo['title'] : "Loading..."}</Card.Title> 
-                <Card.Subtitle>{postInfo['author'] ? "@" + postInfo['author'] : "Loading..."}</Card.Subtitle>
+                <Card.Subtitle>{postInfo['author'] ? postInfo['anonymous'] ? "Anonymous User" : "@" + postInfo['author'] : "Loading..."}</Card.Subtitle>
                 </Col>
                 
 
@@ -178,6 +178,7 @@ import CommentsPage from './CommentsPage';
                 <Card.Header>
                 <Card.Title>{postInfo['title'] ? postInfo['title'] : "Loading..."}</Card.Title> 
                 <Card.Subtitle>{postInfo['author'] ? "@" + postInfo['author'] : "Loading..."}</Card.Subtitle>
+                {postInfo['anonymous'] ? "@" + postInfo['anonymous'] : "Loading..."}
                 </Card.Header>
                 }
         

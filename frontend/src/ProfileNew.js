@@ -19,12 +19,15 @@ import pic6 from "./images/6.jpg";
 
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'
 import ToggleButton from 'react-bootstrap/ToggleButton';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Post from './Post';
+
 
 function ProfileNew() { 
 
   const pics = [pic1, pic2, pic3, pic4, pic5, pic6];
 
-  
+  const [list, setList] = useState([])
   const navigate = useNavigate();
   const currentUser = JSON.parse(localStorage.getItem('user'));
 
@@ -155,11 +158,26 @@ function ProfileNew() {
     })
   }
 
-  useEffect(() => {
+  /*useEffect(() => {
       getUser()
-    }, [url]);
+    }, [url]);*/
 
-  
+    useEffect(() => {
+      getUser()
+      // if (localStorage.getItem('user')) navigate('/homepage');
+      axios({
+        method: 'get',
+        url: 'http://127.0.0.1:5000/get_userline?user=' + currentUser['username'] + '&is_self=' + ((currentUser && username === currentUser['username']) ? 1 : 0),
+      }).then( res => {
+        if (res.data.data !== "No Results") {
+          console.log(res.data);
+          setList(res.data);
+        } 
+      }).catch(error => {
+        //console.error(error);
+        //navigate("/404");
+      })
+    },[]);
 
   
 
@@ -169,7 +187,9 @@ function ProfileNew() {
 
   return (
   <Container className="App-pfpage">
-    // own 
+    <br></br>
+    <Row>
+    <Col md={{ span: 6, offset: 4}}>
   <Card className="text-center" bg="light" style={{ width: '18rem' }}>
     <Card.Body>
     <FigureImage as={Image} width={125} height={125} src={pics[currentUser['profile_picture']]} roundedCircle={true} id="pfp" alt="Card image"/>
@@ -183,9 +203,31 @@ function ProfileNew() {
       <Card.Text>
         {user ? user['bio'] : "Loading"}
       </Card.Text>
+      <Row>
+      <Col>
       <Button variant="primary" href="/EditProfile">Edit Profile</Button>
+      </Col>
+      <Col>
+      <Button variant="primary" href="/createPost/notopic">Create Post</Button>
+      </Col>
+      </Row>
     </Card.Body>
   </Card>
+  </Col>
+  </Row>
+  <br></br>
+  <Row>
+  <Col md={{ span: 9, offset: 1}}>
+  {list && list.length > 0 ? 
+  <ListGroup variant="flush">
+  {list.map((item) => (
+    <Post id={item}/>
+  ))}
+</ListGroup> : ""
+  }
+</Col>
+</Row>
+
   </Container>
   );
 
@@ -193,7 +235,7 @@ function ProfileNew() {
   console.log("i rendered with the blocked status of: " + checkBlocking());
   return (
     <Container className="App-pfpage">
-      // others
+      
     <Card className="text-center" bg="light" style={{ width: '18rem' }}>
       <Card.Body>
 
@@ -267,6 +309,9 @@ function ProfileNew() {
 
       </Card.Body>
     </Card>
+
+  
+
     </Container>
   )
 }

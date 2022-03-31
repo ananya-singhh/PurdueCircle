@@ -231,9 +231,8 @@ import CommentsPage from './CommentsPage';
                 <Container>
                     <Row>
                         <Col md={{ span: 2 }}>{postInfo['liked_by'] && postInfo['liked_by'].length > 0 ? postInfo['liked_by'].length : 0} Likes</Col>
-                        <Col md={{span: 1, offset: 4}}><Button variant="link" onClick={toggleComments}>Comments</Button></Col>
-                        <Col xs={2} md={{offset: 1}}>{postInfo && checkLiked() ?
-                        <ToggleButton
+                        {currentUser ? <><Col md={{ span: 1, offset: 4 }}><Button variant="link" onClick={toggleComments}>Comments</Button></Col><Col xs={2} md={{ offset: 1 }}>{postInfo && checkLiked() ?
+                      <ToggleButton
                         className="mb-2"
                         id="toggle-check"
                         type="checkbox"
@@ -242,10 +241,10 @@ import CommentsPage from './CommentsPage';
                         value="1"
                         onClick={handleUnlike}
                         Style="margin-right=25px;"
-                        >
+                      >
                         Unlike
-                        </ToggleButton> :
-                        <ToggleButton
+                      </ToggleButton> :
+                      <ToggleButton
                         className="mb-2"
                         id="toggle-check"
                         type="checkbox"
@@ -254,35 +253,33 @@ import CommentsPage from './CommentsPage';
                         value="1"
                         onClick={handleLike}
                         Style="margin-right=25px;"
-                        >
+                      >
                         Like
-                        </ToggleButton>}</Col>
-
-                        <Col xs={1}>{postInfo && saved ?
+                      </ToggleButton>}</Col><Col xs={1}>{postInfo && saved ?
                         <ToggleButton
-                        className="mb-2"
-                        id="toggle-check"
-                        type="checkbox"
-                        variant="outline-primary"
-                        checked={false}
-                        value="1"
-                        onClick={handleUnsave}
-                        Style="margin-right=25px;"
+                          className="mb-2"
+                          id="toggle-check"
+                          type="checkbox"
+                          variant="outline-primary"
+                          checked={false}
+                          value="1"
+                          onClick={handleUnsave}
+                          Style="margin-right=25px;"
                         >
-                        Unsave
+                          Unsave
                         </ToggleButton> :
                         <ToggleButton
-                        className="mb-2"
-                        id="toggle-check"
-                        type="checkbox"
-                        variant="outline-primary"
-                        checked={true}
-                        value="1"
-                        onClick={handleSave}
-                        Style="margin-right=25px;"
+                          className="mb-2"
+                          id="toggle-check"
+                          type="checkbox"
+                          variant="outline-primary"
+                          checked={true}
+                          value="1"
+                          onClick={handleSave}
+                          Style="margin-right=25px;"
                         >
-                        Save
-                        </ToggleButton>}</Col>
+                          Save
+                        </ToggleButton>}</Col></> : <><Col><Button variant="link" onClick={toggleComments}>Comments</Button></Col><Col>Please sign in to like and save posts.</Col></>}
                     </Row>
                     <Row>
                         

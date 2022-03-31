@@ -16,10 +16,6 @@ def create_user2():
     assert user.username == 'TestUser2'
     assert user.email == 'ex@gmail.com'
     assert user.password == '1234A*A*'
-    db.create_post("example text", "test4", 'TestUser2', 'test topic', False)
-    post = db.get_post2('test4')[0]
-    global post_id4
-    post_id4 = db.get_post_id('test4')
 
 @pytest.fixture
 def create_user():
@@ -75,6 +71,16 @@ def test_create_post3():
     assert post['title'] == 'test3'
     assert post['content'] == 'sampletext'
     assert post['author'] == 'TestUser1'
+    assert post['topic'] == 'test topic'
+
+def test_create_post4():
+    db.create_post("example text", "test4", 'TestUser2', 'test topic', False)
+    post = db.get_post2('test4')[0]
+    global post_id4
+    post_id4 = db.get_post_id('test4')
+    assert post['title'] == 'test4'
+    assert post['content'] == 'example text'
+    assert post['author'] == 'TestUser2'
     assert post['topic'] == 'test topic'
     
 # user story 2  
@@ -148,6 +154,12 @@ def test_user_timeline():
     posts = db.get_timeline_user("TestUser1")
     assert post_id in posts
     assert post_id3 in posts
+    
+# returns the user's timeline from the database and checks to see if it has the post from
+# the user they follow
+def test_user_timeline():
+    posts = db.get_timeline_user("TestUser1")
+    assert post_id4 in posts
 
 # user story 7
 # create an anonymous post and check if it is listed as anonymous
@@ -201,21 +213,6 @@ def edit_post2():
     post = db.get_post(post_id2)
     assert post['content'] == "different text"
 
-
-# user story 12
-# delete post and confirm that it no longer exists by trying to pull it from the database with its post id
-def test_delete_post1():
-    db.delete_post(post_id)
-    assert db.get_post(post_id) == None
-    
-def test_delete_post2():
-    db.delete_post(post_id2)
-    assert db.get_post(post_id2) == None
-
-def test_delete_post3():
-    db.delete_post(post_id3)
-    assert db.get_post(post_id3) == None
-
 # user story 13
 # pulls 'test topic' topic page, checks if the two users created under that topic appear,
 # and checks that the third user who wasn't under that topic does not appear.
@@ -247,38 +244,33 @@ def test_unfollow_topic2():
     assert 'test topic' not in user['followed_topics'] 
 
 # user story 15
-# call userline from the database and make sure all 3 of the user's posts appear in the list
-def test_user_posts():
+# call userline of TestUser1 and makes sure all 3 of the user's posts appear in the list,
+# and posts that aren't from the user are not displayed
+def test_user_posts1():
     posts = db.get_userline("TestUser1", True)
     assert post_id in posts
     assert post_id2 in posts
     assert post_id3 in posts
+    assert post_id4 not in posts
 
+# calls userline of TestUser2 and makes sure only the posts they have made appear in the list.
+def test_user_posts2():
+    posts = db.get_userline("TestUser2", True)
+    assert post_id not in posts
+    assert post_id2 not in posts
+    assert post_id3 not in posts
+    assert post_id4 in posts
+    
+# user story 12
+# delete post and confirm that it no longer exists by trying to pull it from the database with its post id
+def test_delete_post1():
+    db.delete_post(post_id)
+    assert db.get_post(post_id) == None
+    
+def test_delete_post2():
+    db.delete_post(post_id2)
+    assert db.get_post(post_id2) == None
 
-
-
-
-#create_post()
-#comment_post()
-#print(post_id)
-#edit_post()
-#test_follow_topic()
-#test_delete_post()
-#test_topic_search()
-#test_create_topic1()
-#create_post1()
-#test_like_post()
-#test_follow_topic()
-
-#test_create_topic1()
-#test_user_posts()
-#test_follow_topic()
-#test_anonymous_posting()
-
-# def test_valid_login():
-#     url = "https://reqres.in/api/login/"
-#     data = {'email': 'abc@xyz.com', 'password': 'qwerty'}
-#     response = requests.post(url, data=data)
-#     token = json.loads(response.txt)
-#     assert response.status_code == 200
-#     assert token['token'] == "QpwL5tke4Pnpja7X4"
+def test_delete_post3():
+    db.delete_post(post_id3)
+    assert db.get_post(post_id3) == None

@@ -1,6 +1,6 @@
 from hashlib import new
 from multiprocessing.dummy import Array
-from turtle import pos
+# from turtle import pos
 from firebase_admin import credentials, firestore, initialize_app
 from .User import User
 from .Post import Post
@@ -180,6 +180,23 @@ class db_interface(object):
         #print(post.to_dict())
         return post.to_dict()
     
+    #get a post with its title
+    def get_post2(self, title):
+       posts = self.posts.where(u'title', u"==", title).limit(1).stream()
+       post = next(posts,None)
+       if not post:
+           return None
+       return post.to_dict(),
+  
+    #get a post's id with its title
+    def get_post_id(self, title):
+       posts = self.posts.where(u'title', u"==", title).limit(1).stream()
+       res = []
+       # posts = self.posts.where('author', '==', username).stream()
+       for post in posts:
+           res.append(post.id)
+       return res[0]
+
     #create a new comment
     def create_comment(self, username, content, post_id):
         comment = self.comments.document() # ref to new document
@@ -292,7 +309,7 @@ class db_interface(object):
         posts = self.posts.where(u'topic', u'==', topic).stream()
         posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
-            if post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked']:
+            if username == "x" or post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked']:
                 res.append(post.id)
         return res
     

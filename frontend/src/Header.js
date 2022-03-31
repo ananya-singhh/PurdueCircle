@@ -16,10 +16,10 @@ function Header() {
 	const [show, setShow] = useState(false);
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		// console.log(localStorage.getItem('user'));
-		if (!localStorage.getItem('user')) navigate('/');
-	  },[]);
+	// useEffect(() => {
+	// 	// console.log(localStorage.getItem('user'));
+	// 	if (!localStorage.getItem('user')) navigate('/');
+	//   },[]);
 
 	const user = JSON.parse(localStorage.getItem('user'));
 
@@ -54,13 +54,13 @@ function Header() {
 			</Navbar>
         </div>
     );
-	else if (window.location.pathname === '/')
+	else if (!user)
 	return (
         <div className="My-header">
 			<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 
 			<Container>
-				<Navbar.Brand>PurdueCircle</Navbar.Brand>
+				<Navbar.Brand onClick={() => navigate('/')}>PurdueCircle</Navbar.Brand>
 				<Navbar.Toggle aria-controls="responsive-navbar-nav" />
 				<Navbar.Collapse id="responsive-navbar-nav" collapseOnSelect="true">
   				<Nav className="me-auto">
@@ -82,7 +82,7 @@ function Header() {
 			</Navbar>
         </div>
 	);
-    return (
+    else return (
         <div className="My-header">
 
 			<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">

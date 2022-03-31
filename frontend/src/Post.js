@@ -45,6 +45,8 @@ import CommentsPage from './CommentsPage';
               }
             }).then( res => {
               setSaved(!saved);
+              currentUser['saved_posts'].pop(id);
+              localStorage.setItem('user', JSON.stringify(currentUser));
               //getPost();
             }).catch(error => {
               console.error(error);
@@ -61,6 +63,8 @@ import CommentsPage from './CommentsPage';
             }
           }).then( res => {
             setSaved(!saved);
+            currentUser['saved_posts'].push(id);
+            localStorage.setItem('user', JSON.stringify(currentUser));
             //getPost();
           }).catch(error => {
             console.error(error);
@@ -83,6 +87,8 @@ import CommentsPage from './CommentsPage';
                 }
               }).then( res => {
                 setChecked(!checked);
+                currentUser['liked_posts'].pop(id);
+                localStorage.setItem('user', JSON.stringify(currentUser));
                 getPost();
               }).catch(error => {
                 console.error(error);
@@ -99,6 +105,8 @@ import CommentsPage from './CommentsPage';
                 }
               }).then( res => {
                 setChecked(!checked);
+                currentUser['liked_posts'].push(id);
+                localStorage.setItem('user', JSON.stringify(currentUser));
                 getPost();
               }).catch(error => {
                 console.error(error);
@@ -131,12 +139,12 @@ import CommentsPage from './CommentsPage';
                     content: postInfo.content,
                 }
               }).then( res => {
-
+                getPost();
               }).catch(error => {
                 console.error(error);
                 //navigate("/404");
               })
-            getPost();
+            
         }
 
         function getPost() {
@@ -145,6 +153,10 @@ import CommentsPage from './CommentsPage';
                 url: 'http://127.0.0.1:5000/get_post?id=' + id,
               }).then( res => {
                 setPostInfo(res.data);
+                if(currentUser) {
+                  setChecked(res.data['liked_by'].includes(currentUser['username']));
+                  setSaved(res.data['saved_by'].includes(currentUser['username']));
+                }
               }).catch(error => {
                 console.error(error);
                 //navigate("/404");
@@ -152,7 +164,7 @@ import CommentsPage from './CommentsPage';
         }
         useEffect(() => {
             getPost();
-        }, [random]);
+        }, []);
 
         const [show, setShow] = useState(false);
         const handleNo = () => {
@@ -231,6 +243,7 @@ import CommentsPage from './CommentsPage';
                 <Container>
                     <Row>
                         <Col md={{ span: 2 }}>{postInfo['liked_by'] && postInfo['liked_by'].length > 0 ? postInfo['liked_by'].length : 0} Likes</Col>
+
                         {currentUser ? <><Col md={{ span: 1, offset: 4 }}><Button variant="link" onClick={toggleComments}>Comments</Button></Col><Col xs={2} md={{ offset: 1 }}>{postInfo && checkLiked() ?
                       <ToggleButton
                         className="mb-2"

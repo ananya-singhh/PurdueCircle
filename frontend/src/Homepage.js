@@ -14,6 +14,7 @@ function Homepage() {
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem('user'));
     
+    
 
     const [list, setList] = useState([])
     useEffect(() => {
@@ -23,6 +24,7 @@ function Homepage() {
             }).then( res => {
               if (res.data.data !== "No Results") {
                 setList(res.data)
+                
               } 
             }).catch(error => {
               //console.error(error);

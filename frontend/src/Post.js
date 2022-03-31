@@ -28,6 +28,7 @@ import CommentsPage from './CommentsPage';
     
     
     function Post(props) {
+      const navigate = useNavigate();
         var random = 0;
         var id = props.id; // pass id to the post, ex. <Post id={"exampleID"}/>, the id in this line will be "exampleID"
         const [postInfo, setPostInfo] = useState({});
@@ -195,7 +196,7 @@ import CommentsPage from './CommentsPage';
                 <Row>
                 <Col>
                 <Card.Title>{postInfo['title'] ? postInfo['title'] : "Loading..."}</Card.Title> 
-                <Card.Subtitle>{postInfo['author'] ? postInfo['anonymous'] ? "Anonymous User" : "@" + postInfo['author'] : "Loading..."}</Card.Subtitle>
+                <Card.Subtitle>{postInfo['author'] ? postInfo['anonymous'] ? "Anonymous User" : "@" + postInfo['author'] : "Loading..."} in '{postInfo['topic'] ? <a href={"/Topic/" + postInfo['topic']}>{postInfo['topic']}</a> : ""}'</Card.Subtitle>
                 </Col>
                 
 
@@ -227,7 +228,7 @@ import CommentsPage from './CommentsPage';
                 : 
                 <Card.Header>
                 <Card.Title>{postInfo['title'] ? postInfo['title'] : "Loading..."}</Card.Title> 
-                <Card.Subtitle>{postInfo['author'] && !postInfo['anonymous'] ? "@" + postInfo['author'] : "Anonymous User"}</Card.Subtitle>
+                <Card.Subtitle>{postInfo['author'] && !postInfo['anonymous'] ? "@" + postInfo['author'] : "Anonymous User"} in '{postInfo['topic'] ? <a href={"/Topic/" + postInfo['topic']}>{postInfo['topic']}</a> : ""}'</Card.Subtitle>
                 </Card.Header>
                 }
         

@@ -76,16 +76,19 @@ function CommentsPage(props) {
                 <Form>
                     <Card.Title>Add a Comment...</Card.Title>
                     <Form.Control placeholder="Type your comment here" Style="margin-bottom: 10px;" onChange = {e => setContent(e.target.value)} value={content}/>
-                    <Button variant="primary" onClick={ () => createComment()}>Post</Button>
+                    {user ? <Button variant="primary" onClick={ () => createComment()}>Post</Button>
+                    : <Card.Subtitle>You must be signed in to comment.</Card.Subtitle>
+                    }
                 </Form>
             <Card.Title Style="margin-top: 10px;">Comments</Card.Title>
             <Card.Subtitle>{commentsList && commentsList.length != 1 ? commentsList.length + " Comments" : "1 Comment"} </Card.Subtitle>
+            <br></br>
             {commentsList && commentsList.length > 0 ?
             <ListGroup variant="flush">
                 {commentsList.map((item) => (
                 <ListGroup.Item><Comment commentId={item}/></ListGroup.Item>
                 ))}
-            </ListGroup> : <h1 Style="margin-top: 10px;"><strong>No Comments</strong></h1>
+            </ListGroup> : ""
             }
             </Card.Body>
         </Card>

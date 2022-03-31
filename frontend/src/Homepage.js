@@ -34,6 +34,8 @@ function Homepage() {
 
           <Container className="App-Topic">
             <br></br>
+            <h1 Style="margin-top: 5px;"><strong>My Timeline</strong></h1>
+            <br></br>
           <ListGroup variant="flush">
           {list.map((item) => (
             <Post id={item}/>

@@ -150,7 +150,6 @@ function ProfileNew() {
     }).then( res => {
       if (!res.data.data) {
         setUser(res.data);
-        console.log(user);
       } 
     }).catch(error => {
       console.error(error);
@@ -167,7 +166,7 @@ function ProfileNew() {
       // if (localStorage.getItem('user')) navigate('/homepage');
       axios({
         method: 'get',
-        url: 'http://127.0.0.1:5000/get_userline?user=' + currentUser['username'] + '&is_self=' + ((currentUser && username === currentUser['username']) ? 1 : 0),
+        url: 'http://127.0.0.1:5000/get_userline?user=' + username + '&is_self=' + ((currentUser && username === currentUser['username']) ? 1 : 0),
       }).then( res => {
         if (res.data.data !== "No Results") {
           console.log(res.data);
@@ -232,7 +231,6 @@ function ProfileNew() {
   );
 
   } 
-  console.log("i rendered with the blocked status of: " + checkBlocking());
   return (
     <Container className="App-pfpage">
       
@@ -249,6 +247,7 @@ function ProfileNew() {
         <Card.Text>
           {user ? user['bio'] : "Loading"}
         </Card.Text>
+        { currentUser ? 
         <Row>
         <Col md={{ span: 4, offset: 1 }}>
           {user && checkFollowing() && (checked || !checked) ?
@@ -305,11 +304,18 @@ function ProfileNew() {
         Block
       </ToggleButton>}
       </Col>
-      </Row>
-
+      </Row> : "sign in dummy"
+}
+      
       </Card.Body>
     </Card>
-
+    {list && list.length > 0 ? 
+  <ListGroup variant="flush">
+  {list.map((item) => (
+    <Post id={item}/>
+  ))}
+</ListGroup> : ""
+  }
   
 
     </Container>

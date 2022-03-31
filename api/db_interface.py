@@ -309,7 +309,7 @@ class db_interface(object):
         posts = self.posts.where(u'topic', u'==', topic).stream()
         posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
-            if post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked']:
+            if username == "x" or post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked']:
                 res.append(post.id)
         return res
     

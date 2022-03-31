@@ -64,6 +64,8 @@ function Header() {
 				<Navbar.Toggle aria-controls="responsive-navbar-nav" />
 				<Navbar.Collapse id="responsive-navbar-nav" collapseOnSelect="true">
   				<Nav className="me-auto">
+				  <Nav.Link href="/Login">Log In</Nav.Link>
+				  <Nav.Link href="/signup">Sign Up</Nav.Link>
   				</Nav>
 
 

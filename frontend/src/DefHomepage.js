@@ -15,13 +15,7 @@ function Homepage() {
 
     const navigate = useNavigate();
 
-    const handleLogin = (event) => {
-        navigate('/Login');
-    };
-
-    const handleSignup = (event) => {
-        navigate('/signup');
-    }
+    
     // console.log(localStorage.getItem('user'))
     const [list, setList] = useState([])
     useEffect(() => {
@@ -45,24 +39,10 @@ function Homepage() {
           <Container>
             <br></br>
           <Row>
-            
-
-            <Col md={{ span: 3, offset: 10 }}>
-            <Button type="submit"  onClick={handleLogin}>
-              Login
-            </Button>
-            </Col>
-            <div class="row mt-3"></div>
-            <Col md={{ span: 3, offset: 10 }}>
-            <Button type="submit"  onClick={handleSignup}>
-              Sign up
-            </Button>
-            </Col>
-
-            
 
             <Col sm={8} >     
-
+            <h1 Style="margin-top: 5px;"><strong>Recent Posts</strong></h1>
+            <br></br>
             <ListGroup variant="flush">
               {list.map((item) => (
                 <Post id={item}/>

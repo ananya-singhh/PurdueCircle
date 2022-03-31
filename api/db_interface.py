@@ -330,11 +330,11 @@ class db_interface(object):
         if posts1:
             for post in posts1:
                 if post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked']:
-                    res.append(post.id)
+                    if post.id not in res: res.append(post.id)
         if posts2:
             for post in posts2:
                 if post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked']:
-                    res.append(post.id)
+                    if post.id not in res: res.append(post.id)
         return res
 
     #get userline of a user

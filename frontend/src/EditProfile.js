@@ -143,7 +143,7 @@ function EditProfile() {
     </Form.Group>
 
     <div class="col-sm-12 text-center">
-        <Button type= "submit" id="follow" class="btn btn-primary btn-md center-block" Style="width: 100px; margin-right: 25px;" onClick={ () => saveChanges()} >Confirm</Button>
+        <Button id="follow" class="btn btn-primary btn-md center-block" Style="width: 100px; margin-right: 25px;" onClick={ () => saveChanges()} >Confirm</Button>
          <Button id="block" variant="warning" class="btn btn-warning btn-md center-block" Style="width: 100px;" onClick={() => navigate('/Profile/'+user['username'])}>Cancel</Button>
          <Button id="del" variant="danger" class="btn btn-danger btn-md center-block" Style="width: 100px; margin-top: 25px;" onClick={areYouSure}>Delete Account</Button>
          <Modal show={show} onHide={handleNo}>

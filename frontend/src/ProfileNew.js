@@ -207,7 +207,7 @@ function ProfileNew() {
       <Button variant="primary" href="/EditProfile">Edit Profile</Button>
       </Col>
       <Col>
-      <Button variant="primary" href="/createPost/notopic">Create Post</Button>
+      <Button variant="primary" href="/createPost/general">Create Post</Button>
       </Col>
       </Row>
     </Card.Body>
@@ -215,6 +215,7 @@ function ProfileNew() {
   </Col>
   </Row>
   <br></br>
+  <h1 Style="margin-top: 5px;"><strong><u>My posts</u></strong></h1>
   <Row>
   <Col md={{ span: 9, offset: 1}}>
   {list && list.length > 0 ? 
@@ -233,7 +234,9 @@ function ProfileNew() {
   } 
   return (
     <Container className="App-pfpage">
-      
+      <br></br>
+    <Row>
+    <Col md={{ span: 6, offset: 4}}>
     <Card className="text-center" bg="light" style={{ width: '18rem' }}>
       <Card.Body>
 
@@ -309,6 +312,10 @@ function ProfileNew() {
       
       </Card.Body>
     </Card>
+    </Col>
+    </Row>
+    <br></br>
+    <h1 Style="margin-top: 5px;"><strong><u>{user['username']}'s posts</u></strong></h1>
     {list && list.length > 0 ? 
   <ListGroup variant="flush">
   {list.map((item) => (

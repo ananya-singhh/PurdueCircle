@@ -85,40 +85,39 @@ function TopicPage() {
         <Container className="App-Topic">
         <h1 Style="margin-top: 10px;"><strong>{title}</strong></h1>
           <Row>
-        <Col sm={1}>
-        {topic && followed ?
-        <ToggleButton
-        className="mb-2"
-        id="toggle-check"
-        type="checkbox"
-        variant="outline-primary"
-        checked={false}
-        value="1"
-        onChange={() => handleUnfollowing()}
-        Style="margin-right=25px;"
-      >
-        Unfollow
-      </ToggleButton> :
+        {title !== "general" ? currentUser ? <><Col sm={1}>
+                {topic && followed ?
+                  <ToggleButton
+                    className="mb-2"
+                    id="toggle-check"
+                    type="checkbox"
+                    variant="outline-primary"
+                    checked={false}
+                    value="1"
+                    onChange={() => handleUnfollowing()}
+                    Style="margin-right=25px;"
+                  >
+                    Unfollow
+                  </ToggleButton> :
 
-      <ToggleButton
-      className="mb-2"
-      id="toggle-check"
-      type="checkbox"
-      variant="outline-primary"
-      checked={true}
-      value="1"
-      onClick={() => handleFollowing()}
-      Style="margin-right=25px;"
-    >
-      Follow
-    </ToggleButton>}
-      </Col>
-
-      <Col sm={2}>
-            <Button type="submit" onClick={handleCreateProfile}>
-              Create Post
-            </Button>
-      </Col>
+                  <ToggleButton
+                    className="mb-2"
+                    id="toggle-check"
+                    type="checkbox"
+                    variant="outline-primary"
+                    checked={true}
+                    value="1"
+                    onClick={() => handleFollowing()}
+                    Style="margin-right=25px;"
+                  >
+                    Follow
+                  </ToggleButton>}
+              </Col><Col sm={2}>
+                  <Button type="submit" onClick={handleCreateProfile}>
+                    Create Post
+                  </Button>
+                </Col></>
+      : "Sign in to interact with this topic" : ""}
       </Row>
 
             <ListGroup variant="flush">

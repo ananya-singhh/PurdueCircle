@@ -172,7 +172,8 @@ def get_timeline_topic():
 @app.route('/get_userline', methods=['GET'])
 def get_userline():
     print('I am here')
-    return json.dumps(db.get_userline(request.args['user'], request.args['is_self']))
+    is_self = request.args['is_self'] == 1
+    return json.dumps(db.get_userline(request.args['user'], is_self))
 
 @app.route('/search_for_topic', methods=['GET'])
 def search_for_topic():

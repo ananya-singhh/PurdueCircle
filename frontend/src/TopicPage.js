@@ -13,6 +13,7 @@ import Post from './Post'
 function TopicPage() { 
   const title = useParams()['name'];
   const currentUser = JSON.parse(localStorage.getItem('user'));
+  const username = currentUser ? currentUser['username'] : "x";
   const [topic, setTopic] = useState({})
   const [followed, setFollowed] = useState(false);
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ function TopicPage() {
       url: 'http://127.0.0.1:5000/follow_topic',
       data: {
         topic_name: title,
-        username: currentUser['username'],
+        username: username,
       }
     }).then( res => {
       setFollowed(!followed)
@@ -43,7 +44,7 @@ function TopicPage() {
       url: 'http://127.0.0.1:5000/unfollow_topic',
       data: {
         topic_name: title,
-        username: currentUser['username'],
+        username: username,
       }
     }).then( res => {
       setFollowed(!followed)
@@ -56,7 +57,7 @@ function TopicPage() {
   useEffect(() => {
           axios({
             method: 'get',
-            url: 'http://127.0.0.1:5000/get_timeline_topic?topic='+title + '&user=' + currentUser['username'],
+            url: 'http://127.0.0.1:5000/get_timeline_topic?topic='+title + '&user=' + username,
           }).then( res => {
             if (res.data.data !== "No Results") {
               console.log(res.data)
@@ -72,7 +73,7 @@ function TopicPage() {
           }).then( res => {
             if (res.data.data !== "failed") {
               setTopic(res.data);
-              setFollowed(res.data['followed_by'].includes(currentUser['username']));
+              setFollowed(res.data['followed_by'].includes(username));
             } 
           }).catch(error => {
             //console.error(error);

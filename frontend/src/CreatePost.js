@@ -76,6 +76,9 @@ import FormCheck from 'react-bootstrap/FormCheck';
                   Please enter some content to post.
                 </Form.Control.Feedback>
                 </InputGroup>
+                <br></br>
+                <Form.Label>Add an Image (optional)</Form.Label>
+                <Form.Control type="file" size="sm" />
             </Card.Body>
             <Card.Footer>
                 <div className="d-grid gap-2">

@@ -5,6 +5,8 @@ from firebase_admin import credentials, firestore, initialize_app
 from .User import User
 from .Post import Post
 from .Comment import Comment
+from .MessageThread import MessageThread
+from .Message import Message
 from random import random
 from .Helper import *
 import datetime
@@ -19,6 +21,8 @@ class db_interface(object):
         self.posts = db.collection(u'posts')
         self.topics = db.collection(u'topics')
         self.comments = db.collection(u'comments')
+        self.dms = db.collection(u'dms')
+        self.messages = db.collection(u'messages')
         
     
     #checks if user with same username or email exists
@@ -231,9 +235,20 @@ class db_interface(object):
         return res
                 
     #send a message
-    def send_message(self):
-        # TODO: implement
-        pass
+    def create_message(self, sender, receiver, content, message_thread_id=None):
+        self.create_thread(sender, receiver)
+        if message_thread_id is None:
+            message_thread_id = self.get_thread_id(sender, receiver)
+        message = self.messages.document() # ref to new document
+        current_date = datetime.datetime.now(tz=datetime.timezone.utc)
+        new_message = Message(sender=sender, receiver=receiver, content=content, timestamp=current_date, message_thread_id=message_thread_id)
+        message.set(to_dict(new_message))
+        message_info = message.get()
+        self.dms.document(message_thread_id).update({u'messages': firestore.ArrayUnion([message_info.id])})
+        message.update({u'message_id': message_info.id})
+        new_message = to_dict(new_message)
+        new_message['message_id'] = message_info.id
+        return new_message
         
     #change privacy setting
     def change_privacy_setting(self):
@@ -395,17 +410,46 @@ class db_interface(object):
         else:
             return None
     
+    def get_thread_id(self, username1, username2):
+        usernames_sorted = sorted([username1, username2])
+        return '_'.join(usernames_sorted)
+    
     #create a message thread between two users
-    def create_thread(self):
-        # TODO: implement
-        pass
+    def create_thread(self, username1, username2):
+        thread_id = self.get_thread_id(username1, username2)
+        usernames_sorted = sorted([username1, username2])
+        dms = self.dms.document(thread_id)
+        if dms.get().exists:
+            return False # thread already exists
+        else:
+            thread = MessageThread(thread_id, usernames_sorted[0], usernames_sorted[1])
+            dms.set(to_dict(thread))
+            return True
     
     #get a message thread between two users
-    def get_thread(self):
-        # TODO: implement
-        pass
+    def get_thread(self, username1=None, username2=None, thread_id=None):
+        if thread_id:
+            thread = self.dms.document(thread_id).get()
+            if thread.exists:
+                return thread.to_dict()
+            else:
+                return None
+        else:
+            thread_id = self.get_thread_id(username1, username2)
+            thread = self.dms.document(thread_id).get()
+            if thread.exists:
+                return thread.to_dict()
+            else:
+                return None
+
     
     #get message threads for a user
-    def get_threads(self):
-        # TODO: implement
-        pass
+    def get_threads(self, username):
+        res = []
+        threads1 = self.dms.where(u'user1', u'==', username).stream()
+        threads2 = self.dms.where(u'user2', u'==', username).stream()
+        for thread in threads1:
+            res.append(thread.id)
+        for thread in threads2:
+            res.append(thread.id)
+        return res

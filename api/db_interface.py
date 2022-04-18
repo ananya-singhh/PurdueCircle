@@ -1,4 +1,4 @@
-from hashlib import new
+import hashlib
 from multiprocessing.dummy import Array
 # from turtle import pos
 from firebase_admin import credentials, firestore, initialize_app
@@ -35,14 +35,28 @@ class db_interface(object):
         check = self.user_exists(username, email)
         if check[0] == True: #if username or email already exists
             return (None, check[1]) #returns 'email' or 'username' depending on which was already taken
-        new_user = User(email, username, password, '')
+        
+        # hashes password before adding it to the database
+        h = hashlib.new('sha256')
+        arr = bytes(password, 'utf-8')
+        h.update(arr)
+        hashed_password = h.hexdigest()
+        
+        new_user = User(email, username, hashed_password, '')
         self.users.document(username).set(to_dict(new_user))
         return (new_user, None)
     
     def login_user(self, username, password):
         if not self.users.where(u'username', u"==", username).get():
             return None
-        users = self.users.where(u'username', u"==", username).where(u'password', u'==', password).limit(1).stream()
+        
+        # hashes password and compares it to hashed password in database
+        h = hashlib.new('sha256')
+        arr = bytes(password, 'utf-8')
+        h.update(arr)
+        hashed_password = h.hexdigest()
+        
+        users = self.users.where(u'username', u"==", username).where(u'password', u'==', hashed_password).limit(1).stream()
         user = next(users,None)
         if not user:
             return None

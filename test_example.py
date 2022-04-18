@@ -28,7 +28,7 @@ def create_user():
 
 # user story 4
 # doing user story 4 first so that posts can be made under this topic
-# creates post and checks if it exists by searching for its name directly
+# creates topic and checks if it exists by searching for its name directly
 def test_create_topic1():
     db.create_topic("test topic")
     assert "test topic" in db.search_topic("test topic")
@@ -150,14 +150,14 @@ def test_follow_topic2():
 # user story 6
 # returns the user's timeline from the database and checks to see if it has the two posts 
 # that are members of the followed topic 'test topic' 
-def test_user_timeline():
+def test_user_timeline1():
     posts = db.get_timeline_user("TestUser1")
     assert post_id in posts
     assert post_id3 in posts
     
 # returns the user's timeline from the database and checks to see if it has the post from
 # the user they follow
-def test_user_timeline():
+def test_user_timeline2():
     posts = db.get_timeline_user("TestUser1")
     assert post_id4 in posts
 
@@ -214,7 +214,7 @@ def edit_post2():
     assert post['content'] == "different text"
 
 # user story 13
-# pulls 'test topic' topic page, checks if the two users created under that topic appear,
+# pulls 'test topic' topic page, checks if the two posts created under that topic appear,
 # and checks that the third user who wasn't under that topic does not appear.
 def test_topic_page1():
     topics = db.get_timeline_topic('test topic', "TestUser1")

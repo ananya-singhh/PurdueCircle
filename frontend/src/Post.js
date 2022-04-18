@@ -33,7 +33,6 @@ import CommentsPage from './CommentsPage';
         var id = props.id; // pass id to the post, ex. <Post id={"exampleID"}/>, the id in this line will be "exampleID"
         const [postInfo, setPostInfo] = useState({});
         const currentUser = JSON.parse(localStorage.getItem('user'));
-      
 
         const [saved, setSaved] = useState(false);
         const handleUnsave = (e) => {
@@ -238,6 +237,7 @@ import CommentsPage from './CommentsPage';
                 :
                 <Form.Control as="textarea" value={postInfo['content']} onChange = {e => setPostInfo({...postInfo, content: e.target.value})}/>
                 }
+                {postInfo['image'] ? <img src = {postInfo['image']}></img> : ""}
             
             </Card.Body>
             <Card.Footer>

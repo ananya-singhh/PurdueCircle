@@ -133,17 +133,17 @@ class db_interface(object):
         user_to_unblock.update({u'blocked_by': firestore.ArrayRemove([username])})
             
     #create a new post
-    def create_post(self, content, title, username, topic, anonymous):
+    def create_post(self, content, title, username, topic, anonymous, image):
         post = self.posts.document() # ref to new document
         current_date = datetime.datetime.now(tz=datetime.timezone.utc)
-        new_post = Post(author=username, content=content, title=title, topic=topic, date_posted=current_date, anonymous=anonymous)
+        new_post = Post(author=username, content=content, title=title, topic=topic, date_posted=current_date, anonymous=anonymous, image=image)
         post.set(to_dict(new_post))
         post_info = post.get()
         if anonymous:
             self.users.document(username).update({u'anonymous_posts': firestore.ArrayUnion([post_info.id])})
         else:
             self.users.document(username).update({u'posts': firestore.ArrayUnion([post_info.id])})
-        return Post(username, post_info.id, topic, title, content, current_date, anonymous=anonymous)
+        return Post(username, post_info.id, topic, title, content, current_date, anonymous=anonymous, image=image)
         
     #edit a post
     def edit_post(self, id, changes: dict):

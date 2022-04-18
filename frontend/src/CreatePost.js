@@ -14,12 +14,21 @@ import FormCheck from 'react-bootstrap/FormCheck';
     function CreatePost() {
         const topic = useParams()['topic']
         const user = JSON.parse(localStorage.getItem('user'));
-        const [content, setContent] = useState({content: "", title: "", anonymous: false});
+        const [content, setContent] = useState({content: "", title: "", anonymous: false, image: null});
         const navigate = useNavigate();
         
+        const toBase64 = file => new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = error => reject(error);
+        });
         
 
-        function create() {
+        async function create() {
+          var url = ""
+          console.log(content.image)
+          if (content.image) url = await toBase64(content.image)
             axios({
               method: 'POST',
               url: 'http://127.0.0.1:5000/create_post',
@@ -29,6 +38,7 @@ import FormCheck from 'react-bootstrap/FormCheck';
                 username: user['username'],
                 topic: topic,
                 anonymous: content.anonymous,
+                image: url
               }
             }).then( res => {
               console.log(content.anonymous);
@@ -78,7 +88,7 @@ import FormCheck from 'react-bootstrap/FormCheck';
                 </InputGroup>
                 <br></br>
                 <Form.Label>Add an Image (optional)</Form.Label>
-                <Form.Control type="file" size="sm" />
+                <Form.Control type="file" size="sm" onChange={e => setContent({...content, image: e.target.files[0]})}/>
             </Card.Body>
             <Card.Footer>
                 <div className="d-grid gap-2">

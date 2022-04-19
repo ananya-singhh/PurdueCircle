@@ -131,15 +131,26 @@ function EditProfile() {
     
     <Form.Group className="mb-3" controlId="formProfileVisibility">
       <Form.Label Style="margin-right: 12px;">Profile Visibility:</Form.Label>
+      { user && user['privacy_setting'] ? 
       <BootstrapSwitchButton
       width={90}
     checked={false}
     onlabel='Public'
     offlabel='Private'
     onChange={(checked) => {
-            this.setState({ isUserAdmin: checked })
+            setEdit({...edit, privacy: !checked })
+    }}
+    /> :
+    <BootstrapSwitchButton
+      width={90}
+    checked={true}
+    onlabel='Public'
+    offlabel='Private'
+    onChange={(checked) => {
+            setEdit({...edit, privacy: !checked })
     }}
     />
+    }
     </Form.Group>
 
     <div class="col-sm-12 text-center">

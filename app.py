@@ -275,5 +275,37 @@ def get_saved_posts():
     else:
         return {"data" : "failed"}
 
+@app.route('/create_message', methods=['POST'])
+def create_message():
+    request_data = request.get_json()
+    try:
+        thread_id = request_data['thread_id']
+    except:
+        thread_id = None
+    created_message = db.create_message(request_data['username'], request_data['recipient'], request_data['content'], thread_id)
+    return created_message
+
+@app.route('/get_threads', methods=['GET'])
+def get_threads():
+    request_data = request.get_json()
+    ret = db.get_threads(request_data['username'])
+    return {'ids': ret}
+
+@app.route('/get_thread', methods=['GET'])
+def get_thread():
+    request_data = request.get_json()
+    try:
+        thread_id = request_data['thread_id']
+    except:
+        thread_id = None
+    try:
+        user1 = request_data['user1']
+        user2 = request_data['user2']
+    except:
+        user1 = None
+        user2 = None
+    ret = db.get_thread(user1, user2, thread_id)
+    return ret
+
 if __name__ == "__main__":
     app.run(debug=True)

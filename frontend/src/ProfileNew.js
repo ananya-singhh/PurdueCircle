@@ -210,6 +210,8 @@ function ProfileNew() {
       <Button variant="primary" href="/createPost/general">Create Post</Button>
       </Col>
       </Row>
+      <br></br>
+      <Button variant="primary">Messages</Button>
     </Card.Body>
   </Card>
   </Col>
@@ -302,14 +304,15 @@ function ProfileNew() {
         checked={true}
         value="1"
         onClick={handleBlocking}
-        Style="margin-right=25px;"
+        style={{marginLeft: "25px"}}
         >
         Block
       </ToggleButton>}
       </Col>
       </Row> : "sign in dummy"
 }
-      
+<br></br>
+      <Button variant="primary" href={"./DMPage/" + currentUser['username'] + "/" + user['username']}>Send Message</Button>
       </Card.Body>
     </Card>
     </Col>

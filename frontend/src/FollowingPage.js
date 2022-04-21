@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import ListGroup from 'react-bootstrap/ListGroup';
-import Post from './Post'
+
 
 
 function FollowingPage() { 
@@ -13,7 +13,8 @@ function FollowingPage() {
 
         return (  
         <Container className="App-Topic">
-        Following
+        <h1 Style="margin-top: 10px;"><strong>Followed Users</strong></h1>
+        <h1 Style="margin-top: 10px;"><strong>Followed Topics</strong></h1>
         {/*<ListGroup variant="flush">
             {list.map((item) => (
                 <Post id={item}/>

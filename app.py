@@ -275,5 +275,13 @@ def get_saved_posts():
     else:
         return {"data" : "failed"}
 
+@app.route('/get_following', methods=['GET'])
+def get_following():
+    ret = db.get_following(request.args['username'])
+    if ret:
+        return json.dumps(ret)
+    else:
+        return {"data" : "failed"}
+
 if __name__ == "__main__":
     app.run(debug=True)

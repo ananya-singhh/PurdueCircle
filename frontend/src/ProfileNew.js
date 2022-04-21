@@ -161,13 +161,14 @@ function ProfileNew() {
       getUser()
     }, [url]);*/
 
-    const handleFollowerPage = (event) => {
+    const handleFollowersPage = (event) => {
       navigate('/FollowersPage');
     };
 
     const handleFollowingPage = (event) => {
       navigate('/FollowingPage');
     };
+
     useEffect(() => {
       getUser()
       // if (localStorage.getItem('user')) navigate('/homepage');
@@ -208,7 +209,7 @@ function ProfileNew() {
       <Row>
       <Col>
         {user['followers'] ? user['followers'].length + "   " : "   "}
-        <Button type="submit" onClick={handleFollowerPage}>Followers</Button>
+        <Button type="submit" onClick={handleFollowersPage}>Followers</Button>
       </Col>
       <Col>
         {user['following'] ?user['following'].length + "   " : "   "}
@@ -335,8 +336,7 @@ function ProfileNew() {
     <Post id={item}/>
   ))}
 </ListGroup> : ""
-  }
-  
+  } 
 
     </Container>
   )

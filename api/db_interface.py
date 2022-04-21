@@ -1,3 +1,4 @@
+from concurrent.futures import thread
 import hashlib
 from multiprocessing.dummy import Array
 # from turtle import pos
@@ -259,7 +260,9 @@ class db_interface(object):
         new_message = Message(sender=sender, receiver=receiver, content=content, timestamp=current_date, message_thread_id=message_thread_id)
         message.set(to_dict(new_message))
         message_info = message.get()
+        
         self.dms.document(message_thread_id).update({u'messages': firestore.ArrayUnion([message_info.id]), u'time_updated': current_date})
+        
         message.update({u'message_id': message_info.id})
         new_message = to_dict(new_message)
         new_message['message_id'] = message_info.id
@@ -474,6 +477,7 @@ class db_interface(object):
                 return self.dms.document(thread_id).get().to_dict()
     
     def get_messages(self, thread_id):
+        print(thread_id)
         res = []
         docs = self.messages.where(u'message_thread_id', u'==', thread_id).stream()
         docs = sorted(docs, key=lambda x: x.to_dict()['timestamp'], reverse=False)
@@ -507,4 +511,4 @@ class db_interface(object):
         
         callback_done.wait(timeout=60)
         watch.unsubscribe()
-        return ref.get().to_dict()
+        return self.get_messages(ref.get().to_dict()['message_thread_id'])

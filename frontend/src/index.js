@@ -18,6 +18,7 @@ import CreateTopic from './CreateTopic';
 import HomePage from './Homepage';
 import TopicPage from './TopicPage';
 import DMPage from './DMPage';
+import DMList from './DMList';
 
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import CommentsPage from './CommentsPage';
@@ -43,6 +44,7 @@ const Routing = () => {
         <Route path="/createTopic" element={<CreateTopic />} />
         <Route path="/Topic/:name" element={<TopicPage />} />
         <Route path="Profile/DMPage/:name/:target" element={<DMPage />} />
+        <Route path=":name/DMList" element={<DMList />} />
       </Routes>
 	  <Footer />
     </Router>

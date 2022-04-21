@@ -223,9 +223,10 @@ function ProfileNew() {
       <Col>
       <Button variant="primary" href="/createPost/general">Create Post</Button>
       </Col>
-      </Row>
-      <br></br>
+      <Col> 
       <Button variant="primary" href={"/" + currentUser['username'] + "/DMList"}>Messages</Button>
+      </Col>
+      </Row>
     </Card.Body>
   </Card>
   </Col>

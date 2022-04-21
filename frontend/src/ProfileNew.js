@@ -161,6 +161,13 @@ function ProfileNew() {
       getUser()
     }, [url]);*/
 
+    const handleFollowerPage = (event) => {
+      navigate('/FollowersPage');
+    };
+
+    const handleFollowingPage = (event) => {
+      navigate('/FollowingPage');
+    };
     useEffect(() => {
       getUser()
       // if (localStorage.getItem('user')) navigate('/homepage');
@@ -188,25 +195,31 @@ function ProfileNew() {
   <Container className="App-pfpage">
     <br></br>
     <Row>
-    <Col md={{ span: 6, offset: 4}}>
-  <Card className="text-center" bg="light" style={{ width: '18rem' }}>
+   <Col md={{ span: 10, offset: 1}}>
+  <Card className="text-center" bg="light" style={{ width: '60rem' }}>
     <Card.Body>
     <FigureImage as={Image} width={125} height={125} src={pics[currentUser['profile_picture']]} roundedCircle={true} id="pfp" alt="Card image"/>
     
 
       <Card.Title>{user ? user['username'] : "loading"}</Card.Title>
-      <Row>
-      <Col md={4}>{user['followers'] ? user['followers'].length + "" : ""}<Button type="submit">Followers</Button></Col>
-      <Col md={{ span: 5, offset: 2 }}>{user['following'] ?user['following'].length + "" : ""}<Button type="submit">Following</Button></Col>
-      </Row>
       <Card.Text>
         {user ? user['bio'] : "Loading"}
       </Card.Text>
       <Row>
-      <Col md={4}>
+      <Col>
+        {user['followers'] ? user['followers'].length + "   " : "   "}
+        <Button type="submit" onClick={handleFollowerPage}>Followers</Button>
+      </Col>
+      <Col>
+        {user['following'] ?user['following'].length + "   " : "   "}
+        <Button type="submit" onClick={handleFollowingPage}>Following</Button>
+      </Col>
+      {/*</Row>*/}
+      {/*<Row>*/}
+      <Col>
       <Button variant="primary" href="/EditProfile">Edit Profile</Button>
       </Col>
-      <Col md={{ span: 5, offset: 2 }}>
+      <Col>
       <Button variant="primary" href="/createPost/general">Create Post</Button>
       </Col>
       </Row>

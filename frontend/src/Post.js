@@ -188,44 +188,35 @@ import CommentsPage from './CommentsPage';
 
         return (
             <Container className="App-post" Style="margin-bottom: 10px;">
-            <Card className="text-left" bg="light">
+            <Card className="text-left" bg="light" style={{borderColor: 'black', borderWidth: '1px', borderRadius: '5px'}}>
             
             {postInfo['author'] && currentUser && postInfo['author'] === currentUser['username'] ?
-                <Card.Header>
-                <Row>
-                <Col>
-                <Card.Title>{postInfo['title'] ? postInfo['title'] : "Loading..."}</Card.Title> 
-                <Card.Subtitle>{postInfo['author'] ? postInfo['anonymous'] ? "Anonymous User" : "@" + postInfo['author'] : "Loading..."} in '{postInfo['topic'] ? <a href={"/Topic/" + postInfo['topic']}>{postInfo['topic']}</a> : ""}'</Card.Subtitle>
-                </Col>
-                
-
-                <Col md={{span: 1, offset: 3}}>
+                <Card.Header style={{color: 'white', background: '#212529'}}>
+                <Card.Title style={{float:'left'}}>{postInfo['title'] ? postInfo['title'] : "Loading..."}</Card.Title>
+                <Button variant="danger" style={{float:'right', marginLeft: '10px'}} onClick={areYouSure}>Delete</Button> 
                     {editMode ? 
-                    <Button variant="warning" onClick={toggleEditMode}>Edit</Button>
+                    <Button variant="warning" style={{float:'right'}} onClick={toggleEditMode}>Edit</Button>
                     :
-                    <Button onClick={saveEdits}>Save</Button> }
-                </Col>
-                <Col md={{ span: 2, offset: 1}}>
-                    <Button variant="danger" onClick={areYouSure}>Delete</Button>
+                    <Button style={{float:'right', background: 'green'}} onClick={saveEdits}>Confirm</Button> }
+                    
+                    <Card.Subtitle style={{clear:'left'}}>{postInfo['author'] ? postInfo['anonymous'] ? "Anonymous User" : "@" + postInfo['author'] : "Loading..."} in '{postInfo['topic'] ? <a href={"/Topic/" + postInfo['topic']}>{postInfo['topic']}</a> : ""}'</Card.Subtitle>
                     <Modal show={show} onHide={handleNo}>
-					<Modal.Header closeButton>
-					  <Modal.Title>Delete Post</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>Are you sure you want to delete this post?</Modal.Body>
-					<Modal.Footer>
-					  <Button variant="secondary" onClick={handleNo}>
-						No
-					  </Button>
-					  <Button variant="primary" onClick={handleYes}>
-						Yes
-					  </Button>
-					</Modal.Footer>
-					</Modal>
-                </Col>
-                </Row>
+					            <Modal.Header closeButton>
+					              <Modal.Title>Delete Post</Modal.Title>
+					            </Modal.Header>
+					            <Modal.Body>Are you sure you want to delete this post?</Modal.Body>
+					            <Modal.Footer>
+					              <Button variant="secondary" onClick={handleNo}>
+						              No
+					              </Button>
+					              <Button variant="primary" onClick={handleYes}>
+						              Yes
+					              </Button>
+					              </Modal.Footer>
+					              </Modal>
                 </Card.Header>
                 : 
-                <Card.Header>
+                <Card.Header style={{color: 'white', background: '#212529'}}>
                 <Card.Title>{postInfo['title'] ? postInfo['title'] : "Loading..."}</Card.Title> 
                 <Card.Subtitle>{postInfo['author'] && !postInfo['anonymous'] ? "@" + postInfo['author'] : "Anonymous User"} in '{postInfo['topic'] ? <a href={"/Topic/" + postInfo['topic']}>{postInfo['topic']}</a> : ""}'</Card.Subtitle>
                 </Card.Header>
@@ -242,34 +233,10 @@ import CommentsPage from './CommentsPage';
             </Card.Body>
             <Card.Footer>
                 <Container>
-                    <Row>
-                        <Col md={{ span: 2 }}>{postInfo['liked_by'] && postInfo['liked_by'].length > 0 ? postInfo['liked_by'].length : 0} Likes</Col>
+                    <p style={{float: 'left', marginTop: '8px'}}>{postInfo['liked_by'] && postInfo['liked_by'].length > 0 ? postInfo['liked_by'].length : 0} Likes</p>
 
-                        {currentUser ? <><Col md={{ span: 1, offset: 4 }}><Button variant="link" onClick={toggleComments}>Comments</Button></Col><Col xs={2} md={{ offset: 1 }}>{postInfo && checkLiked() ?
-                      <ToggleButton
-                        className="mb-2"
-                        id="toggle-check"
-                        type="checkbox"
-                        variant="outline-primary"
-                        checked={false}
-                        value="1"
-                        onClick={handleUnlike}
-                        Style="margin-right=25px;"
-                      >
-                        Unlike
-                      </ToggleButton> :
-                      <ToggleButton
-                        className="mb-2"
-                        id="toggle-check"
-                        type="checkbox"
-                        variant="outline-primary"
-                        checked={true}
-                        value="1"
-                        onClick={handleLike}
-                        Style="margin-right=25px;"
-                      >
-                        Like
-                      </ToggleButton>}</Col><Col xs={1}>{postInfo && saved ?
+                        {currentUser ? <>
+                        {postInfo && saved ?
                         <ToggleButton
                           className="mb-2"
                           id="toggle-check"
@@ -278,7 +245,7 @@ import CommentsPage from './CommentsPage';
                           checked={false}
                           value="1"
                           onClick={handleUnsave}
-                          Style="margin-right=25px;"
+                          style={{float: 'right', marginLeft: '10px'}}
                         >
                           Unsave
                         </ToggleButton> :
@@ -290,15 +257,39 @@ import CommentsPage from './CommentsPage';
                           checked={true}
                           value="1"
                           onClick={handleSave}
-                          Style="margin-right=25px;"
+                          style={{float: 'right', marginLeft: '10px'}}
                         >
                           Save
-                        </ToggleButton>}</Col></> : <><Col><Button variant="link" onClick={toggleComments}>Comments</Button></Col><Col>Please sign in to like and save posts.</Col></>}
-                    </Row>
-                    <Row>
+                        </ToggleButton>}
+                        {postInfo && checkLiked() ?
+                      <ToggleButton
+                        className="mb-2"
+                        id="toggle-check"
+                        type="checkbox"
+                        variant="outline-primary"
+                        checked={false}
+                        value="1"
+                        onClick={handleUnlike}
+                        style={{float: 'right'}}
+                      >
+                        Unlike
+                      </ToggleButton> :
+                      <ToggleButton
+                        className="mb-2"
+                        id="toggle-check"
+                        type="checkbox"
+                        variant="outline-primary"
+                        checked={true}
+                        value="1"
+                        onClick={handleLike}
+                        style={{float: 'right'}}
+                      >
+                        Like
+                      </ToggleButton>}
+                      <Button variant="link" style={{float: 'right', marginRight: '10px'}} onClick={toggleComments}>Comments</Button></> : <><p style={{float: 'right', marginTop: '8px'}}>Please sign in to like and save posts.</p><Button variant="link" style={{float: 'right', marginRight: '10px'}} onClick={toggleComments}>Comments</Button></>}
+
                         
                         {(checkCommentsVisible()) ? <CommentsPage curPostId={id} /> : null}
-                    </Row>
                 </Container>
             </Card.Footer>
             </Card>

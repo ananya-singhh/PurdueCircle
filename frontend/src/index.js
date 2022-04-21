@@ -17,13 +17,10 @@ import CreatePost from './CreatePost';
 import CreateTopic from './CreateTopic';
 import HomePage from './Homepage';
 import TopicPage from './TopicPage';
-<<<<<<< HEAD
 import FollowersPage from './FollowersPage';
 import FollowingPage from './FollowingPage';
-=======
 import DMPage from './DMPage';
 import DMList from './DMList';
->>>>>>> 9854db9aef2f66ad2d0c32cbe218a6dc444563d4
 
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import CommentsPage from './CommentsPage';
@@ -48,13 +45,10 @@ const Routing = () => {
         <Route path="/createPost/:topic" element={<CreatePost />} />
         <Route path="/createTopic" element={<CreateTopic />} />
         <Route path="/Topic/:name" element={<TopicPage />} />
-<<<<<<< HEAD
         <Route path="/FollowersPage" element={<FollowersPage />} />
         <Route path="/FollowingPage" element={<FollowingPage/>} />
-=======
         <Route path="Profile/DMPage/:name/:target" element={<DMPage />} />
         <Route path=":name/DMList" element={<DMList />} />
->>>>>>> 9854db9aef2f66ad2d0c32cbe218a6dc444563d4
       </Routes>
 	  <Footer />
     </Router>

@@ -19,7 +19,9 @@ function DMPage() {
     const navigate = useNavigate();
     const target = useParams()['target'];
     const [messageList, setMessageList] = useState([]);
-    const msgRecipient = target.split('_')[0] !== user['username'] ? target.split('_')[0] : target.split('_')[1];
+    var id = [target, user['username']].sort().join('_');
+    
+    
   
 
     useEffect(() => {     
@@ -30,7 +32,7 @@ function DMPage() {
       console.log(query);
        axios({
         method: 'get',
-        url: 'http://127.0.0.1:5000/get_messages?thread_id=' + target,
+        url: 'http://127.0.0.1:5000/get_messages?thread_id=' + id,
       }).then( res => {
         if (res.data.data !== "No Results") {
           setMessageList(res.data)
@@ -47,9 +49,9 @@ function DMPage() {
           method: 'POST',
           url: 'http://127.0.0.1:5000/create_message',
           data: {
-            thread_id: target,
+            thread_id: id,
             username: user['username'],
-            recipient: msgRecipient,
+            recipient: target,
             content: query,
           }
         }).then( res => {

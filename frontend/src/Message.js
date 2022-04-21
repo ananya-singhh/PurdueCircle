@@ -7,32 +7,38 @@ import Col from 'react-bootstrap/Col';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
-import Image from 'react-bootstrap/Image'
-import FigureImage from 'react-bootstrap/FigureImage'
 
-import pic1 from "./images/1.jpg";
-import pic2 from "./images/2.jpg";
-import pic3 from "./images/3.jpg";
-import pic4 from "./images/4.jpg";
-import pic5 from "./images/5.jpg";
-import pic6 from "./images/6.jpg";
-
-import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'
-import ToggleButton from 'react-bootstrap/ToggleButton';
-
-const Message = ({messageId, sender, content}) => {
+const Message = ({id}) => {
     //var messageId = props.messageId;
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    const [content, setContent] = useState({});
+
     //todo: use effect to get message content
+    useEffect(() => {
+        axios({
+          method: 'get',
+          url: 'http://127.0.0.1:5000/get_message?id=' + id,
+        }).then( res => {
+          if (res.data.data !== "No Results") {
+            console.log(res.data);
+            setContent(res.data);
+          } 
+        }).catch(error => {
+          //console.error(error);
+          //navigate("/404");
+        })
+      },[]);
 
     return (
         <div>
-        {sender === 'placeholder' ?
+        {user && content && content['sender'] !== user['username'] ?
         <div>
         <div style={{ float:'left', maxWidth:'350px' }}>
         <Card>
             <Card.Body>
             <Card.Text>
-            {content}
+            {content ? content['content'] : "Loading!!!"}
             </Card.Text>
             </Card.Body>
         </Card>
@@ -45,7 +51,7 @@ const Message = ({messageId, sender, content}) => {
         <Card>
             <Card.Body>
             <Card.Text>
-            {content}
+            {content ? content['content'] : "Loading!!!"}
             </Card.Text>
             </Card.Body>
         </Card>

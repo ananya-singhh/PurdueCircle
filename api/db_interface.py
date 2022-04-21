@@ -264,7 +264,11 @@ class db_interface(object):
         new_message = to_dict(new_message)
         new_message['message_id'] = message_info.id
         return new_message
-        
+    
+    def get_message(self, id):
+        msg = self.messages.document(id).get()
+        return msg.to_dict()
+            
     #change privacy setting
     def change_privacy_setting(self):
         # TODO: implement
@@ -459,6 +463,14 @@ class db_interface(object):
             else:
                 self.create_thread(username1, username2)
                 return self.dms.document(thread_id).get().to_dict()
+    
+    def get_messages(self, thread_id):
+        res = []
+        docs = self.messages.where(u'message_thread_id', u'==', thread_id).stream()
+        docs = sorted(docs, key=lambda x: x.to_dict()['timestamp'], reverse=False)
+        for doc in docs:
+            res.append(doc.id)
+        return res
 
     #get message threads for a user
     def get_threads(self, username):

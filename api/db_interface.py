@@ -259,7 +259,7 @@ class db_interface(object):
         new_message = Message(sender=sender, receiver=receiver, content=content, timestamp=current_date, message_thread_id=message_thread_id)
         message.set(to_dict(new_message))
         message_info = message.get()
-        self.dms.document(message_thread_id).update({u'messages': firestore.ArrayUnion([message_info.id])})
+        self.dms.document(message_thread_id).update({u'messages': firestore.ArrayUnion([message_info.id]), u'time_updated': current_date})
         message.update({u'message_id': message_info.id})
         new_message = to_dict(new_message)
         new_message['message_id'] = message_info.id
@@ -438,7 +438,9 @@ class db_interface(object):
             return False # thread already exists
         else:
             thread = MessageThread(thread_id, usernames_sorted[0], usernames_sorted[1])
-            dms.set(to_dict(thread))
+            ret = to_dict(thread)
+            ret['time_updated'] = datetime.datetime.now(tz=datetime.timezone.utc)
+            dms.set(ret)
             return True
     
     #get a message thread between two users
@@ -455,9 +457,9 @@ class db_interface(object):
             if thread.exists:
                 return thread.to_dict()
             else:
-                return None
+                self.create_thread(username1, username2)
+                return self.dms.document(thread_id).get().to_dict()
 
-    
     #get message threads for a user
     def get_threads(self, username):
         res = []

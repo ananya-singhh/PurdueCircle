@@ -289,7 +289,8 @@ def create_message():
 def get_threads():
     request_data = request.get_json()
     ret = db.get_threads(request_data['username'])
-    return {'ids': ret}
+    if ret: return json.dumps(ret)
+    else: return {'data': 'failed'}
 
 @app.route('/get_thread', methods=['GET'])
 def get_thread():

@@ -43,8 +43,8 @@ const Routing = () => {
         <Route path="/createPost/:topic" element={<CreatePost />} />
         <Route path="/createTopic" element={<CreateTopic />} />
         <Route path="/Topic/:name" element={<TopicPage />} />
-        <Route path="Profile/DMPage/:name/:target" element={<DMPage />} />
-        <Route path=":name/DMList" element={<DMList />} />
+        <Route path="./DMPage/:name/:target" element={<DMPage />} />
+        <Route path="/Profile/:name/DMList" element={<DMList />} />
       </Routes>
 	  <Footer />
     </Router>

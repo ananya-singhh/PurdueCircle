@@ -1,9 +1,7 @@
 import { React, useState ,  useEffect} from 'react';
 
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ListGroup from 'react-bootstrap/ListGroup';
@@ -34,17 +32,21 @@ function Homepage() {
     
         return (
 
-          <Container className="App-Topic">
+          <div className="App-Topic" style={{background: 'black'}}>
             <br></br>
-            <h1 Style="margin-top: 5px;"><strong>My Timeline</strong></h1>
+            <Card.Header style={{color: 'white', background: '#212529', borderRadius: '0px'}}>
+            <h1 Style="margin-top: 5px;">My Timeline</h1>
+            </Card.Header>
+          <Card.Body style={{background: '#0b3866'}}>
             <br></br>
           <ListGroup variant="flush">
           {list.map((item) => (
             <Post id={item}/>
           ))}
           </ListGroup>
-
-          </Container>
+          </Card.Body>
+          
+          </div>
           );
    
   }

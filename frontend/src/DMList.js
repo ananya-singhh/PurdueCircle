@@ -22,7 +22,7 @@ const DMList = () => {
             <br></br>
         <Card>
             <Card.Header>
-                <Button variant="primary" style={{float: "right"}} href={"../Profile/" + user['username']}>Back</Button>
+                <Button variant="primary" style={{float: "right"}} href={"./"}>Back</Button>
                 <h1>My Messages</h1>
             </Card.Header>
             <Card.Body>

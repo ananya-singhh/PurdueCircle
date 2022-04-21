@@ -307,7 +307,16 @@ class db_interface(object):
     def tag_post_with_topic(self):
         # TODO: implement
         pass
-    
+
+
+    # get list of users a user is following
+    def get_following(self, username):
+        res = []
+        users = self.users.where('following', 'array_contains', username).stream()
+        for user in users:
+            res.append(user.to_dict()['username'])
+        return res
+
     # get the default timeline with all posts, sorted by date
     def get_timeline(self):
         res = []

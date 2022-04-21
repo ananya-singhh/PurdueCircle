@@ -45,7 +45,7 @@ function Header() {
 	  
     if (window.location.pathname === '/Login' || window.location.pathname === '/signup')
 		return (
-        <div className="My-header">
+        <div className="My-header" style={{background: 'black'}}>
 			<Navbar bg="dark" variant="dark">
 			  <Container>
 			  <Navbar.Brand>PurdueCircle</Navbar.Brand>
@@ -56,7 +56,7 @@ function Header() {
     );
 	else if (!user)
 	return (
-        <div className="My-header">
+        <div className="My-header" style={{background: 'black'}}>
 			<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 
 			<Container>
@@ -85,7 +85,7 @@ function Header() {
         </div>
 	);
     else return (
-        <div className="My-header">
+        <div className="My-header" style={{background: 'black'}}>
 
 			<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 

@@ -211,7 +211,7 @@ function ProfileNew() {
       </Col>
       </Row>
       <br></br>
-      <Button variant="primary" href={"/" + currentUser['username'] + "/DMList"}>Messages</Button>
+      <Button variant="primary" href={"/Profile/" + currentUser['username'] + "/DMList"}>Messages</Button>
     </Card.Body>
   </Card>
   </Col>

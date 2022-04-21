@@ -196,17 +196,17 @@ function ProfileNew() {
 
       <Card.Title>{user ? user['username'] : "loading"}</Card.Title>
       <Row>
-      <Col md={4}>{user['followers'] ? user['followers'].length + " Followers" : "Loading"}</Col>
-      <Col md={{ span: 4, offset: 4 }}>{user['following'] ?user['following'].length + " Following" : "Loading"}</Col>
+      <Col md={4}>{user['followers'] ? user['followers'].length + "" : ""}<Button type="submit">Followers</Button></Col>
+      <Col md={{ span: 5, offset: 2 }}>{user['following'] ?user['following'].length + "" : ""}<Button type="submit">Following</Button></Col>
       </Row>
       <Card.Text>
         {user ? user['bio'] : "Loading"}
       </Card.Text>
       <Row>
-      <Col>
+      <Col md={4}>
       <Button variant="primary" href="/EditProfile">Edit Profile</Button>
       </Col>
-      <Col>
+      <Col md={{ span: 5, offset: 2 }}>
       <Button variant="primary" href="/createPost/general">Create Post</Button>
       </Col>
       </Row>

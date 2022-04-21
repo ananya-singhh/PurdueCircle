@@ -196,8 +196,8 @@ function ProfileNew() {
   <Container className="App-pfpage">
     <br></br>
     <Row>
-   <Col md={{ span: 10, offset: 1}}>
-  <Card className="text-center" bg="light" style={{ width: '60rem' }}>
+   <Col md={{ span: 10, offset: 3}}>
+  <Card className="text-center" bg="light" style={{ width: '30rem' }}>
     <Card.Body>
     <FigureImage as={Image} width={125} height={125} src={pics[currentUser['profile_picture']]} roundedCircle={true} id="pfp" alt="Card image"/>
     
@@ -209,24 +209,32 @@ function ProfileNew() {
       <Row>
       <Col>
         {user['followers'] ? user['followers'].length + "   " : "   "}
-        <Button type="submit" onClick={handleFollowersPage}>Followers</Button>
+        <Card.Text onClick={handleFollowersPage}>Followers</Card.Text>
+        {/*Blue with underline*/}
+        {/*<Card.Text><a href = "/FollowersPage">Followers</a></Card.Text>*/}
       </Col>
       <Col>
         {user['following'] ?user['following'].length + "   " : "   "}
-        <Button type="submit" onClick={handleFollowingPage}>Following</Button>
+        <Card.Text onClick={handleFollowingPage}>Following</Card.Text>
+        {/*Blue with underline*/}
+        {/*<Card.Text><a href = "/FollowingPage">Following</a></Card.Text>*/}
       </Col>
+      </Row>
       {/*</Row>*/}
       {/*<Row>*/}
+      <br></br>
+      <Row>      
       <Col>
       <Button variant="primary" href="/EditProfile">Edit Profile</Button>
       </Col>
       <Col>
       <Button variant="primary" href="/createPost/general">Create Post</Button>
-      </Col>
-      <Col> 
+      </Col>  
+      <Col>
       <Button variant="primary" href={"/" + currentUser['username'] + "/DMList"}>Messages</Button>
-      </Col>
+      </Col> 
       </Row>
+
     </Card.Body>
   </Card>
   </Col>

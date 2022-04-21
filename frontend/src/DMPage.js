@@ -68,7 +68,7 @@ function DMPage() {
       <Card>
           <Card.Header>
             <Row>
-              <Col md="auto"><Button variant="primary" href="../../">Back</Button></Col>
+              <Col md="auto"><Button variant="primary" href={"../../" + target}>Back</Button></Col>
           <Col><Form.Label className="text-center" style={{width: "93%", fontSize: "125%", fontWeight: "bold" }}>{target}</Form.Label></Col>
           </Row>
           </Card.Header>

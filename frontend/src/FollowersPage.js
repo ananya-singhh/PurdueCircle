@@ -29,7 +29,7 @@ function FollowersPage() {
 
         return (  
         <Container className="App-Topic">
-        <h1 Style="margin-top: 10px;"><strong>Following</strong></h1>
+        <h1 Style="margin-top: 10px;"><strong>Followers</strong></h1>
         {list && list.length > 0 ? 
         <ListGroup variant="flush">
             {list.map((item) => (

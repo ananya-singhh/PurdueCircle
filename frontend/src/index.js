@@ -17,6 +17,8 @@ import CreatePost from './CreatePost';
 import CreateTopic from './CreateTopic';
 import HomePage from './Homepage';
 import TopicPage from './TopicPage';
+import FollowersPage from './FollowersPage';
+import FollowingPage from './FollowingPage';
 import DMPage from './DMPage';
 import DMList from './DMList';
 
@@ -43,6 +45,8 @@ const Routing = () => {
         <Route path="/createPost/:topic" element={<CreatePost />} />
         <Route path="/createTopic" element={<CreateTopic />} />
         <Route path="/Topic/:name" element={<TopicPage />} />
+        <Route path="/FollowersPage" element={<FollowersPage />} />
+        <Route path="/FollowingPage" element={<FollowingPage/>} />
         <Route path="Profile/DMPage/:name/:target" element={<DMPage />} />
         <Route path=":name/DMList" element={<DMList />} />
       </Routes>

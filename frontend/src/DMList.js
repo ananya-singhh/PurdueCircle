@@ -38,7 +38,7 @@ const DMList = () => {
             <br></br>
         <Card>
             <Card.Header>
-                <Button variant="primary" style={{float: "right"}} href={"./"}>Back</Button>
+                <Button variant="primary" style={{float: "right"}} onClick={navigate(-1)}>Back</Button>
                 <h1>My Messages</h1>
             </Card.Header>
             <Card.Body>

@@ -275,6 +275,15 @@ def get_saved_posts():
     else:
         return {"data" : "failed"}
 
+<<<<<<< HEAD
+@app.route('/get_following', methods=['GET'])
+def get_following():
+    ret = db.get_following(request.args['username'])
+    if ret:
+        return json.dumps(ret)
+    else:
+        return {"data" : "failed"}
+=======
 @app.route('/create_message', methods=['POST'])
 def create_message():
     request_data = request.get_json()
@@ -307,6 +316,7 @@ def get_thread():
         user2 = None
     ret = db.get_thread(user1, user2, thread_id)
     return ret
+>>>>>>> 9854db9aef2f66ad2d0c32cbe218a6dc444563d4
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -287,6 +287,7 @@ def get_following():
 @app.route('/create_message', methods=['POST'])
 def create_message():
     request_data = request.get_json()
+    print(request_data)
     try:
         thread_id = request_data['thread_id']
     except:

@@ -259,12 +259,16 @@ class db_interface(object):
         new_message = Message(sender=sender, receiver=receiver, content=content, timestamp=current_date, message_thread_id=message_thread_id)
         message.set(to_dict(new_message))
         message_info = message.get()
-        self.dms.document(message_thread_id).update({u'messages': firestore.ArrayUnion([message_info.id])})
+        self.dms.document(message_thread_id).update({u'messages': firestore.ArrayUnion([message_info.id]), u'time_updated': current_date})
         message.update({u'message_id': message_info.id})
         new_message = to_dict(new_message)
         new_message['message_id'] = message_info.id
         return new_message
-        
+    
+    def get_message(self, id):
+        msg = self.messages.document(id).get()
+        return msg.to_dict()
+            
     #change privacy setting
     def change_privacy_setting(self):
         # TODO: implement
@@ -323,7 +327,16 @@ class db_interface(object):
     def tag_post_with_topic(self):
         # TODO: implement
         pass
-    
+
+
+    # get list of users a user is following
+    def get_following(self, username):
+        res = []
+        users = self.users.where('following', 'array_contains', username).stream()
+        for user in users:
+            res.append(user.to_dict()['username'])
+        return res
+
     # get the default timeline with all posts, sorted by date
     def get_timeline(self):
         res = []
@@ -438,7 +451,9 @@ class db_interface(object):
             return False # thread already exists
         else:
             thread = MessageThread(thread_id, usernames_sorted[0], usernames_sorted[1])
-            dms.set(to_dict(thread))
+            ret = to_dict(thread)
+            ret['time_updated'] = datetime.datetime.now(tz=datetime.timezone.utc)
+            dms.set(ret)
             return True
     
     #get a message thread between two users
@@ -455,9 +470,17 @@ class db_interface(object):
             if thread.exists:
                 return thread.to_dict()
             else:
-                return None
-
+                self.create_thread(username1, username2)
+                return self.dms.document(thread_id).get().to_dict()
     
+    def get_messages(self, thread_id):
+        res = []
+        docs = self.messages.where(u'message_thread_id', u'==', thread_id).stream()
+        docs = sorted(docs, key=lambda x: x.to_dict()['timestamp'], reverse=False)
+        for doc in docs:
+            res.append(doc.id)
+        return res
+
     #get message threads for a user
     def get_threads(self, username):
         res = []

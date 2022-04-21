@@ -276,9 +276,9 @@ def get_saved_posts():
         return {"data" : "failed"}
 
 
-@app.route('/get_following', methods=['GET'])
-def get_following():
-    ret = db.get_following(request.args['username'])
+@app.route('/get_followers', methods=['GET'])
+def get_followers():
+    ret = db.get_followers(request.args['username'])
     if ret:
         return json.dumps(ret)
     else:
@@ -323,7 +323,22 @@ def get_messages():
 def get_message():
     ret = db.get_message(request.args['id'])
     return ret
-    
+
+@app.route('/get_user_following', methods=['GET'])
+def get_user_following():
+    ret = db.get_user_following(request.args['username'])
+    if ret:
+        return json.dumps(ret)
+    else:
+        return {"data" : "failed"}   
+
+@app.route('/get_topic_following', methods=['GET'])
+def get_topic_following():
+    ret = db.get_topic_following(request.args['username'])
+    if ret:
+        return json.dumps(ret)
+    else:
+        return {"data" : "failed"}  
 
 if __name__ == "__main__":
     app.run(debug=True)

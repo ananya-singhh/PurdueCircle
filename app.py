@@ -287,26 +287,33 @@ def create_message():
 
 @app.route('/get_threads', methods=['GET'])
 def get_threads():
-    request_data = request.get_json()
-    ret = db.get_threads(request_data['username'])
+    ret = db.get_threads(request.args['username'])
     if ret: return json.dumps(ret)
     else: return {'data': 'failed'}
 
 @app.route('/get_thread', methods=['GET'])
 def get_thread():
-    request_data = request.get_json()
     try:
-        thread_id = request_data['thread_id']
+        thread_id = request.args['thread_id']
     except:
         thread_id = None
     try:
-        user1 = request_data['user1']
-        user2 = request_data['user2']
+        user1 = request.args['user1']
+        user2 = request.args['user2']
     except:
         user1 = None
         user2 = None
     ret = db.get_thread(user1, user2, thread_id)
     return ret
 
+@app.route('/get_messages', methods=['GET'])
+def get_messages():
+    return json.dumps(db.get_messages(request.args['thread_id']))
+
+@app.route('/get_message', methods=['GET'])
+def get_message():
+    ret = db.get_message(request.args['id'])
+    return ret
+    
 if __name__ == "__main__":
     app.run(debug=True)

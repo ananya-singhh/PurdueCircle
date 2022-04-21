@@ -332,7 +332,7 @@ class db_interface(object):
     # get list of users a user is followed by
     def get_followers(self, username):
         res = []
-        users = self.users.where('followers', 'array_contains', username).stream()
+        users = self.users.where('following', 'array_contains', username).stream()
         for user in users:
             res.append(user.to_dict()['username'])
         return res
@@ -512,7 +512,7 @@ class db_interface(object):
     # get list of users a user is following
     def get_user_following(self, username):
         res = []
-        users = self.users.where('following', 'array_contains', username).stream()
+        users = self.users.where('followers', 'array_contains', username).stream()
         for user in users:
             res.append(user.to_dict()['username'])
         return res
@@ -520,7 +520,7 @@ class db_interface(object):
     # get list of topics a user is following
     def get_topic_following(self, username):
         res = []
-        topics = self.users.where('followed_topics', 'array_contains', username).stream() 
+        topics = self.topics.where('followed_by', 'array_contains', username).stream() 
         for topic in topics:
             res.append(topic.id) 
         return res

@@ -312,7 +312,7 @@ function ProfileNew() {
       </Row> : "sign in dummy"
 }
 <br></br>
-      <Button variant="primary" href={"./" + user['username'] + "/DMPage/" + currentUser['username'] + "/" + user['username']}>Send Message</Button>
+      <Button variant="primary" href={"./DMPage/" + currentUser['username'] + "/" + user['username']}>Send Message</Button>
       </Card.Body>
     </Card>
     </Col>

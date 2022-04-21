@@ -10,6 +10,7 @@ from .Message import Message
 from random import random
 from .Helper import *
 import datetime
+import threading
 
 class db_interface(object):
     def __init__(self):
@@ -467,3 +468,20 @@ class db_interface(object):
         for thread in threads2:
             res.append(thread.id)
         return res
+    
+    def update_thread(self, thread_id):
+        callback_done = threading.Event()
+
+    # Create a callback on_snapshot function to capture changes
+        def on_snapshot(doc_snapshot, changes, read_time):
+            for doc in doc_snapshot:
+                print(f'Received document snapshot: {doc.id}')
+            callback_done.set()
+        
+        ref = self.dms.document(thread_id)
+        
+        watch = ref.on_snapshot(on_snapshot())
+        
+        callback_done.wait(timeout=60)
+        watch.unsubscribe()
+        return ref.get().to_dict()

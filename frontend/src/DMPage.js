@@ -11,48 +11,56 @@ import Col from 'react-bootstrap/Col';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
-import Image from 'react-bootstrap/Image'
-import FigureImage from 'react-bootstrap/FigureImage'
 
-import pic1 from "./images/1.jpg";
-import pic2 from "./images/2.jpg";
-import pic3 from "./images/3.jpg";
-import pic4 from "./images/4.jpg";
-import pic5 from "./images/5.jpg";
-import pic6 from "./images/6.jpg";
-
-import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'
-import ToggleButton from 'react-bootstrap/ToggleButton';
 //TODO: implement posting comment functionality
 function DMPage() {
     const user = JSON.parse(localStorage.getItem('user'));
     const [query, setQuery] = useState("");
     const navigate = useNavigate();
     const target = useParams()['target'];
+    const [messageList, setMessageList] = useState([]);
+    const msgRecipient = target.split('_')[0] !== user['username'] ? target.split('_')[0] : target.split('_')[1];
+  
 
-    /*useEffect(() => {     CHANGE THIS TO GRAB MESSAGE LIST
+    useEffect(() => {     
       updateList();
     }, []);
 
     function updateList() {
       console.log(query);
-      axios({
+       axios({
         method: 'get',
-        url: 'http://127.0.0.1:5000/search_for_user?query=' + query,
+        url: 'http://127.0.0.1:5000/get_messages?thread_id=' + target,
       }).then( res => {
         if (res.data.data !== "No Results") {
-          setUserList(res.data)
+          setMessageList(res.data)
         } 
       }).catch(error => {
         //console.error(error);
         //navigate("/404");
       })
-    }*/
+    }
 
     function sendMessage() {
       if(query !== "") {
-        console.log(query);
-        setQuery("");
+        axios({
+          method: 'POST',
+          url: 'http://127.0.0.1:5000/create_message',
+          data: {
+            thread_id: target,
+            username: user['username'],
+            recipient: msgRecipient,
+            content: query,
+          }
+        }).then( res => {
+          if (res.data.data !== "No Results") {
+            setQuery("");
+            updateList();
+          } 
+        }).catch(error => {
+          //console.error(error);
+          //navigate("/404");
+        })
       }
 
     }
@@ -63,22 +71,29 @@ function DMPage() {
       } 
     }
 
+    const goBack = () => {
+      navigate(-1);
+    }
+
     return (
       <Container>
         <br></br>
       <Card>
           <Card.Header>
             <Row>
-              <Col md="auto"><Button variant="primary" href={"../../" + target}>Back</Button></Col>
+              <Col md="auto"><Button variant="primary" onClick={goBack}>Back</Button></Col>
           <Col><Form.Label className="text-center" style={{width: "93%", fontSize: "125%", fontWeight: "bold" }}>{target}</Form.Label></Col>
           </Row>
           </Card.Header>
           <Card.Body>
 
-          <Message sender="adam" content="HI"></Message>
-          <Message sender="adam" content="JFKSDHGFSKDLRdhfjklsjldkfjdslkfjsdkljflskdjflkjdslkfjsdhflkjkjdfSJKFHSDLKjlksjfdlkjflkdjlfksdjlkfjsdlkfjdslkfFHSDJ"></Message>
-          <Message sender="placeholder" content="HELLO"></Message>
-
+           {messageList && messageList.length > 0 ?
+                <>
+                {messageList.map((item) => (
+                  <Message id={item}/>
+                ))}
+                </> : <div><h2 Style="margin-top: 10px;"><strong>No Messages Fucking Idiot</strong></h2></div>
+                }   
           </Card.Body>
           <Card.Footer>
           <Form className="d-flex">

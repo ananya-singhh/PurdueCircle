@@ -340,6 +340,11 @@ def get_topic_following():
         return json.dumps(ret)
     else:
         return {"data" : "failed"}  
+    
+# @app.route('/realtime_update', methods=['GET'])
+# def realtime_update():
+#     return json.dumps(db.update_thread(request.args['thread_id']))
+
 
 if __name__ == "__main__":
     app.run(debug=True)

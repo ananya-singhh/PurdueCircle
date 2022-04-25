@@ -15,11 +15,12 @@ function SearchResults() {
   const [topicList, setTopicList] = useState([])
   const query = useParams()['query'];
   const url = window.location.pathname.split('/').pop();
-  
+  const user = JSON.parse(localStorage.getItem('user'));
+
   useEffect(() => {
     axios({
       method: 'get',
-      url: 'http://127.0.0.1:5000/search_for_user?query=' + query,
+      url: 'http://127.0.0.1:5000/search_for_user?query=' + query + '&logged_in_user=' + user['username'],
     }).then( res => {
       if (res.data.data !== "No Results") {
         setUserList(res.data)

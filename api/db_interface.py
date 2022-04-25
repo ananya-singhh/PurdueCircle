@@ -149,6 +149,10 @@ class db_interface(object):
         user_to_unblock = self.users.document(username_to_unblock)
         user.update({u'blocked': firestore.ArrayRemove([username_to_unblock])})
         user_to_unblock.update({u'blocked_by': firestore.ArrayRemove([username])})
+    
+    def get_blocked_list(self, username):
+        user = self.users.document(username)
+        return user.get().to_dict()['blocked']
             
     #create a new post
     def create_post(self, content, title, username, topic, anonymous, image):
@@ -193,10 +197,13 @@ class db_interface(object):
         self.posts.document(id).delete()
     
     #get a post
-    def get_post(self, id):
+    def get_post(self, id, logged_in_user=None):
         post = self.posts.document(id).get()
         #print(post.to_dict())
-        return post.to_dict()
+        res = post.to_dict()
+        if logged_in_user:
+            res['comments'] = [comment for comment in res['comments'] if self.get_comment(comment)['author'] not in self.users.document(logged_in_user).get().to_dict()['blocked'] and self.get_comment(comment)['author'] not in self.users.document(logged_in_user).get().to_dict()['blocked_by']]
+        return res
     
     #get a post with its title
     def get_post2(self, title):
@@ -204,7 +211,7 @@ class db_interface(object):
        post = next(posts,None)
        if not post:
            return None
-       return post.to_dict(),
+       return post.to_dict()
   
     #get a post's id with its title
     def get_post_id(self, title):
@@ -240,14 +247,16 @@ class db_interface(object):
         return comment.to_dict()
         
     # returns the comments by post id
-    def get_comments(self, post_id):
+    def get_comments(self, post_id, logged_in_user):
         comments = self.comments.where(u'post_id', u'==', post_id).stream()
         res = []
         for comment in comments:
-            res.append(comment.id)
+            comment_dict = comment.to_dict()
+            if comment_dict['author'] not in self.users.document(logged_in_user).get().to_dict()['blocked'] and comment_dict['author'] not in self.users.document(logged_in_user).get().to_dict()['blocked_by']:
+                res.append(comment.id)
             #print(comment.id)
         return res
-                
+
     #send a message
     def create_message(self, sender, receiver, content, message_thread_id=None):
         self.create_thread(sender, receiver)
@@ -306,7 +315,7 @@ class db_interface(object):
         return res 
          
     #search for users
-    def search_user(self, query):
+    def search_user(self, query, logged_in_user):
         res = []
         end = query[0:-1]
         end += str(chr(ord(query[-1]) + 1)) # increment last char of end
@@ -314,7 +323,11 @@ class db_interface(object):
         
         users = self.users.where('username', '>=', query).where('username', '<', end).stream() # cursed query to find users that start with the query
         for user in users:
-            res.append(user.to_dict()['username']) # build list of usernames to return
+            username = user.to_dict()['username']
+            # if username is not in the logged in users block list and blocked by list append to res
+            if username not in self.users.document(logged_in_user).get().to_dict()['blocked'] and \
+            username not in self.users.document(logged_in_user).get().to_dict()['blocked_by']:
+                res.append(username) # build list of usernames to return
         #print(res)
         return res
     
@@ -338,7 +351,8 @@ class db_interface(object):
         posts = self.posts.where(u'topic', u'==', topic).stream()
         posts = sorted(posts, key=lambda x: x.to_dict()['date_posted'], reverse=True)
         for post in posts:
-            if username == "x" or post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked']:
+            if username == "x" or (post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked'] and \
+            post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked_by']):
                 res.append(post.id)
         return res
     
@@ -352,18 +366,24 @@ class db_interface(object):
             posts1 = self.posts.where(u'author', u'in', user['following']).stream()
         if len(user['followed_topics']) > 0:
             posts2 = self.posts.where(u'topic', u'in', user['followed_topics']).stream()
-            
-            
-        if posts1: posts1 = sorted(posts1, key=lambda x: x.to_dict()['date_posted'], reverse=True)
-        if posts2: posts2 = sorted(posts2, key=lambda x: x.to_dict()['date_posted'], reverse=True)
-        if posts1:
+        
+        sorted_posts = []
+        if posts1 is not None:
             for post in posts1:
-                if post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked']:
-                    if post.id not in res: res.append(post.id)
-        if posts2:
+                sorted_posts.append(post.to_dict())
+                sorted_posts[-1]['post_id'] = post.id
+        if posts2 is not None:
             for post in posts2:
-                if post.to_dict()['author'] not in self.users.document(username).get().to_dict()['blocked']:
-                    if post.id not in res: res.append(post.id)
+                sorted_posts.append(post.to_dict())
+                sorted_posts[-1]['post_id'] = post.id
+        
+        sorted_posts = sorted(sorted_posts, key=lambda x: x['date_posted'], reverse=True)
+
+        for post in sorted_posts:
+            if post['author'] not in self.users.document(username).get().to_dict()['blocked'] and \
+            post['author'] not in self.users.document(username).get().to_dict()['blocked_by']:
+                if post['post_id'] not in res: res.append(post['post_id'])
+                    
         return res
 
     #get userline of a user

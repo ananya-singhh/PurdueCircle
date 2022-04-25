@@ -27,6 +27,7 @@ function DMPage() {
   
 
     useEffect(() => {  
+      updateList();
       const interval = setInterval(() => {
         updateList();
       }, 5000);

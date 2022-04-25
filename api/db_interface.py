@@ -12,6 +12,7 @@ from random import random
 from .Helper import *
 import datetime
 import threading
+import time
 
 class db_interface(object):
     def __init__(self):
@@ -496,22 +497,25 @@ class db_interface(object):
             res.append(thread.id)
         return res
     
-    def update_thread(self, thread_id):
-        callback_done = threading.Event()
+    # def update_thread(self, thread_id):
+    #     update = False
 
-    # Create a callback on_snapshot function to capture changes
-        def on_snapshot(doc_snapshot, changes, read_time):
-            for doc in doc_snapshot:
-                print(f'Received document snapshot: {doc.id}')
-            callback_done.set()
+    # # Create a callback on_snapshot function to capture changes
+    #     def on_snapshot(doc_snapshot, changes, read_time):
+    #         global update
+    #         for doc in doc_snapshot:
+    #             print(f'Received document snapshot: {doc.id}')
+    #         update = True
         
-        ref = self.dms.document(thread_id)
+    #     ref = self.dms.document(thread_id)
         
-        watch = ref.on_snapshot(on_snapshot())
+    #     watch = ref.on_snapshot(on_snapshot)
+    #     t_end = time.time() + 5
+    #     while not update or time.time() < t_end: 
+    #         continue
         
-        callback_done.wait(timeout=60)
-        watch.unsubscribe()
-        return self.get_messages(ref.get().to_dict()['message_thread_id'])
+    #     watch.unsubscribe()
+    #     return self.get_messages(ref.get().to_dict()['message_thread_id'])
 
     # get list of users a user is following
     def get_user_following(self, username):

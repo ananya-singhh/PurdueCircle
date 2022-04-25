@@ -21,27 +21,48 @@ function DMPage() {
     const [messageList, setMessageList] = useState([]);
     var id = [target, user['username']].sort().join('_');
     
-    
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
   
 
-    useEffect(() => {     
+    useEffect(() => {  
       updateList();
+      const interval = setInterval(() => {
+        updateList();
+      }, 5000);
+      return () => clearInterval(interval);   
     }, []);
 
     function updateList() {
-      console.log(query);
-       axios({
+      axios({
         method: 'get',
         url: 'http://127.0.0.1:5000/get_messages?thread_id=' + id,
       }).then( res => {
         if (res.data.data !== "No Results") {
           setMessageList(res.data)
+          
         } 
       }).catch(error => {
         //console.error(error);
         //navigate("/404");
       })
     }
+
+    // async function realtimeUpdates() {
+    //   await axios({
+    //     method: 'get',
+    //     url: 'http://127.0.0.1:5000/realtime_update?thread_id=' + id,
+    //   }).then( res => {
+    //     if (res.data.data !== "No Results") {
+    //       setMessageList(res.data)
+    //       realtimeUpdates()
+    //     } 
+    //   }).catch(error => {
+    //     //console.error(error);
+    //     //navigate("/404");
+    //   })
+    // }
 
     function sendMessage() {
       if(query !== "") {

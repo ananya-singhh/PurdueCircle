@@ -164,7 +164,7 @@ class db_interface(object):
             
     #create a new post
     def create_post(self, content, title, username, topic, anonymous, image, url):
-        if len(content) > 20000:
+        if len(content) > 500:
            return -1
         
         post = self.posts.document() # ref to new document

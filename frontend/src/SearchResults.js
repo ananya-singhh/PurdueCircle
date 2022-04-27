@@ -20,7 +20,7 @@ function SearchResults() {
   useEffect(() => {
     axios({
       method: 'get',
-      url: 'http://127.0.0.1:5000/search_for_user?query=' + query + '&logged_in_user=' + user['username'],
+      url: `http://127.0.0.1:5000/search_for_user?query=${query}&logged_in_user=${user['username']}`,
     }).then( res => {
       if (res.data.data !== "No Results") {
         setUserList(res.data)

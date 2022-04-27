@@ -188,7 +188,7 @@ function ProfileNew() {
     }, [username]);
 
   
-
+  const [showPosts, setShowPosts] = useState(false);
   function DMable() {
       if(user['privacy_setting']) {
           if(user['following'].includes(currentUser['username'])) {
@@ -249,16 +249,33 @@ function ProfileNew() {
   </Col>
   </Row>
   <br></br>
-  <h1 Style="margin-top: 5px;"><strong><u>My posts</u></strong></h1>
+  <h1 Style="margin-top: 5px;"><strong><u>My Activity</u></strong></h1>
   <Row>
   <Col md={{ span: 9, offset: 1}}>
-  {list && list.length > 0 ? 
+    {showPosts ?
+    <>
+    <Button onClick={() => setShowPosts(false)} style={{borderRadius: '12px 12px 0px 0px', background: 'white', color: 'blue'}}>Posts</Button>
+    <Button style={{borderRadius: '12px 12px 0px 0px'}}>Interactions</Button></>
+    : 
+    <>
+    <Button style={{borderRadius: '12px 12px 0px 0px'}}>Posts</Button>
+    <Button onClick={() => setShowPosts(true)} style={{borderRadius: '12px 12px 0px 0px', background: 'white', color: 'blue'}}>Interactions</Button></>
+    }
+  <Card>
+    <Card.Body>
+      {!showPosts ? 
+  <>{list && list.length > 0 ? 
   <ListGroup variant="flush">
   {list.map((item) => (
     <Post id={item}/>
   ))}
 </ListGroup> : ""
+  }</>
+  :
+  <>Interactions List</>
   }
+  </Card.Body>
+  </Card>
 </Col>
 </Row>
 

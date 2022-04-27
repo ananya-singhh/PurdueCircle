@@ -104,7 +104,7 @@ def search_for_user():
 def create_post():
     request_data = request.get_json()
     print(request_data)
-    created_post = db.create_post(request_data['content'], request_data['title'], request_data['username'], request_data['topic'], request_data['anonymous'], request_data['image'])
+    created_post = db.create_post(request_data['content'], request_data['title'], request_data['username'], request_data['topic'], request_data['anonymous'], request_data['image'], request_data['link'])
     return to_dict(created_post)
     
 @app.route('/edit_post', methods=['PUT'])

@@ -323,8 +323,7 @@ def get_thread():
 
 @app.route('/get_blocked_list', methods=['GET'])
 def get_blocked_list():
-    request_data = request.get_json()
-    ret = db.get_blocked_list(request_data['username'])
+    ret = db.get_blocked_list(request.args['username'])
     return {'blocked': ret}
 @app.route('/get_messages', methods=['GET'])
 def get_messages():

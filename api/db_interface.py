@@ -528,3 +528,15 @@ class db_interface(object):
         for topic in topics:
             res.append(topic.id) 
         return res
+
+    def get_interactions(self, username):
+        res = []
+        user = self.users.document(username).get().to_dict()
+        posts1 = user['liked_posts']
+        posts2 = []
+        for comment_id in user['comments']:
+            comment = self.comments.document(comment_id).get().to_dict()
+            posts2.append(comment['post_id'])
+        
+        res = list(set(posts1 + posts2))
+        return res

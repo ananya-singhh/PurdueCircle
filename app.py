@@ -341,5 +341,10 @@ def get_topic_following():
     else:
         return {"data" : "failed"}  
 
+@app.route('/get_interactions', methods=['GET'])
+def get_interactions():
+    ret = db.get_interactions(request.args['username'])
+    return {'interactions': ret}
+
 if __name__ == "__main__":
     app.run(debug=True)

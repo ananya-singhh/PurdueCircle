@@ -39,6 +39,11 @@ class db_interface(object):
         
     #create new user given info, can also add password checking for proper length etc
     def create_user(self, email, username, password):
+        if len(username) < 4:
+           return -1
+        elif len(username) > 15:
+           return 1
+
         check = self.user_exists(username, email)
         if check[0] == True: #if username or email already exists
             return (None, check[1]) #returns 'email' or 'username' depending on which was already taken
@@ -155,6 +160,9 @@ class db_interface(object):
             
     #create a new post
     def create_post(self, content, title, username, topic, anonymous, image):
+        if len(content) > 20000:
+           return -1
+        
         post = self.posts.document() # ref to new document
         current_date = datetime.datetime.now(tz=datetime.timezone.utc)
         new_post = Post(author=username, content=content, title=title, topic=topic, date_posted=current_date, anonymous=anonymous, image=image)

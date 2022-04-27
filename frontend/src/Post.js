@@ -151,7 +151,7 @@ import CommentsPage from './CommentsPage';
         function getPost() {
             axios({
                 method: 'get',
-                url: `http://127.0.0.1:5000/get_post?id=${id}&logged_in_user=${currentUser['username']}`,
+                url: `http://127.0.0.1:5000/get_post?id=${id}&logged_in_user=${currentUser ? currentUser['username'] : ""}`,
               }).then( res => {
                 setPostInfo(res.data);
                 if(currentUser) {

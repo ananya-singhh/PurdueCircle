@@ -188,7 +188,16 @@ function ProfileNew() {
 
   
 
-  
+  function DMable() {
+      if(user['privacy_setting']) {
+          if(user['following'].includes(currentUser['username'])) {
+            return true;
+          } else {
+            return false;
+          }
+      }
+      return true;
+  }
 
   if(currentUser && username === currentUser['username']) {
 
@@ -197,7 +206,7 @@ function ProfileNew() {
     <br></br>
     <Row>
    <Col md={{ span: 10, offset: 3}}>
-  <Card className="text-center" bg="light" style={{ width: '30rem' }}>
+  <Card className="text-center" bg="light" style={{ width: '18rem', marginLeft: '120px' }}>
     <Card.Body>
     <FigureImage as={Image} width={125} height={125} src={pics[currentUser['profile_picture']]} roundedCircle={true} id="pfp" alt="Card image"/>
     
@@ -230,12 +239,11 @@ function ProfileNew() {
       <Col>
       <Button variant="primary" href="/createPost/general">Create Post</Button>
       </Col>  
-      <Col>
-      <Button variant="primary" href={"/" + currentUser['username'] + "/DMList"}>Messages</Button>
-      </Col> 
       </Row>
-
+      <br></br>
+      <Button variant="primary" href={"/" + currentUser['username'] + "/DMList"}>Messages</Button>
     </Card.Body>
+    <p>Privacy Status: {currentUser['privacy_setting'] ? "Private" : "Public"}</p>
   </Card>
   </Col>
   </Row>
@@ -335,7 +343,7 @@ function ProfileNew() {
       </Row> : "sign in dummy"
 }
 <br></br>
-      <Button variant="primary" href={"./DMPage/" + currentUser['username'] + "/" + user['username']}>Send Message</Button>
+      {DMable() ? <Button variant="primary" href={"./DMPage/" + currentUser['username'] + "/" + user['username']}>Send Message</Button> : "This user is private."}
       </Card.Body>
     </Card>
     </Col>

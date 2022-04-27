@@ -1,3 +1,4 @@
+from concurrent.futures import thread
 import hashlib
 from multiprocessing.dummy import Array
 # from turtle import pos
@@ -10,6 +11,8 @@ from .Message import Message
 from random import random
 from .Helper import *
 import datetime
+import threading
+import time
 
 class db_interface(object):
     def __init__(self):
@@ -36,6 +39,11 @@ class db_interface(object):
         
     #create new user given info, can also add password checking for proper length etc
     def create_user(self, email, username, password):
+        if len(username) < 4:
+           return -1
+        elif len(username) > 15:
+           return 1
+
         check = self.user_exists(username, email)
         if check[0] == True: #if username or email already exists
             return (None, check[1]) #returns 'email' or 'username' depending on which was already taken
@@ -155,10 +163,13 @@ class db_interface(object):
         return user.get().to_dict()['blocked']
             
     #create a new post
-    def create_post(self, content, title, username, topic, anonymous, image):
+    def create_post(self, content, title, username, topic, anonymous, image, url):
+        if len(content) > 20000:
+           return -1
+        
         post = self.posts.document() # ref to new document
         current_date = datetime.datetime.now(tz=datetime.timezone.utc)
-        new_post = Post(author=username, content=content, title=title, topic=topic, date_posted=current_date, anonymous=anonymous, image=image)
+        new_post = Post(author=username, content=content, title=title, topic=topic, date_posted=current_date, anonymous=anonymous, image=image, URL = url)
         post.set(to_dict(new_post))
         post_info = post.get()
         if anonymous:
@@ -267,12 +278,18 @@ class db_interface(object):
         new_message = Message(sender=sender, receiver=receiver, content=content, timestamp=current_date, message_thread_id=message_thread_id)
         message.set(to_dict(new_message))
         message_info = message.get()
-        self.dms.document(message_thread_id).update({u'messages': firestore.ArrayUnion([message_info.id])})
+        
+        self.dms.document(message_thread_id).update({u'messages': firestore.ArrayUnion([message_info.id]), u'time_updated': current_date})
+        
         message.update({u'message_id': message_info.id})
         new_message = to_dict(new_message)
         new_message['message_id'] = message_info.id
         return new_message
-        
+    
+    def get_message(self, id):
+        msg = self.messages.document(id).get()
+        return msg.to_dict()
+            
     #change privacy setting
     def change_privacy_setting(self):
         # TODO: implement
@@ -335,7 +352,16 @@ class db_interface(object):
     def tag_post_with_topic(self):
         # TODO: implement
         pass
-    
+
+
+    # get list of users a user is followed by
+    def get_followers(self, username):
+        res = []
+        users = self.users.where('following', 'array_contains', username).stream()
+        for user in users:
+            res.append(user.to_dict()['username'])
+        return res
+
     # get the default timeline with all posts, sorted by date
     def get_timeline(self):
         res = []
@@ -457,7 +483,9 @@ class db_interface(object):
             return False # thread already exists
         else:
             thread = MessageThread(thread_id, usernames_sorted[0], usernames_sorted[1])
-            dms.set(to_dict(thread))
+            ret = to_dict(thread)
+            ret['time_updated'] = datetime.datetime.now(tz=datetime.timezone.utc)
+            dms.set(ret)
             return True
     
     #get a message thread between two users
@@ -474,9 +502,18 @@ class db_interface(object):
             if thread.exists:
                 return thread.to_dict()
             else:
-                return None
-
+                self.create_thread(username1, username2)
+                return self.dms.document(thread_id).get().to_dict()
     
+    def get_messages(self, thread_id):
+        print(thread_id)
+        res = []
+        docs = self.messages.where(u'message_thread_id', u'==', thread_id).stream()
+        docs = sorted(docs, key=lambda x: x.to_dict()['timestamp'], reverse=False)
+        for doc in docs:
+            res.append(doc.id)
+        return res
+
     #get message threads for a user
     def get_threads(self, username):
         res = []
@@ -486,4 +523,40 @@ class db_interface(object):
             res.append(thread.id)
         for thread in threads2:
             res.append(thread.id)
+        return res
+    
+    # def update_thread(self, thread_id):
+    #     update = False
+
+    # # Create a callback on_snapshot function to capture changes
+    #     def on_snapshot(doc_snapshot, changes, read_time):
+    #         global update
+    #         for doc in doc_snapshot:
+    #             print(f'Received document snapshot: {doc.id}')
+    #         update = True
+        
+    #     ref = self.dms.document(thread_id)
+        
+    #     watch = ref.on_snapshot(on_snapshot)
+    #     t_end = time.time() + 5
+    #     while not update or time.time() < t_end: 
+    #         continue
+        
+    #     watch.unsubscribe()
+    #     return self.get_messages(ref.get().to_dict()['message_thread_id'])
+
+    # get list of users a user is following
+    def get_user_following(self, username):
+        res = []
+        users = self.users.where('followers', 'array_contains', username).stream()
+        for user in users:
+            res.append(user.to_dict()['username'])
+        return res
+
+    # get list of topics a user is following
+    def get_topic_following(self, username):
+        res = []
+        topics = self.topics.where('followed_by', 'array_contains', username).stream() 
+        for topic in topics:
+            res.append(topic.id) 
         return res

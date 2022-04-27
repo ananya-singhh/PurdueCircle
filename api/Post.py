@@ -4,7 +4,7 @@ from typing import List
 
 class Post(object):
     
-    def __init__(self, author: str = None, post_id: str = None, topic: str = None, title: str = None, content: str = None, date_posted: datetime = None, liked_by: List = list(), saved_by: List = list(), anonymous: bool = False, comments: List = list(), image: str = None):
+    def __init__(self, author: str = None, post_id: str = None, topic: str = None, title: str = None, content: str = None, date_posted: datetime = None, liked_by: List = list(), saved_by: List = list(), anonymous: bool = False, comments: List = list(), image: str = None, URL: str = None):
         self.author = author
         self.post_id = post_id
         self.topic = topic
@@ -16,3 +16,4 @@ class Post(object):
         self.saved_by = saved_by
         self.anonymous = anonymous
         self.comments = comments
+        self.URL = URL

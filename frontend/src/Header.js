@@ -33,7 +33,12 @@ function Header() {
 	  }
 	const handleShow = () => setShow(true);
 
-	const [query, setQuery] = useState("")
+	const [query, setQuery] = useState("");
+
+	function handleClick() {
+		navigate('/Profile/'+ user['username']);
+		// window.location.reload(false);
+	}
 
 	function handleSearch() {
 		if(query.length > 0) {
@@ -45,7 +50,7 @@ function Header() {
 	  
     if (window.location.pathname === '/Login' || window.location.pathname === '/signup')
 		return (
-        <div className="My-header">
+        <div className="My-header" style={{background: 'black'}}>
 			<Navbar bg="dark" variant="dark">
 			  <Container>
 			  <Navbar.Brand>PurdueCircle</Navbar.Brand>
@@ -56,7 +61,7 @@ function Header() {
     );
 	else if (!user)
 	return (
-        <div className="My-header">
+        <div className="My-header" style={{background: 'black'}}>
 			<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 
 			<Container>
@@ -85,7 +90,7 @@ function Header() {
         </div>
 	);
     else return (
-        <div className="My-header">
+        <div className="My-header" style={{background: 'black'}}>
 
 			<Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 
@@ -100,7 +105,7 @@ function Header() {
 				  <Nav.Link href="/message">Direct Message</Nav.Link>
 				  <Nav.Link href="/SavedPosts">Saved Posts</Nav.Link>
 				  <NavDropdown title={user['username']} id="navbarScrollingDropdown">
-					  <NavDropdown.Item onClick={() => navigate('/Profile/'+user['username'])}>View Profile</NavDropdown.Item>
+					  <NavDropdown.Item onClick={handleClick}>View Profile</NavDropdown.Item>
 					  <NavDropdown.Divider />
 					  <NavDropdown.Item onClick={handleShow}>Logout</NavDropdown.Item>
 				  </NavDropdown>

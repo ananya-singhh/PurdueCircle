@@ -71,8 +71,8 @@ function CommentsPage(props) {
         <Container>
         
         
-        <Card>
-            <Card.Body>
+        <Card style={{borderColor: '#f0f1f2'}}>
+            <Card.Body style={{background: '#f0f1f2'}}>
                 <Form>
                     <Card.Title>Add a Comment...</Card.Title>
                     <Form.Control placeholder="Type your comment here" Style="margin-bottom: 10px;" onChange = {e => setContent(e.target.value)} value={content}/>
@@ -86,7 +86,7 @@ function CommentsPage(props) {
             {commentsList && commentsList.length > 0 ?
             <ListGroup variant="flush">
                 {commentsList.map((item) => (
-                <ListGroup.Item><Comment commentId={item}/></ListGroup.Item>
+                <ListGroup.Item style={{background: '#f0f1f2'}}><Comment commentId={item}/></ListGroup.Item>
                 ))}
             </ListGroup> : ""
             }

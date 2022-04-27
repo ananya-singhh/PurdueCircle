@@ -14,7 +14,7 @@ import FormCheck from 'react-bootstrap/FormCheck';
     function CreatePost() {
         const topic = useParams()['topic']
         const user = JSON.parse(localStorage.getItem('user'));
-        const [content, setContent] = useState({content: "", title: "", anonymous: false, image: null});
+        const [content, setContent] = useState({content: "", title: "", URL: "", anonymous: false, image: null});
         const navigate = useNavigate();
         
         const toBase64 = file => new Promise((resolve, reject) => {
@@ -79,9 +79,9 @@ import FormCheck from 'react-bootstrap/FormCheck';
                 <Card.Subtitle>@{user['username']}</Card.Subtitle>
             </Card.Header>
             <Card.Body>
-                Post Content
+                Post Content ({content.content.length}/500 characters)
                 <InputGroup hasValidation>
-                <Form.Control aria-describedby="inputGroupPrepend" required as="textarea" placeholder="What's on your mind?" onChange = {e => setContent({...content, content: e.target.value})} value={content.content} />
+                <Form.Control aria-describedby="inputGroupPrepend" required as="textarea" maxLength={500} placeholder="What's on your mind?" onChange = {e => setContent({...content, content: e.target.value})} value={content.content} />
                 <Form.Control.Feedback type="invalid">
                   Please enter some content to post.
                 </Form.Control.Feedback>
@@ -89,6 +89,8 @@ import FormCheck from 'react-bootstrap/FormCheck';
                 <br></br>
                 <Form.Label>Add an Image (optional)</Form.Label>
                 <Form.Control type="file" size="sm" onChange={e => setContent({...content, image: e.target.files[0]})}/>
+                <Form.Label>Add a URL (optional)</Form.Label>
+                <Form.Control placeholder="paste your URL here" type="input" size="sm" onChange={e => setContent({...content, URL: e.target.value})} value={content.URL}></Form.Control>
             </Card.Body>
             <Card.Footer>
                 <div className="d-grid gap-2">

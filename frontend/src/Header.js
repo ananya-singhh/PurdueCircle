@@ -33,7 +33,12 @@ function Header() {
 	  }
 	const handleShow = () => setShow(true);
 
-	const [query, setQuery] = useState("")
+	const [query, setQuery] = useState("");
+
+	function handleClick() {
+		navigate('/Profile/'+ user['username']);
+		// window.location.reload(false);
+	}
 
 	function handleSearch() {
 		if(query.length > 0) {
@@ -100,7 +105,7 @@ function Header() {
 				  <Nav.Link href="/message">Direct Message</Nav.Link>
 				  <Nav.Link href="/SavedPosts">Saved Posts</Nav.Link>
 				  <NavDropdown title={user['username']} id="navbarScrollingDropdown">
-					  <NavDropdown.Item onClick={() => navigate('/Profile/'+user['username'])}>View Profile</NavDropdown.Item>
+					  <NavDropdown.Item onClick={handleClick}>View Profile</NavDropdown.Item>
 					  <NavDropdown.Divider />
 					  <NavDropdown.Item onClick={handleShow}>Logout</NavDropdown.Item>
 				  </NavDropdown>

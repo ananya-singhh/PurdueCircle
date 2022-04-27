@@ -30,7 +30,14 @@ import CommentsPage from './CommentsPage';
     function Post(props) {
       const navigate = useNavigate();
         var random = 0;
-        var id = props.id; // pass id to the post, ex. <Post id={"exampleID"}/>, the id in this line will be "exampleID"
+        var showComments = false;
+        var id = useParams()['id']; // pass id to the post, ex. <Post id={"exampleID"}/>, the id in this line will be "exampleID"
+        if(id==null) {
+          id = props.id;
+          //console.log(id);
+        }else {
+          showComments =true;
+        }
         const [postInfo, setPostInfo] = useState({});
         const currentUser = JSON.parse(localStorage.getItem('user'));
 
@@ -76,7 +83,6 @@ import CommentsPage from './CommentsPage';
 
 
         const [checked, setChecked] = useState(false);
-        const [commentsVisible, setCommentsVisible] = useState(false);
         const handleUnlike = (e) => {
             axios({
                 method: 'put',
@@ -118,12 +124,7 @@ import CommentsPage from './CommentsPage';
             return checked;
         }
         
-        function checkCommentsVisible() {
-            return commentsVisible;
-        }
-        const toggleComments = (e) => {
-            setCommentsVisible(!commentsVisible);
-        }
+        
 
         const [editMode, setEditMode] = useState(true);
         const toggleEditMode = (e) => {
@@ -192,7 +193,7 @@ import CommentsPage from './CommentsPage';
             
             {postInfo['author'] && currentUser && postInfo['author'] === currentUser['username'] ?
                 <Card.Header style={{color: 'white', background: '#212529'}}>
-                <Card.Title style={{float:'left'}}>{postInfo['title'] ? postInfo['title'] : "Loading..."}</Card.Title>
+                <Card.Title onClick={() => navigate("/Post/" + id)}style={{float:'left'}}>{postInfo['title'] ? postInfo['title'] : "Loading..."}</Card.Title>
                 <Button variant="danger" style={{float:'right', marginLeft: '10px'}} onClick={areYouSure}>Delete</Button> 
                     {editMode ? 
                     <Button variant="warning" style={{float:'right'}} onClick={toggleEditMode}>Edit</Button>
@@ -217,7 +218,7 @@ import CommentsPage from './CommentsPage';
                 </Card.Header>
                 : 
                 <Card.Header style={{color: 'white', background: '#212529'}}>
-                <Card.Title>{postInfo['title'] ? postInfo['title'] : "Loading..."}</Card.Title> 
+                <Card.Title onClick={() => navigate("/Post/" + id)}>{postInfo['title'] ? postInfo['title'] : "Loading..."}</Card.Title> 
                 <Card.Subtitle>{postInfo['author'] && !postInfo['anonymous'] ? "@" + postInfo['author'] : "Anonymous User"} in '{postInfo['topic'] ? <a href={"/Topic/" + postInfo['topic']}>{postInfo['topic']}</a> : ""}'</Card.Subtitle>
                 </Card.Header>
                 }
@@ -229,12 +230,13 @@ import CommentsPage from './CommentsPage';
                 <Form.Control as="textarea" value={postInfo['content']} onChange = {e => setPostInfo({...postInfo, content: e.target.value})}/>
                 }
                 {postInfo['image'] ? <img src = {postInfo['image']}></img> : ""}
+                {postInfo['URL'] ? <><br></br><br></br>Attached URL: <a href={postInfo['URL']}>{postInfo['URL']}</a></> : <></>}
             
             </Card.Body>
             <Card.Footer>
                 <Container>
-                    <p style={{float: 'left', marginTop: '8px'}}>{postInfo['liked_by'] && postInfo['liked_by'].length > 0 ? postInfo['liked_by'].length : 0} Likes</p>
-
+                    <p style={{float: 'left', marginTop: '8px', marginRight: '12px'}}>{postInfo['liked_by'] && postInfo['liked_by'].length > 0 ? postInfo['liked_by'].length : 0} Likes</p>
+                    <p style={{float: 'left', marginTop: '8px'}}>{postInfo['comments'] && postInfo['comments'].length !== 1 ? <>{postInfo['comments'].length} Comments</> : <>1 Comment</>}</p>
                         {currentUser ? <>
                         {postInfo && saved ?
                         <ToggleButton
@@ -286,10 +288,10 @@ import CommentsPage from './CommentsPage';
                       >
                         Like
                       </ToggleButton>}
-                      <Button variant="link" style={{float: 'right', marginRight: '10px'}} onClick={toggleComments}>Comments</Button></> : <><p style={{float: 'right', marginTop: '8px'}}>Please sign in to like and save posts.</p><Button variant="link" style={{float: 'right', marginRight: '10px'}} onClick={toggleComments}>Comments</Button></>}
+                      </> : <><p style={{float: 'right', marginTop: '8px'}}>Please sign in to like and save posts.</p></>}
 
                         
-                        {(checkCommentsVisible()) ? <CommentsPage curPostId={id} /> : null}
+                        {showComments ? <><br></br><br></br><CommentsPage style={{clear: 'both'}} curPostId={id}/></> : null}
                 </Container>
             </Card.Footer>
             </Card>

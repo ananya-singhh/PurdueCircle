@@ -63,11 +63,11 @@ import FormCheck from 'react-bootstrap/FormCheck';
   };
 
         return (
-            <Container className="App-post" Style="margin-bottom: 10px;">
+            <div className="App-post">
               <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <h1 Style="margin-top: 10px;"><strong>Create a Post</strong></h1>
             <Card className="text-left" bg="light">
-            <Card.Header>
+            <Card.Header style={{color: 'white', background: '#212529', borderRadius: '0px'}}>
                 <Card.Title>
                 <InputGroup hasValidation>
                     <Form.Control required placeholder="Enter a title for your post" onChange = {e => setContent({...content, title: e.target.value})} value={content.title} />
@@ -108,7 +108,7 @@ import FormCheck from 'react-bootstrap/FormCheck';
             <Button variant="link" size="sm" href="/homepage">Return to homepage</Button>
 
             </Form>
-            </Container> 
+            </div> 
             
       );
     

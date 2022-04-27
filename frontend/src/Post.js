@@ -229,6 +229,7 @@ import CommentsPage from './CommentsPage';
                 <Form.Control as="textarea" value={postInfo['content']} onChange = {e => setPostInfo({...postInfo, content: e.target.value})}/>
                 }
                 {postInfo['image'] ? <img src = {postInfo['image']}></img> : ""}
+                {postInfo['URL'] ? <><br></br><br></br>Attached URL: <a href={postInfo['URL']}>{postInfo['URL']}</a></> : <></>}
             
             </Card.Body>
             <Card.Footer>
@@ -289,7 +290,7 @@ import CommentsPage from './CommentsPage';
                       <Button variant="link" style={{float: 'right', marginRight: '10px'}} onClick={toggleComments}>Comments</Button></> : <><p style={{float: 'right', marginTop: '8px'}}>Please sign in to like and save posts.</p><Button variant="link" style={{float: 'right', marginRight: '10px'}} onClick={toggleComments}>Comments</Button></>}
 
                         
-                        {(checkCommentsVisible()) ? <CommentsPage curPostId={id} /> : null}
+                        {(checkCommentsVisible()) ? <><br></br><br></br><CommentsPage style={{clear: 'both'}} curPostId={id}/></> : null}
                 </Container>
             </Card.Footer>
             </Card>

@@ -15,11 +15,11 @@ function BlockedPage() {
     useEffect(() => {
         axios({
         method: 'get',
-        url: 'http://127.0.0.1:5000/get_followers?username=' + currentUser['username'],
+        url: 'http://127.0.0.1:5000/get_blocked_list?username=' + currentUser['username'],
     }).then( res => {
     if (res.data.data !== "No Results") {
-        console.log(res.data);
-      setList(res.data)
+        console.log(res.data['blocked']);
+      setList(res.data['blocked'])
     } 
     }).catch(error => {
     //console.error(error);

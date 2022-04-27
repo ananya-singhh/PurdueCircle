@@ -233,7 +233,7 @@ function ProfileNew() {
         {/*<Card.Text><a href = "/FollowingPage">Following</a></Card.Text>*/}
       </Col>
       <Col>
-        {user['following'] ?user['following'].length + "   " : "   "}
+        {user['blocked'] ?user['blocked'].length + "   " : "   "}
         <Card.Text onClick={handleBlockedPage}>Blocked</Card.Text>
         {/*Blue with underline*/}
         {/*<Card.Text><a href = "/FollowingPage">Following</a></Card.Text>*/}

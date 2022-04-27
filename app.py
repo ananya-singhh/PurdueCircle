@@ -94,8 +94,9 @@ def unblock_user():
 @app.route('/search_for_user', methods=['GET'])
 def search_for_user():
     query = request.args['query']
+    logged_in_user = request.args['logged_in_user']
     print(query)
-    list = db.search_user(query)
+    list = db.search_user(query, logged_in_user)
     if not list:
         return {'data': 'No Results'}
     return json.dumps(list)
@@ -188,8 +189,12 @@ def search_for_topic():
 @app.route('/get_post', methods=['GET'])
 def get_post():
     id = request.args['id']
-    dict = db.get_post(id)
-    return dict
+    try:
+        logged_in_user = request.args['logged_in_user']
+    except:
+        logged_in_user = None
+    res = db.get_post(id, logged_in_user)
+    return res
 
 
 @app.route('/delete_post', methods=['DELETE'])
@@ -224,7 +229,7 @@ def get_comment():
     
 @app.route('/get_comments', methods=['GET'])
 def get_comments():
-    comments = db.get_comments(request.args['post_id'])
+    comments = db.get_comments(request.args['post_id'], request.args['logged_in_user'])
     return json.dumps(comments)
     
 @app.route('/save_post', methods=['PUT'])
@@ -316,6 +321,11 @@ def get_thread():
     ret = db.get_thread(user1, user2, thread_id)
     return ret
 
+@app.route('/get_blocked_list', methods=['GET'])
+def get_blocked_list():
+    request_data = request.get_json()
+    ret = db.get_blocked_list(request_data['username'])
+    return {'blocked': ret}
 @app.route('/get_messages', methods=['GET'])
 def get_messages():
     return json.dumps(db.get_messages(request.args['thread_id']))

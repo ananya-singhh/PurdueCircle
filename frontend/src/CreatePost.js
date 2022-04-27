@@ -27,7 +27,7 @@ import FormCheck from 'react-bootstrap/FormCheck';
 
         async function create() {
           var url = ""
-          console.log(content.image)
+          console.log(content.URL)
           if (content.image) url = await toBase64(content.image)
             axios({
               method: 'POST',
@@ -38,7 +38,8 @@ import FormCheck from 'react-bootstrap/FormCheck';
                 username: user['username'],
                 topic: topic,
                 anonymous: content.anonymous,
-                image: url
+                image: url,
+                link: content.URL,
               }
             }).then( res => {
               console.log(content.anonymous);

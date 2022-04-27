@@ -21,7 +21,7 @@ function Signup() {
   const formRef = useRef(null);
   
   const [show, setShow] = useState(false);
-  
+
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
   };
@@ -37,6 +37,8 @@ function Signup() {
       alert("Password does not meet listed requirements!")
     } else if (user.password !== user.password2) {
 		alert("Passwords do not match!")
+	} else if (user.username.length < 4 || user.username.length > 15){
+		alert("Username should be between 4 and 15 characters long!")
 	} else if (user.username.length === 0 || user.password.length === 0) {
 		alert("Fill in all the stuff")
 	} else {

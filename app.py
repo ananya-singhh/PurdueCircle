@@ -105,7 +105,7 @@ def search_for_user():
 def create_post():
     request_data = request.get_json()
     print(request_data)
-    created_post = db.create_post(request_data['content'], request_data['title'], request_data['username'], request_data['topic'], request_data['anonymous'], request_data['image'])
+    created_post = db.create_post(request_data['content'], request_data['title'], request_data['username'], request_data['topic'], request_data['anonymous'], request_data['image'], request_data['link'])
     return to_dict(created_post)
     
 @app.route('/edit_post', methods=['PUT'])
@@ -280,9 +280,19 @@ def get_saved_posts():
     else:
         return {"data" : "failed"}
 
+
+@app.route('/get_followers', methods=['GET'])
+def get_followers():
+    ret = db.get_followers(request.args['username'])
+    if ret:
+        return json.dumps(ret)
+    else:
+        return {"data" : "failed"}
+
 @app.route('/create_message', methods=['POST'])
 def create_message():
     request_data = request.get_json()
+    print(request_data)
     try:
         thread_id = request_data['thread_id']
     except:
@@ -292,20 +302,19 @@ def create_message():
 
 @app.route('/get_threads', methods=['GET'])
 def get_threads():
-    request_data = request.get_json()
-    ret = db.get_threads(request_data['username'])
-    return {'ids': ret}
+    ret = db.get_threads(request.args['username'])
+    if ret: return json.dumps(ret)
+    else: return {'data': 'failed'}
 
 @app.route('/get_thread', methods=['GET'])
 def get_thread():
-    request_data = request.get_json()
     try:
-        thread_id = request_data['thread_id']
+        thread_id = request.args['thread_id']
     except:
         thread_id = None
     try:
-        user1 = request_data['user1']
-        user2 = request_data['user2']
+        user1 = request.args['user1']
+        user2 = request.args['user2']
     except:
         user1 = None
         user2 = None
@@ -317,6 +326,35 @@ def get_blocked_list():
     request_data = request.get_json()
     ret = db.get_blocked_list(request_data['username'])
     return {'blocked': ret}
+@app.route('/get_messages', methods=['GET'])
+def get_messages():
+    return json.dumps(db.get_messages(request.args['thread_id']))
+
+@app.route('/get_message', methods=['GET'])
+def get_message():
+    ret = db.get_message(request.args['id'])
+    return ret
+
+@app.route('/get_user_following', methods=['GET'])
+def get_user_following():
+    ret = db.get_user_following(request.args['username'])
+    if ret:
+        return json.dumps(ret)
+    else:
+        return {"data" : "failed"}   
+
+@app.route('/get_topic_following', methods=['GET'])
+def get_topic_following():
+    ret = db.get_topic_following(request.args['username'])
+    if ret:
+        return json.dumps(ret)
+    else:
+        return {"data" : "failed"}  
+    
+# @app.route('/realtime_update', methods=['GET'])
+# def realtime_update():
+#     return json.dumps(db.update_thread(request.args['thread_id']))
+
 
 if __name__ == "__main__":
     app.run(debug=True)

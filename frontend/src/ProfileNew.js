@@ -161,9 +161,18 @@ function ProfileNew() {
       getUser()
     }, [url]);*/
 
+    const handleFollowersPage = (event) => {
+      navigate('/FollowersPage');
+    };
+
+    const handleFollowingPage = (event) => {
+      navigate('/FollowingPage');
+    };
+
     useEffect(() => {
       getUser()
       // if (localStorage.getItem('user')) navigate('/homepage');
+      setList([]);
       axios({
         method: 'get',
         url: 'http://127.0.0.1:5000/get_userline?user=' + username + '&is_self=' + ((currentUser && username === currentUser['username']) ? 1 : 0),
@@ -176,11 +185,20 @@ function ProfileNew() {
         //console.error(error);
         //navigate("/404");
       })
-    },[]);
+    }, [username]);
 
   
 
-  
+  function DMable() {
+      if(user['privacy_setting']) {
+          if(user['following'].includes(currentUser['username'])) {
+            return true;
+          } else {
+            return false;
+          }
+      }
+      return true;
+  }
 
   if(currentUser && username === currentUser['username']) {
 
@@ -188,29 +206,45 @@ function ProfileNew() {
   <Container className="App-pfpage">
     <br></br>
     <Row>
-    <Col md={{ span: 6, offset: 4}}>
-  <Card className="text-center" bg="light" style={{ width: '18rem' }}>
+   <Col md={{ span: 10, offset: 3}}>
+  <Card className="text-center" bg="light" style={{ width: '18rem', marginLeft: '120px' }}>
     <Card.Body>
     <FigureImage as={Image} width={125} height={125} src={pics[currentUser['profile_picture']]} roundedCircle={true} id="pfp" alt="Card image"/>
     
 
       <Card.Title>{user ? user['username'] : "loading"}</Card.Title>
-      <Row>
-      <Col md={4}>{user['followers'] ? user['followers'].length + " Followers" : "Loading"}</Col>
-      <Col md={{ span: 4, offset: 4 }}>{user['following'] ?user['following'].length + " Following" : "Loading"}</Col>
-      </Row>
       <Card.Text>
         {user ? user['bio'] : "Loading"}
       </Card.Text>
       <Row>
       <Col>
+        {user['followers'] ? user['followers'].length + "   " : "   "}
+        <Card.Text onClick={handleFollowersPage}>Followers</Card.Text>
+        {/*Blue with underline*/}
+        {/*<Card.Text><a href = "/FollowersPage">Followers</a></Card.Text>*/}
+      </Col>
+      <Col>
+        {user['following'] ?user['following'].length + "   " : "   "}
+        <Card.Text onClick={handleFollowingPage}>Following</Card.Text>
+        {/*Blue with underline*/}
+        {/*<Card.Text><a href = "/FollowingPage">Following</a></Card.Text>*/}
+      </Col>
+      </Row>
+      {/*</Row>*/}
+      {/*<Row>*/}
+      <br></br>
+      <Row>      
+      <Col>
       <Button variant="primary" href="/EditProfile">Edit Profile</Button>
       </Col>
       <Col>
       <Button variant="primary" href="/createPost/general">Create Post</Button>
-      </Col>
+      </Col>  
       </Row>
+      <br></br>
+      <Button variant="primary" href={"/" + currentUser['username'] + "/DMList"}>Messages</Button>
     </Card.Body>
+    <p>Privacy Status: {currentUser['privacy_setting'] ? "Private" : "Public"}</p>
   </Card>
   </Col>
   </Row>
@@ -302,14 +336,15 @@ function ProfileNew() {
         checked={true}
         value="1"
         onClick={handleBlocking}
-        Style="margin-right=25px;"
+        style={{marginLeft: "25px"}}
         >
         Block
       </ToggleButton>}
       </Col>
       </Row> : "sign in dummy"
 }
-      
+<br></br>
+      {DMable() ? <Button variant="primary" href={"./DMPage/" + currentUser['username'] + "/" + user['username']}>Send Message</Button> : "This user is private."}
       </Card.Body>
     </Card>
     </Col>
@@ -322,8 +357,7 @@ function ProfileNew() {
     <Post id={item}/>
   ))}
 </ListGroup> : ""
-  }
-  
+  } 
 
     </Container>
   )

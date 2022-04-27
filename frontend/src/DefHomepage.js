@@ -1,9 +1,7 @@
 import { React, useEffect, useState } from 'react';
 
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ListGroup from 'react-bootstrap/ListGroup';
@@ -36,24 +34,20 @@ function Homepage() {
 
     
         return (
-          <Container>
-            <br></br>
-          <Row>
-
-            <Col sm={8} >     
-            <h1 Style="margin-top: 5px;"><strong>Recent Posts</strong></h1>
+          <div className="App-Topic" style={{background: 'black'}}>
+          <br></br>
+            <Card.Header style={{color: 'white', background: '#212529', borderRadius: '0px'}}>
+            <h1 Style="margin-top: 5px;">Trending Posts</h1>
+            </Card.Header>
+          <Card.Body style={{background: '#0b3866'}}>
             <br></br>
             <ListGroup variant="flush">
               {list.map((item) => (
                 <Post id={item}/>
               ))}
             </ListGroup>
-
-            </Col> 
-
-        
-        </Row>
-        </Container>
+            </Card.Body>
+        </div>
           );
    
   }

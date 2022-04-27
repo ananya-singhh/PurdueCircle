@@ -17,7 +17,6 @@ import pic4 from "./images/4.jpg";
 import pic5 from "./images/5.jpg";
 import pic6 from "./images/6.jpg";
 
-import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Post from './Post';
@@ -169,6 +168,10 @@ function ProfileNew() {
       navigate('/FollowingPage');
     };
 
+    const handleBlockedPage = (event) => {
+      navigate('/BlockedPage');
+    };
+
     useEffect(() => {
       getUser()
       // if (localStorage.getItem('user')) navigate('/homepage');
@@ -226,6 +229,12 @@ function ProfileNew() {
       <Col>
         {user['following'] ?user['following'].length + "   " : "   "}
         <Card.Text onClick={handleFollowingPage}>Following</Card.Text>
+        {/*Blue with underline*/}
+        {/*<Card.Text><a href = "/FollowingPage">Following</a></Card.Text>*/}
+      </Col>
+      <Col>
+        {user['blocked'] ?user['blocked'].length + "   " : "   "}
+        <Card.Text onClick={handleBlockedPage}>Blocked</Card.Text>
         {/*Blue with underline*/}
         {/*<Card.Text><a href = "/FollowingPage">Following</a></Card.Text>*/}
       </Col>

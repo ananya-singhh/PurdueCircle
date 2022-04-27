@@ -22,6 +22,7 @@ import FollowingPage from './FollowingPage';
 import DMPage from './DMPage';
 import DMList from './DMList';
 import Post from './Post';
+import BlockedPage from './BlockedPage';
 
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import CommentsPage from './CommentsPage';
@@ -51,6 +52,7 @@ const Routing = () => {
         <Route path="/Post/:id" element={<Post/>} />
         <Route path="Profile/DMPage/:name/:target" element={<DMPage />} />
         <Route path=":name/DMList" element={<DMList />} />
+        <Route path="/BlockedPage" element={<BlockedPage />} />
       </Routes>
 	  <Footer />
     </Router>

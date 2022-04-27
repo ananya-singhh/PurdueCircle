@@ -10,6 +10,7 @@ import axios from 'axios';
 import InlineAlert from './InlineAlert';
 import Alert from 'react-bootstrap/Alert';
 import PasswordChecklist from "react-password-checklist";
+import Modal from 'react-bootstrap/Modal';
 
 function Signup() { 
 
@@ -38,6 +39,7 @@ function Signup() {
     } else if (user.password !== user.password2) {
 		alert("Passwords do not match!")
 	} else if (user.username.length < 4 || user.username.length > 15){
+		// console.log("alert test");
 		alert("Username should be between 4 and 15 characters long!")
 	} else if (user.username.length === 0 || user.password.length === 0) {
 		alert("Fill in all the stuff")

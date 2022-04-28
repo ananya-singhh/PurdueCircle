@@ -550,5 +550,6 @@ class db_interface(object):
             comment = self.comments.document(comment_id).get().to_dict()
             posts2.append(comment['post_id'])
         
-        res = list(set(posts1 + posts2))
+        res = list(posts1 + posts2)
+        print(res)
         return res

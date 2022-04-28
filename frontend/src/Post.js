@@ -43,6 +43,7 @@ import CommentsPage from './CommentsPage';
 
         const [saved, setSaved] = useState(false);
         const handleUnsave = (e) => {
+          e.preventDefault();
             axios({
               method: 'put',
               url: 'http://127.0.0.1:5000/unsave_post',
@@ -61,6 +62,7 @@ import CommentsPage from './CommentsPage';
             })
         }
         const handleSave = (e) => {
+          e.preventDefault();
           axios({
             method: 'put',
             url: 'http://127.0.0.1:5000/save_post',
@@ -84,6 +86,7 @@ import CommentsPage from './CommentsPage';
 
         const [checked, setChecked] = useState(false);
         const handleUnlike = (e) => {
+          e.preventDefault();
             axios({
                 method: 'put',
                 url: 'http://127.0.0.1:5000/unlike_post',
@@ -102,6 +105,7 @@ import CommentsPage from './CommentsPage';
               })
         }
         const handleLike = (e) => {
+          e.preventDefault();
             axios({
                 method: 'put',
                 url: 'http://127.0.0.1:5000/like_post',
@@ -128,9 +132,11 @@ import CommentsPage from './CommentsPage';
 
         const [editMode, setEditMode] = useState(true);
         const toggleEditMode = (e) => {
+            e.preventDefault();
             setEditMode(!editMode);
         }
         const saveEdits = (e) => {
+          e.preventDefault();
             setEditMode(!editMode);
             axios({
                 method: 'put',
@@ -168,12 +174,17 @@ import CommentsPage from './CommentsPage';
         }, []);
 
         const [show, setShow] = useState(false);
-        const handleNo = () => {
+        const handleNo = (e) => {
+          e.preventDefault();
             setShow(false);
           }
-          const areYouSure = () => setShow(true);
+          const areYouSure = (e) => {
+            e.preventDefault();
+            setShow(true);
+          }
 
-          const handleYes = () => { //TODO: DELETE THE ACC
+          const handleYes = (e) => { //TODO: DELETE THE ACC
+            e.preventDefault();
             setShow(false);
             axios({
               method: 'delete',

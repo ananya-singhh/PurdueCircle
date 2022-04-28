@@ -115,7 +115,7 @@ function DMPage() {
                 {messageList.map((item) => (
                   <Message id={item}/>
                 ))}
-                </> : <div><h2 Style="margin-top: 10px;"><strong>No Messages Fucking Idiot</strong></h2></div>
+                </> : <div><h2 Style="margin-top: 10px;"><strong>No Messages Yet</strong></h2></div>
                 }   
           </Card.Body>
           <Card.Footer>

@@ -7,6 +7,8 @@ import Col from 'react-bootstrap/Col';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
+import swal from 'sweetalert';
+
 import Image from 'react-bootstrap/Image'
 import FigureImage from 'react-bootstrap/FigureImage'
 
@@ -139,7 +141,7 @@ function ProfileNew() {
   }
 
   if(currentUser && user['blocked'] && user['blocked'].includes(currentUser['username'])) {
-    alert('This User has you blocked!')
+    swal('This User has you blocked!');
     navigate('/homepage');
   }
   

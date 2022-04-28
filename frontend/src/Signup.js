@@ -11,6 +11,7 @@ import InlineAlert from './InlineAlert';
 import Alert from 'react-bootstrap/Alert';
 import PasswordChecklist from "react-password-checklist";
 import Modal from 'react-bootstrap/Modal';
+import swal from 'sweetalert';
 
 function Signup() { 
 
@@ -33,16 +34,16 @@ function Signup() {
 
 
 	if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(user.email)) {
-		alert("Enter a valid email address")
+		swal("Enter a valid email address")
 	} else if (!(specials.test(user.password)) || user.password.length < 8 || !(/[0-9]/.test(user.password)) || !(/[A-Z]/.test(user.password))) {
-      alert("Password does not meet listed requirements!")
+      swal("Password does not meet listed requirements!")
     } else if (user.password !== user.password2) {
-		alert("Passwords do not match!")
+		swal("Passwords do not match!")
 	} else if (user.username.length < 4 || user.username.length > 15){
 		// console.log("alert test");
-		alert("Username should be between 4 and 15 characters long!")
+		swal("Username should be between 4 and 15 characters long!")
 	} else if (user.username.length === 0 || user.password.length === 0) {
-		alert("Fill in all the stuff")
+		swal("Fill in all the stuff")
 	} else {
 		axios({
 			method: 'post',
@@ -55,8 +56,8 @@ function Signup() {
 		  }).then( res => {
 			  if (res.data.data) {
 				  if (res.data.data === "username") {
-					alert("Username is taken")
-				  } else alert("Email is already in use!");
+					swal("Username is taken")
+				  } else swal("Email is already in use!");
 			  } else {
 				  localStorage.setItem('user', JSON.stringify(res.data));
 				  navigate("/homepage");

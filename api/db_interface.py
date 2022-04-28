@@ -520,9 +520,13 @@ class db_interface(object):
         threads1 = self.dms.where(u'user1', u'==', username).stream()
         threads2 = self.dms.where(u'user2', u'==', username).stream()
         for thread in threads1:
-            res.append(thread.id)
+            if username not in self.users.document(thread.to_dict()['user2']).get().to_dict()['blocked'] and \
+            username not in self.users.document(thread.to_dict()['user2']).get().to_dict()['blocked_by']:
+                res.append(thread.id)
         for thread in threads2:
-            res.append(thread.id)
+            if username not in self.users.document(thread.to_dict()['user1']).get().to_dict()['blocked'] and \
+            username not in self.users.document(thread.to_dict()['user1']).get().to_dict()['blocked_by']:
+                res.append(thread.id)
         return res
     
     # def update_thread(self, thread_id):

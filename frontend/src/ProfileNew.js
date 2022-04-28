@@ -28,6 +28,7 @@ function ProfileNew() {
   const pics = [pic1, pic2, pic3, pic4, pic5, pic6];
 
   const [list, setList] = useState([])
+  const [interactions, setInteractions] = useState([])
   const navigate = useNavigate();
   const currentUser = JSON.parse(localStorage.getItem('user'));
 
@@ -185,6 +186,18 @@ function ProfileNew() {
         //console.error(error);
         //navigate("/404");
       })
+      axios({
+        method: 'get',
+        url: 'http://127.0.0.1:5000/get_interactions?username=' + username,
+      }).then( res => {
+        if (res.data.data !== "No Results") {
+          console.log(res.data);
+          setInteractions(res.data);
+        } 
+      }).catch(error => {
+        //console.error(error);
+        //navigate("/404");
+      })
     }, [username]);
 
   
@@ -272,7 +285,13 @@ function ProfileNew() {
 </ListGroup> : ""
   }</>
   :
-  <>Interactions List</>
+  <>{interactions && interactions.length > 0 ? 
+    <ListGroup variant="flush">
+    {interactions.map((item) => (
+      <Post id={item}/>
+    ))}
+  </ListGroup> : ""
+    }</>
   }
   </Card.Body>
   </Card>

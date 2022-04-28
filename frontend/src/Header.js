@@ -9,6 +9,7 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import { useNavigate } from 'react-router-dom';
 import InlineAlert from './InlineAlert';
+import swal from 'sweetalert';
 
 
 function Header() {
@@ -44,7 +45,7 @@ function Header() {
 		if(query.length > 0) {
 			navigate('SearchResults/' + query);
 			window.location.reload(false);
-		} else alert('search is empty')
+		} else swal('search is empty')
 
 	}
 	  

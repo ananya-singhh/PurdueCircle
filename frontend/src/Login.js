@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import swal from 'sweetalert';
 
 function Login() { 
 
@@ -37,7 +38,7 @@ function Login() {
 		}).then( res => {
 			if (res.data.data === "Failed") {
 				console.log("bad login")
-				alert("Information is incorrect")
+				swal("Information is incorrect")
 			} else {
 				console.log(res);
 				localStorage.setItem('user', JSON.stringify(res.data))

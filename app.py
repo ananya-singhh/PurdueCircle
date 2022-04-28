@@ -355,5 +355,10 @@ def get_topic_following():
 #     return json.dumps(db.update_thread(request.args['thread_id']))
 
 
+@app.route('/get_interactions', methods=['GET'])
+def get_interactions():
+    ret = db.get_interactions(request.args['username'])
+    return json.dumps(ret)
+
 if __name__ == "__main__":
     app.run(debug=True)

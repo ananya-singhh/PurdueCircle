@@ -102,7 +102,6 @@ function Header() {
 
 				<Nav>
 				  <Nav.Link href="/createTopic">Create Topic</Nav.Link>
-				  <Nav.Link href="/message">Direct Message</Nav.Link>
 				  <Nav.Link href="/SavedPosts">Saved Posts</Nav.Link>
 				  <NavDropdown title={user['username']} id="navbarScrollingDropdown">
 					  <NavDropdown.Item onClick={handleClick}>View Profile</NavDropdown.Item>

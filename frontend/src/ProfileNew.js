@@ -174,6 +174,7 @@ function ProfileNew() {
       getUser()
       // if (localStorage.getItem('user')) navigate('/homepage');
       setList([]);
+      setInteractions([]);
       axios({
         method: 'get',
         url: 'http://127.0.0.1:5000/get_userline?user=' + username + '&is_self=' + ((currentUser && username === currentUser['username']) ? 1 : 0),
@@ -202,6 +203,17 @@ function ProfileNew() {
 
   
   const [showPosts, setShowPosts] = useState(false);
+  function alternateUI() {
+    setShowPosts(!showPosts);
+    if(!showPosts) {
+      document.getElementById("ownposts").style.display = "none";
+      document.getElementById("interactions").style.display = "block";
+    } else {
+      document.getElementById("ownposts").style.display = "block";
+      document.getElementById("interactions").style.display = "none";
+    }
+  }
+
   function DMable() {
       if(user['privacy_setting']) {
           if(user['following'].includes(currentUser['username'])) {
@@ -267,32 +279,33 @@ function ProfileNew() {
   <Col md={{ span: 9, offset: 1}}>
     {showPosts ?
     <>
-    <Button onClick={() => setShowPosts(false)} style={{borderRadius: '12px 12px 0px 0px', background: 'white', color: 'blue'}}>Posts</Button>
+    <Button onClick={() => alternateUI()} style={{borderRadius: '12px 12px 0px 0px', background: 'white', color: 'blue'}}>Posts</Button>
     <Button style={{borderRadius: '12px 12px 0px 0px'}}>Interactions</Button></>
     : 
     <>
     <Button style={{borderRadius: '12px 12px 0px 0px'}}>Posts</Button>
-    <Button onClick={() => setShowPosts(true)} style={{borderRadius: '12px 12px 0px 0px', background: 'white', color: 'blue'}}>Interactions</Button></>
+    <Button onClick={() => alternateUI()} style={{borderRadius: '12px 12px 0px 0px', background: 'white', color: 'blue'}}>Interactions</Button></>
     }
   <Card>
     <Card.Body>
-      {!showPosts ? 
-  <>{list && list.length > 0 ? 
-  <ListGroup variant="flush">
-  {list.map((item) => (
-    <Post id={item}/>
-  ))}
-</ListGroup> : ""
-  }</>
-  :
-  <>{interactions && interactions.length > 0 ? 
-    <ListGroup variant="flush">
-    {interactions.map((item) => (
-      <Post id={item}/>
-    ))}
-  </ListGroup> : ""
-    }</>
-  }
+      
+
+      <div id="ownposts" style={{display: 'block'}}>{list && list.length > 0 ? 
+      <ListGroup variant="flush">
+      {list.map((item) => (
+        <Post id={item}/>
+      ))}
+    </ListGroup> : ""
+      }</div>
+
+      <div id="interactions" style={{display: 'none'}}>{interactions && interactions.length > 0 ? 
+        <ListGroup variant="flush">
+        {interactions.map((item2) => (
+          <Post id={item2}/>
+        ))}
+      </ListGroup> : ""
+       }</div>
+
   </Card.Body>
   </Card>
 </Col>
@@ -386,14 +399,42 @@ function ProfileNew() {
     </Col>
     </Row>
     <br></br>
-    <h1 Style="margin-top: 5px;"><strong><u>{user['username']}'s posts</u></strong></h1>
-    {list && list.length > 0 ? 
-  <ListGroup variant="flush">
-  {list.map((item) => (
-    <Post id={item}/>
-  ))}
-</ListGroup> : ""
-  } 
+    <h1 Style="margin-top: 5px;"><strong><u>{user['username']}'s Activity</u></strong></h1>
+    <Row>
+  <Col md={{ span: 9, offset: 1}}>
+    {showPosts ?
+    <>
+    <Button onClick={() => alternateUI()} style={{borderRadius: '12px 12px 0px 0px', background: 'white', color: 'blue'}}>Posts</Button>
+    <Button style={{borderRadius: '12px 12px 0px 0px'}}>Interactions</Button></>
+    : 
+    <>
+    <Button style={{borderRadius: '12px 12px 0px 0px'}}>Posts</Button>
+    <Button onClick={() => alternateUI()} style={{borderRadius: '12px 12px 0px 0px', background: 'white', color: 'blue'}}>Interactions</Button></>
+    }
+  <Card>
+    <Card.Body>
+      
+
+      <div id="ownposts" style={{display: 'block'}}>{list && list.length > 0 ? 
+      <ListGroup variant="flush">
+      {list.map((item) => (
+        <Post id={item}/>
+      ))}
+    </ListGroup> : ""
+      }</div>
+
+      <div id="interactions" style={{display: 'none'}}>{interactions && interactions.length > 0 ? 
+        <ListGroup variant="flush">
+        {interactions.map((item2) => (
+          <Post id={item2}/>
+        ))}
+      </ListGroup> : ""
+       }</div>
+
+  </Card.Body>
+  </Card>
+</Col>
+</Row>
 
     </Container>
   )

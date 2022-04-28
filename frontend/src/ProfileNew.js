@@ -218,6 +218,9 @@ function ProfileNew() {
   }
 
   function DMable() {
+    if(blocked) {
+      return false;
+    }
       if(user['privacy_setting']) {
           if(user['following'].includes(currentUser['username'])) {
             return true;
@@ -402,7 +405,7 @@ function ProfileNew() {
       </Row> : "sign in dummy"
 }
 <br></br>
-      {DMable() ? <Button variant="primary" href={"./DMPage/" + currentUser['username'] + "/" + user['username']}>Send Message</Button> : "This user is private."}
+      {DMable() ? <Button variant="primary" href={"./DMPage/" + currentUser['username'] + "/" + user['username']}>Send Message</Button> : !blocked ? "This user is private." : "You have blocked this user."}
       </Card.Body>
     </Card>
     </Col>

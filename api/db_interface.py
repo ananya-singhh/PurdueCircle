@@ -176,7 +176,7 @@ class db_interface(object):
             self.users.document(username).update({u'anonymous_posts': firestore.ArrayUnion([post_info.id])})
         else:
             self.users.document(username).update({u'posts': firestore.ArrayUnion([post_info.id])})
-        return Post(username, post_info.id, topic, title, content, current_date, anonymous=anonymous, image=image)
+        return Post(username, post_info.id, topic, title, content, current_date, anonymous=anonymous, image=image, URL = url)
         
     #edit a post
     def edit_post(self, id, changes: dict):
@@ -271,6 +271,13 @@ class db_interface(object):
     #send a message
     def create_message(self, sender, receiver, content, message_thread_id=None):
         self.create_thread(sender, receiver)
+        
+        users = self.users.where(u'username', u"==", receiver).limit(1).stream()
+        user = next(users,None)
+        user = User(**user.to_dict())
+        if user.privacy_setting == 1:
+            return -1
+        
         if message_thread_id is None:
             message_thread_id = self.get_thread_id(sender, receiver)
         message = self.messages.document() # ref to new document
@@ -506,7 +513,7 @@ class db_interface(object):
                 return self.dms.document(thread_id).get().to_dict()
     
     def get_messages(self, thread_id):
-        print(thread_id)
+        # print(thread_id)
         res = []
         docs = self.messages.where(u'message_thread_id', u'==', thread_id).stream()
         docs = sorted(docs, key=lambda x: x.to_dict()['timestamp'], reverse=False)
@@ -575,5 +582,5 @@ class db_interface(object):
             posts2.append(comment['post_id'])
         
         res = list(posts1 + posts2)
-        print(res)
+        # print(res)
         return res

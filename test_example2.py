@@ -13,9 +13,13 @@ DM4 = None
 
 @pytest.fixture
 def create_user():
+    db.create_user('user1@gmail.com', 'TestUser1', '1234A*A*')
+    db.create_user('user2@gmail.com', 'TestUser2', '1234A*A*')
+    db.create_topic('topic21')
+    db.create_topic('epic stuff')
+    db.create_topic('test topic')
     db.create_user('user5@gmail.com', 'TestUser5', '1234A*A*')
     user = db.get_user('TestUser5')
-    
     assert user.username == 'TestUser5'
     assert user.email == 'user5@gmail.com'
     assert user.password != '1234A*A*'
@@ -25,7 +29,6 @@ def create_user():
 def test_encrypt_password1():
     db.create_user('user4@gmail.com', 'TestUser4', '1234A*A*')
     user = db.get_user('TestUser4')
-    #db.follow_user("TestUser4", "TestUser3")
     
     assert user.username == 'TestUser4'
     assert user.email == 'user4@gmail.com'
@@ -44,6 +47,7 @@ def test_encrypt_password2():
 
 # test that the password for TestUser3 isn't stored as it's original value in the data base
 def test_encrypt_password3():
+    
     db.create_user('user3@gmail.com', 'TestUser3', '4321B*B*')
     user = db.get_user('TestUser3')
     # db.follow_user("TestUser3", "TestUser4")
@@ -101,16 +105,16 @@ def test_username_length6():
 def test_post_image1():
     db.create_post('test content', 'test_post_image1', 'TestUser3', 'topic21', False, 'image1.jpg', 'https://www.google.com')
     post = db.get_post2('test_post_image1')
-    assert 'image1.jpg' in post[0]['image']
-    assert 'https://www.google.com' in post[0]['url']
+    assert 'image1.jpg' in post['image']
+    assert 'https://www.google.com' in post['URL']
     db.delete_post(db.get_post_id('test_post_image1'))
     
     
 def test_post_image2():
     db.create_post('test content', 'test_post_image2', 'TestUser3', 'topic21', False, 'image2.jpg', 'https://www.youtube.com')
     post = db.get_post2('test_post_image2')
-    assert 'image2.jpg' in post[0]['image']
-    assert 'https://www.youtube.com' in post[0]['url']
+    assert 'image2.jpg' in post['image']
+    assert 'https://www.youtube.com' in post['URL']
     db.delete_post(db.get_post_id('test_post_image2'))
     
 def test_post_image3():
@@ -119,12 +123,6 @@ def test_post_image3():
     assert 'image3.jpg' in post['image']    
     assert 'https://www.fbi.gov' in post['URL']
     db.delete_post(db.get_post_id('test_post_image3'))
-    
-test_post_image3()
-  
-  
-  
-  
   
 # user story 3
 #tests that a post greater than 500 characters cannot be created
@@ -159,35 +157,48 @@ def test_follower_list1():
     user = db.get_user('TestUser3')
     user = user.to_dict()
     assert 'TestUser1' in user['following'] 
+    list1 = db.get_user_following('TestUser3')
+    assert 'TestUser1' in list1   
 
 def test_follower_list2():
     db.follow_user('TestUser3', 'TestUser2')
     user = db.get_user('TestUser3')
     user = user.to_dict()
-    assert 'TestUser2' in user['following'] 
+    assert 'TestUser2' in user['following']
+    list1 = db.get_user_following('TestUser3')
+    assert 'TestUser2' in list1 
       
 # tests that the follower list doesn't contain any users that TestUser3 does not follow  
 def test_follower_list3():
     user = db.get_user('TestUser3')
     user = user.to_dict()
     assert 'TestUser5' not in user['following'] 
+    list1 = db.get_user_following('TestUser3')
+    assert 'TestUser5' not in list1
 
 def test_follower_list4():
     user = db.get_user('TestUser3')
     user = user.to_dict()
-    assert 'TestUser8' not in user['following'] 
+    assert 'TestUser4' not in user['following'] 
+    list1 = db.get_user_following('TestUser3')
+    assert 'TestUser4' not in list1
     
 # tests that the follower list correctly contains the users TestUser4 follows 
 def test_follower_list5():
+    db.follow_user('TestUser4', 'TestUser3')
     user = db.get_user('TestUser4')
     user = user.to_dict()
     assert 'TestUser3' in user['following'] 
+    list1 = db.get_user_following('TestUser4')
+    assert 'TestUser3' in list1
     
 def test_follower_list6():
     db.follow_user('TestUser4', 'TestUser1')
     user = db.get_user('TestUser4')
     user = user.to_dict()
-    assert 'TestUser1' in user['following'] 
+    assert 'TestUser1' in user['following']
+    list1 = db.get_user_following('TestUser4')
+    assert 'TestUser1' in list1 
 
 # user story 5  
 # tests that the topic list that is displayed contains the topics that the given user follows  
@@ -196,6 +207,11 @@ def test_topic_list1():
     user = db.get_user("TestUser3")
     user = user.to_dict()
     assert 'epic stuff' in user['followed_topics'] 
+    list1 = db.get_topic_following('TestUser3')
+    assert 'epic stuff' in list1
+    
+test_topic_list1()
+    
     
 def test_topic_list2():
     db.follow_topic("test topic", "TestUser4")
@@ -203,18 +219,25 @@ def test_topic_list2():
     user = user.to_dict()
     assert 'test topic' in user['followed_topics'] 
     assert 'epic stuff' not in user['followed_topics']
+    list1 = db.get_topic_following('TestUser4')
+    assert 'test topic' in list1
+    assert 'epic stuff' not in list1
     
 def test_topic_list3():
     db.follow_topic("topic21", "TestUser3")
     user = db.get_user("TestUser3")
     user = user.to_dict()
     assert 'topic21' in user['followed_topics'] 
+    list1 = db.get_topic_following('TestUser3')
+    assert 'topic21' in list1
     
 def test_topic_list4():
     db.follow_topic("topic21", "TestUser4")
     user = db.get_user("TestUser4")
     user = user.to_dict()
     assert 'topic21' in user['followed_topics'] 
+    list1 = db.get_topic_following('TestUser4')
+    assert 'topic21' in list1
     
 # user story 6
 # tests that a message can successfully be sent and recieved with the correct content to the correct user
@@ -271,7 +294,6 @@ def test_DM_page3():
     assert DM3 in messages 
     assert DM4 not in messages
     
-
 def test_DM_page4():
     messages = db.get_messages('TestUser4_TestUser5')
     assert DM1 not in messages
@@ -279,17 +301,43 @@ def test_DM_page4():
     assert DM3 not in messages 
     assert DM4 in messages
 
-
-
-
-
-
 # user story 8
-def test_privacy():
-    assert 1 == 1
+# tests that the user's privacy setting is toggleable
+def test_privacy1():
+    dict1 = {}
+    dict1['privacy_setting'] = 1
+    db.edit_user('TestUser1', dict1)
+    user = db.get_user('TestUser1')
+    assert user.privacy_setting == 1
 
+# tests to see that dms aren't received from users that aren't followed
+def test_privacy2():
+    message = db.create_message('TestUser2', 'TestUser1', 'message testin')
+    assert message == -1
+    messages = db.get_messages('TestUser1_TestUser2')
+    assert message not in messages
 
+def test_privacy3():
+    message = db.create_message('TestUser4', 'TestUser1', 'message testin')
+    assert message == -1
+    messages = db.get_messages('TestUser4_TestUser1')
+    assert message not in messages  
 
+# user story 9
+# test that blocked list contains all blocked users
+def test_blocked_list1():
+    db.block_user('TestUser3', 'TestUser5')
+    list = db.get_blocked_list('TestUser3')
+    assert 'TestUser5' in list
+    assert 'TestUser4' not in list
+    db.unblock_user('TestUser3', 'TestUser5')
+  
+def test_blocked_list2():
+    db.block_user('TestUser2', 'TestUser1')
+    list = db.get_blocked_list('TestUser2')
+    assert 'TestUser1' in list
+    assert 'TestUser4' not in list
+    db.unblock_user('TestUser2', 'TestUser1')
 
 # user story 11
 # tests that posts made by a blocked user won't appear in a user's timeline
@@ -320,13 +368,23 @@ def test_user_blocked3():
     db.delete_post(post_id)
     db.unblock_user('TestUser4', 'TestUser1')
     
-    
-    
 # user story 12
-def test_():
-    assert 1 == 1
+# tests that posts that have been liked appear in interactions page
+def test_interaction_page1():
+    db.create_post('super cool post!!! so epicc', 'epic post9', 'TestUser1', 'topic21', False, 'image', 'https://www.fbi.gov')
+    id = db.get_post_id('epic post9')
+    db.like_post('TestUser2', id)
+    interactions = db.get_interactions('TestUser2')
+    assert id in interactions
+    db.delete_post(id)
     
-    
+def test_interaction_page2():
+    db.create_post('this is an even epicer post', 'epic post 2.0', 'TestUser2', 'topic21', False, 'image', 'https://www.fbi.gov')
+    id = db.get_post_id('epic post 2.0')
+    db.like_post('TestUser1', id)
+    interactions = db.get_interactions('TestUser1')
+    assert id in interactions
+    db.delete_post(id)
     
 # user story 13
 # tests that posts made by someone who has blocked you are not visable to you.

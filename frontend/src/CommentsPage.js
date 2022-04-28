@@ -51,7 +51,7 @@ function CommentsPage(props) {
     function getComments() {
         axios({
             method: 'get',
-            url: `http://127.0.0.1:5000/get_comments?post_id=${curPostId}&logged_in_user=${user['username']}`,
+            url: `http://127.0.0.1:5000/get_comments?post_id=${curPostId}&logged_in_user=${user ? user['username'] : ""}`,
           }).then( res => {
             if (res.data.data !== "No Results") {
               setCommentsList(res.data)

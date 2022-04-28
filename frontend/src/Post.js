@@ -240,7 +240,7 @@ import CommentsPage from './CommentsPage';
                 :
                 <Form.Control as="textarea" value={postInfo['content']} onChange = {e => setPostInfo({...postInfo, content: e.target.value})}/>
                 }
-                {postInfo['image'] ? <img src = {postInfo['image']}></img> : ""}
+                {postInfo['image'] ? <><br></br><br></br><img src = {postInfo['image']}></img></> : ""}
                 {postInfo['URL'] ? <><br></br><br></br>Attached URL: <a href={postInfo['URL']}>{postInfo['URL']}</a></> : <></>}
             
             </Card.Body>
